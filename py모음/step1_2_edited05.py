@@ -28,7 +28,7 @@ TYPE1_DIR = os.path.join(ROOT, 'triangles4', 'type1_edited05')
 os.makedirs(TYPE1_DIR, exist_ok=True)
 
 # ── draw() 함수 import (기존 v1.0.2 스크립트에서 재사용) ──────────────────────
-_base_script = os.path.join(PY_DIR, 'v1.0.2_260808_1536_triangles4변경.py')
+_base_script = os.path.join(PY_DIR, 'v1.0.3_260809_0000_dash_trim.py')
 spec = importlib.util.spec_from_file_location('tri_draw', _base_script)
 mod  = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)   # matplotlib rcParams 등 설정도 함께 로드됨
