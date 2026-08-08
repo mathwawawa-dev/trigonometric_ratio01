@@ -14,6 +14,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+from matplotlib.patches import Wedge
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -127,7 +128,8 @@ def classify_label_case(latex_str):
 def draw(vertices_dict, right_v, side_labels, filename,
          gap_factor=1.35, lbl_shift=0.0,
          vertex_label_rotations=None, side_label_shifts=None,
-         side_label_offsets=None, side_gap_factors=None):
+         side_label_offsets=None, side_gap_factors=None,
+         highlight_angle=None):
     """
     gap_factor             : excl_r 여백 계수 (v0.0.4 기본=1.35)
     lbl_shift              : 모든 호 레이블의 기본 shift 비율 (0.0=peak 정중앙)
@@ -362,6 +364,34 @@ def draw(vertices_dict, right_v, side_labels, filename,
         ax.text(text_pos[0], text_pos[1], label,
                 fontsize=SFONT, ha='center', va='center',
                 color='black', zorder=5)
+
+    # ⑤ 타겟 각(highlight_angle) 칠하기
+    if highlight_angle and highlight_angle in vertices_dict and highlight_angle != right_v:
+        p_A = vertices_dict[highlight_angle]
+        others = [v for k, v in vertices_dict.items() if k != highlight_angle]
+        p_B, p_C = others[0], others[1]
+        
+        angle_B = math.degrees(math.atan2(p_B[1] - p_A[1], p_B[0] - p_A[0]))
+        angle_C = math.degrees(math.atan2(p_C[1] - p_A[1], p_C[0] - p_A[0]))
+        
+        t1, t2 = sorted([angle_B, angle_C])
+        if t2 - t1 > 180:
+            t1, t2 = t2, t1 + 360
+            t1, t2 = sorted([t1, t2])
+            
+        angle_diff = t2 - t1
+        # 각도가 작을수록 반지름을 더 크게 키움 (최대 1.0 이상)
+        base_radius = 0.45
+        if angle_diff < 45:
+            # 45도일 때 0.45, 10도일 때 약 1.3
+            radius = base_radius + (45 - angle_diff) * 0.025
+        else:
+            radius = base_radius
+            
+        wedge = Wedge(p_A, radius, t1, t2, color='red', alpha=0.35, zorder=1)
+        wedge_edge = Wedge(p_A, radius, t1, t2, fill=False, edgecolor='red', lw=1.5, zorder=2)
+        ax.add_patch(wedge)
+        ax.add_patch(wedge_edge)
 
     out = os.path.join(OUTPUT_DIR, filename)
     plt.savefig(out, dpi=200, transparent=True,
