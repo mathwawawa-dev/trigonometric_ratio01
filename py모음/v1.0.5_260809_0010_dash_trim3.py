@@ -98,10 +98,10 @@ def label_char_count(latex_str):
 _CLR_TABLE = {
     1: dict(L=8,  R=8,  T=13, B=4),
     2: dict(L=13, R=13, T=13, B=4),
-    3: dict(L=16.5, R=20.5, T=19.5, B=13.0),
-    4: dict(L=21.5, R=24.5, T=19.5, B=13.0),
-    5: dict(L=26.5, R=25.5, T=19.5, B=13.0),
-    6: dict(L=30.5, R=30.5, T=19.5, B=13.0),
+    3: dict(L=16.5, R=20.5, T=19.5, B=12.0),
+    4: dict(L=21.5, R=24.5, T=19.5, B=12.0),
+    5: dict(L=26.5, R=25.5, T=19.5, B=12.0),
+    6: dict(L=30.5, R=30.5, T=19.5, B=12.0),
 }
 
 def classify_label_case(latex_str):

@@ -24,7 +24,7 @@ import json, math, os, sys, importlib.util, time
 # ── 경로 설정 ─────────────────────────────────────────────────────────────────
 PY_DIR   = os.path.dirname(os.path.abspath(__file__))          # py모음/
 ROOT     = os.path.dirname(PY_DIR)                              # 삼각비 게임1/
-TYPE1_DIR = os.path.join(ROOT, 'triangles4', 'type1_edited08')
+TYPE1_DIR = os.path.join(ROOT, 'triangles4', 'type1_edited09')
 os.makedirs(TYPE1_DIR, exist_ok=True)
 
 # ── draw() 함수 import (기존 v1.0.2 스크립트에서 재사용) ──────────────────────
