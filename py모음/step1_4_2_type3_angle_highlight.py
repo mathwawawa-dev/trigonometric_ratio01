@@ -97,6 +97,7 @@ def make_orient_type3(tmpl, p, q, p_lbl, q_lbl, h_lbl):
         )
     elif tmpl == 5:
         extra = {'side_gap_factors': {'BC': 1.6}} if 'BC' in full_labels else {}
+        extra['vertex_label_vectors'] = {'A': (0, 1)}
         return (
             {'B': (0.0, 0.0), 'C': (c, 0.0), 'A': (p**2 / c, p * q / c)},
             'A',
@@ -106,6 +107,7 @@ def make_orient_type3(tmpl, p, q, p_lbl, q_lbl, h_lbl):
         )
     elif tmpl == 6:
         extra = {'side_gap_factors': {'BC': 1.6}} if 'BC' in full_labels else {}
+        extra['vertex_label_vectors'] = {'A': (0, 1)}
         return (
             {'B': (0.0, 0.0), 'C': (c, 0.0), 'A': (q**2 / c, p * q / c)},
             'A',

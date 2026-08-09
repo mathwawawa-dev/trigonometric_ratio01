@@ -81,7 +81,7 @@ def make_orient(tmpl, p, q, p_lbl, q_lbl, h_lbl):
             'A',
             {'AB': p_lbl, 'AC': q_lbl, 'BC': h_lbl},
             {'A': 0},
-            {'side_gap_factors': {'BC': 1.6}}
+            {'side_gap_factors': {'BC': 1.6}, 'vertex_label_vectors': {'A': (0, 1)}}
         )
     elif tmpl == 6:
         # B(0,0), C(c,0), A(q^2/c, pq/c) [빗변 BC 수평 바닥]
@@ -90,7 +90,7 @@ def make_orient(tmpl, p, q, p_lbl, q_lbl, h_lbl):
             'A',
             {'AB': q_lbl, 'AC': p_lbl, 'BC': h_lbl},
             {'A': 0},
-            {'side_gap_factors': {'BC': 1.6}}
+            {'side_gap_factors': {'BC': 1.6}, 'vertex_label_vectors': {'A': (0, 1)}}
         )
 
 # ── 이미지 생성 루프 ──────────────────────────────────────────────────────────

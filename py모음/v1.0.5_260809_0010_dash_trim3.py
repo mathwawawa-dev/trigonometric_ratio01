@@ -127,7 +127,7 @@ def classify_label_case(latex_str):
 # ─────────────────────────────────────────────────────────────────────────────
 def draw(vertices_dict, right_v, side_labels, filename,
          gap_factor=1.35, lbl_shift=0.0,
-         vertex_label_rotations=None, side_label_shifts=None,
+         vertex_label_rotations=None, vertex_label_vectors=None, side_label_shifts=None,
          side_label_offsets=None, side_gap_factors=None,
          highlight_angle=None):
     """
@@ -230,15 +230,21 @@ def draw(vertices_dict, right_v, side_labels, filename,
     VOFF = ref_len * 0.08
 
     vlr  = vertex_label_rotations or {}
+    vlv  = vertex_label_vectors or {}
     for vname, vp in pts.items():
-        d  = vp - centroid
-        dn = np.linalg.norm(d)
-        if dn > 1e-9: d /= dn
-        if vname in vlr:
-            a   = math.radians(vlr[vname])   # CCW
-            dx, dy = float(d[0]), float(d[1])
-            d = np.array([dx*math.cos(a) - dy*math.sin(a),
-                          dx*math.sin(a) + dy*math.cos(a)])
+        if vname in vlv:
+            d = np.array(vlv[vname], dtype=float)
+            dn = np.linalg.norm(d)
+            if dn > 1e-9: d /= dn
+        else:
+            d  = vp - centroid
+            dn = np.linalg.norm(d)
+            if dn > 1e-9: d /= dn
+            if vname in vlr:
+                a   = math.radians(vlr[vname])   # CCW
+                dx, dy = float(d[0]), float(d[1])
+                d = np.array([dx*math.cos(a) - dy*math.sin(a),
+                              dx*math.sin(a) + dy*math.cos(a)])
         lpos = vp + d * VOFF
         ax.text(lpos[0], lpos[1], vname, fontproperties=tnr,
                 ha='center', va='center', color='black', zorder=5)

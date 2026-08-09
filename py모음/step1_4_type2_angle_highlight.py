@@ -81,7 +81,7 @@ def make_orient_type2(tmpl, p, q, p_lbl, q_lbl):
             'A',
             {'AB': p_lbl, 'AC': q_lbl},
             {'A': 0},
-            {}
+            {'vertex_label_vectors': {'A': (0, 1)}}
         )
     elif tmpl == 6:
         # B(0,0), C(c,0), A(q^2/c, pq/c) (빗변 BC 제외)
@@ -90,7 +90,7 @@ def make_orient_type2(tmpl, p, q, p_lbl, q_lbl):
             'A',
             {'AB': q_lbl, 'AC': p_lbl},
             {'A': 0},
-            {}
+            {'vertex_label_vectors': {'A': (0, 1)}}
         )
 
 # ── 이미지 생성 루프 ──────────────────────────────────────────────────────────
