@@ -59,7 +59,7 @@
   global.TriLoader = {
     loadQuestions,
     initQuestions,
-    isFileProtocol,
   };
+
 
 })(window);
