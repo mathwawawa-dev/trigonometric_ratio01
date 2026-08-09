@@ -92,6 +92,9 @@
     const sessionLen = len ?? SESSION_LEN;
     const weights    = DIFF_WEIGHTS[diff] || DIFF_WEIGHTS.normal;
 
+    // easy: 세 변이 모두 표시된 이미지(image_type 1)만 출제
+    const pool = (diff === 'easy') ? allQ.filter(q => q.image_type === 1) : allQ;
+
     const session   = [];
     const usedIds   = new Set();
     const recentTri = [];
@@ -99,15 +102,16 @@
     let cooldown    = TRI_COOLDOWN;
 
     for (let i = 0; i < sessionLen; i++) {
-      // 전반: type1 워밍업, 후반: 난이도 가중치
-      const tw = i < sessionLen / 2 ? WARMUP_WEIGHTS : weights;
+      // easy는 항상 type1만 쓰므로 WARMUP_WEIGHTS/가중치 구분 불필요
+      const tw = (diff === 'easy') ? [1.0, 0.0, 0.0]
+               : (i < sessionLen / 2 ? WARMUP_WEIGHTS : weights);
 
-      let eligible = filterQ(allQ, usedIds, recentTri, recentTrg, cooldown);
+      let eligible = filterQ(pool, usedIds, recentTri, recentTrg, cooldown);
 
       // 폴백: cooldown 1단계씩 완화
       while (eligible.length === 0 && cooldown > 1) {
         cooldown--;
-        eligible = filterQ(allQ, usedIds, recentTri, recentTrg, cooldown);
+        eligible = filterQ(pool, usedIds, recentTri, recentTrg, cooldown);
       }
       if (eligible.length === 0) break;
 
@@ -125,6 +129,7 @@
   }
 
   /* ── HTML 이스케이프 ────────────────────────────────────── */
+
   function escHtml(str) {
     return String(str)
       .replace(/&/g, '&amp;')
