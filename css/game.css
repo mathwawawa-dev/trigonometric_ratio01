@@ -136,22 +136,29 @@
   line-height: var(--leading-tight);
 }
 
-/* ── 선지 그리드 ──────────────────────────────────────────── */
+/* ── 선지 그리드 ────────────────────────────────────────── */
 #choices-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-3);
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-2);
 }
 
 .choice-btn {
-  min-height: 72px;
-  font-size: var(--text-lg);
-  letter-spacing: 0.02em;
+  min-height: 90px;
+  font-size: var(--text-2xl);
+  letter-spacing: 0.01em;
   position: relative;
   overflow: hidden;
+  padding-top: var(--sp-5);
+  padding-bottom: var(--sp-3);
 }
 
-/* 선지 번호 뱃지 (①②③④) */
+/* KaTeX 수식 폰트 확대 */
+.choice-btn .katex {
+  font-size: 1.35em;
+}
+
+/* 선지 번호 뜽지 (①②③④) */
 .choice-btn::before {
   content: attr(data-label);
   position: absolute;
@@ -163,7 +170,52 @@
   line-height: 1;
 }
 
-/* ── 정답 해설 배너 ───────────────────────────────────────── */
+/* 키보드 힌트 배지 (1−4) */
+.choice-btn::after {
+  content: attr(data-key);
+  position: absolute;
+  bottom: 5px; right: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  opacity: 0.55;
+  line-height: 1;
+}
+
+
+/* ── 다크/라이트 모드 토글 버튼 ─────────────────────────── */
+#theme-toggle {
+  position: fixed;
+  top: var(--sp-3);
+  right: var(--sp-4);
+  z-index: var(--z-float);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  border: 1.5px solid var(--border-normal);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-spring);
+  box-shadow: var(--shadow-sm);
+}
+#theme-toggle:hover {
+  background: rgba(124,58,237,0.15);
+  border-color: var(--primary-400);
+  transform: scale(1.1);
+}
+
+/* ── 정답 해설 배너 ───────────────────────────────────────────── */
+
 #answer-banner {
   display: none;
   animation: fadeIn 0.3s ease both;

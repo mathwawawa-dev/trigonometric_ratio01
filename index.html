@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
+  <!-- 테마 플리커 방지 -->
+  <script>(function(){var t=localStorage.getItem('triTheme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+
   <style>
     /* ── 대문 전용 스타일 ─────────────────────────── */
 
@@ -410,9 +413,17 @@
   </a>
 
   <!-- 버전 뱃지 (하단 고정) -->
-  <footer class="version-badge" aria-label="버전 정보">
-    v1.0.26_260809_1727_step2_5_hof_link
+  <footer class="version-badge" aria-label="버전 정보" style="display:flex;align-items:center;justify-content:center;gap:8px">
+    <span>v1.0.36_260809_1911_theme_toggle</span>
+    <button id="theme-toggle-index" aria-label="테마 변경" style="
+      width:28px;height:28px;border-radius:50%;
+      background:var(--glass-bg);border:1px solid var(--border-normal);
+      cursor:pointer;font-size:0.9rem;
+      display:inline-flex;align-items:center;justify-content:center;
+      transition:transform 0.2s;
+    ">🌙</button>
   </footer>
+
 
 </div><!-- /index-wrap -->
 
@@ -537,7 +548,23 @@ startBtn.addEventListener('click', () => {
 nickInput.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !startBtn.disabled) startBtn.click();
 });
+
+// ── 테마 토글 ─────────────────────────────────────────────
+const indexThemeBtn = document.getElementById('theme-toggle-index');
+function applyThemeIndex(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('triTheme', t);
+  if (indexThemeBtn) indexThemeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
+}
+applyThemeIndex(localStorage.getItem('triTheme') || 'light');
+if (indexThemeBtn) {
+  indexThemeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    applyThemeIndex(cur === 'dark' ? 'light' : 'dark');
+  });
+}
 </script>
+
 
 </body>
 </html>

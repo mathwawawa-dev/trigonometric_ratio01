@@ -19,8 +19,19 @@
   <script src="js/questionLoader.js"></script>
   <script src="js/quizEngine.js"></script>
 
+  <!-- 오프닝 테마 적용 (플리커 방지) -->
+  <script>
+    (function() {
+      var t = localStorage.getItem('triTheme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
 </head>
 <body>
+
+<!-- ── 다크/라이트 모드 토글 버튼 ─────────────────────── -->
+<button id="theme-toggle" aria-label="테마 변경" title="다크/라이트 모드">🌙</button>
 
 <!-- ── 피드백 스탬프 오버레이 ─────────────────────────── -->
 <div id="feedback-overlay" aria-hidden="true">
@@ -114,13 +125,14 @@
     <p id="question-text" aria-live="polite">문제를 불러오는 중...</p>
   </div>
 
-  <!-- 선지 4개 -->
+  <!-- 선지 4개 (1행 4열) -->
   <div id="choices-grid" role="group" aria-label="답안 선택">
-    <button class="choice-btn" data-label="①" data-idx="0" id="choice-0" aria-label="선지 1"></button>
-    <button class="choice-btn" data-label="②" data-idx="1" id="choice-1" aria-label="선지 2"></button>
-    <button class="choice-btn" data-label="③" data-idx="2" id="choice-2" aria-label="선지 3"></button>
-    <button class="choice-btn" data-label="④" data-idx="3" id="choice-3" aria-label="선지 4"></button>
+    <button class="choice-btn" data-label="①" data-key="1" data-idx="0" id="choice-0" aria-label="선지 1"></button>
+    <button class="choice-btn" data-label="②" data-key="2" data-idx="1" id="choice-1" aria-label="선지 2"></button>
+    <button class="choice-btn" data-label="③" data-key="3" data-idx="2" id="choice-2" aria-label="선지 3"></button>
+    <button class="choice-btn" data-label="④" data-key="4" data-idx="3" id="choice-3" aria-label="선지 4"></button>
   </div>
+
 
   <!-- 정답 해설 배너 -->
   <div id="answer-banner" class="answer-banner" role="status"></div>
@@ -174,17 +186,38 @@ document.getElementById('home-btn').addEventListener('click', () => {
   window.location.href = 'index.html';
 });
 
-// ── 키보드 단축키 (1~4: 선지, Enter/Space: 다음) ─────────
+// ── 키보드 단축키 (1~4: 선지, Numpad1~4: 선지, Enter/Space: 다음) ─────
 document.addEventListener('keydown', e => {
   const st = TriQuizEngine.getState();
-  if (['1','2','3','4'].includes(e.key) && st && !st.answered) {
-    TriQuizEngine.onChoiceClick(parseInt(e.key) - 1);
+  // 일반 1~4 및 Numpad1~4 모두 지원
+  const numMap = { '1':'1','2':'2','3':'3','4':'4',
+                   'Numpad1':'1','Numpad2':'2','Numpad3':'3','Numpad4':'4' };
+  const key = numMap[e.key] || numMap[e.code];
+  if (key && st && !st.answered) {
+    e.preventDefault();
+    TriQuizEngine.onChoiceClick(parseInt(key) - 1);
   }
   if ((e.key === 'Enter' || e.key === ' ') && st?.answered) {
     const nextBtn = document.getElementById('next-btn');
     if (nextBtn.style.display !== 'none') nextBtn.click();
   }
 });
+
+// ── 테마 토글 ───────────────────────────────────────────────────
+const themeToggleBtn = document.getElementById('theme-toggle');
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('triTheme', t);
+  themeToggleBtn.textContent = t === 'dark' ? '🌙' : '☀️';
+  themeToggleBtn.title = t === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환';
+}
+// 실행 시 저장된 테마 적용 (HTML 인라인 스크립트에서 이미 설정 완료)
+applyTheme(localStorage.getItem('triTheme') || 'light');
+themeToggleBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
 
 // ── 초기 데이터 로드 & 게임 시작 ─────────────────────────
 TriLoader.initQuestions({
