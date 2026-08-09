@@ -134,6 +134,9 @@ def draw(vertices_dict, right_v, side_labels, filename,
     gap_factor             : excl_r 여백 계수 (v0.0.4 기본=1.35)
     lbl_shift              : 모든 호 레이블의 기본 shift 비율 (0.0=peak 정중앙)
     vertex_label_rotations : dict {'A': 40} 등. 무게중심->꼭짓점 방향을 CCW 도만큼 회전
+    vertex_label_vectors   : dict {'A': (0, 1)} 등. 꼭짓점 레이블 방향 벡터 직접 지정.
+                             지정 시 vertex_label_rotations보다 우선. tmpl 5/6의 A 꼭짓점
+                             x좌표 정중앙 정렬에 사용 (방향 벡터를 (0,1) 수직 상단으로 고정).
     side_label_shifts      : dict {'CB': 0.07} 등. 특정 변의 호 레이블만 shift 상세 지정
     side_label_offsets     : dict {'CB': (0, -0.3)} 등. 레이블에 data좌표 직접 (dx,dy) 오프셋
     """
