@@ -21,6 +21,8 @@
   let _cfg = null;       // TriUtils.CONFIG 캐시
   let _difficulty = '';
   let _allQuestions = [];
+  let _elapsedInterval = null;
+  let _toggleState = { avgtime: false, elapsed: false, scorepop: true };
 
   /* ── 초기화 ──────────────────────────────────────────── */
 
@@ -50,13 +52,26 @@
       timerMax:      _cfg.TIMER_SEC[_difficulty] || 30,
       timerLeft:     _cfg.TIMER_SEC[_difficulty] || 30,
       qStartTime:    0,
+      elapsedSec:    0,
     };
 
-    // HUD 초기화
-    _setEl('hud-nickname',    trainer.nickname);
-    _setImg('hud-pokemon-img', TriUtils.pokemonSpriteUrl(trainer.pokemonId));
-    _setEl('hud-qtotal',      `/${_cfg.SESSION_LEN}`);
+    // 토글 상태 복원 + 이벤트 연결
+    _loadToggles();
+
+    // HUD 초기화 (포켓몬 칩 제거됨 - 결과 화면 포켓몬만 세팅)
+    _setEl('hud-qtotal', `/${_cfg.SESSION_LEN}`);
     _setImg('result-pokemon-img', TriUtils.pokemonArtUrl(trainer.pokemonId));
+    _setEl('hud-accuracy-val', '0%');
+    _setEl('hud-score', '0');
+    _setEl('hud-combo', '0');
+
+    // 경과시간 카운트업 타이머
+    clearInterval(_elapsedInterval);
+    _gs.elapsedSec = 0;
+    _elapsedInterval = setInterval(() => {
+      _gs.elapsedSec++;
+      if (_toggleState.elapsed) _setEl('hud-elapsed-val', _gs.elapsedSec);
+    }, 1000);
 
     // 진행 도트 생성
     _buildProgressDots();
@@ -64,6 +79,7 @@
     // 첫 문항 표시
     showQuestion(_gs.session[0]);
   }
+
 
   /* ── 문제 표시 ────────────────────────────────────────── */
 
@@ -187,7 +203,9 @@
       _gs.correctCount++;
       const speedBonus = Math.round((_gs.timerLeft / _gs.timerMax) * 50);
       const comboBonus = Math.min(_gs.combo - 1, 5) * 10;
-      _gs.score += 100 + speedBonus + comboBonus;
+      const gained     = 100 + speedBonus + comboBonus;
+      _gs.score += gained;
+      if (_toggleState.scorepop) _showScorePopup(gained);
       _showFeedback(true);
       _showAnswerBanner(true, q);
     } else {
@@ -286,8 +304,9 @@
   /* ── 게임 리셋 ────────────────────────────────────────── */
 
   function resetGame(allQ, diff) {
-    if (!_gs) return;   // init() 전 호출 방어
+    if (!_gs) return;
     clearInterval(_gs.timerInterval);
+    clearInterval(_elapsedInterval);
     _gs.qIndex       = 0;
     _gs.score        = 0;
     _gs.combo        = 0;
@@ -295,10 +314,20 @@
     _gs.correctCount = 0;
     _gs.timings      = [];
     _gs.answered     = false;
+    _gs.elapsedSec   = 0;
     _gs.session      = TriUtils.buildSession(allQ ?? _allQuestions, diff ?? _difficulty);
 
-    _setEl('hud-score', '0');
-    _setEl('hud-combo', '0');
+    _setEl('hud-score',        '0');
+    _setEl('hud-combo',        '0');
+    _setEl('hud-accuracy-val', '0%');
+    _setEl('hud-elapsed-val',  '0');
+    _setEl('hud-avgtime-val',  '-');
+
+    _elapsedInterval = setInterval(() => {
+      _gs.elapsedSec++;
+      if (_toggleState.elapsed) _setEl('hud-elapsed-val', _gs.elapsedSec);
+    }, 1000);
+
     _updateDots();
     showQuestion(_gs.session[0]);
   }
@@ -343,15 +372,74 @@
   /* ── 내부: HUD 업데이트 ──────────────────────────────── */
 
   function _updateHUD() {
+    // 점수
     _setEl('hud-score', _gs.score.toLocaleString());
+    // 콤보
     const comboEl = document.getElementById('hud-combo');
-    comboEl.textContent = _gs.combo;
-    if (_gs.combo > 0) {
-      comboEl.classList.add('combo-value--active');
-      setTimeout(() => comboEl.classList.remove('combo-value--active'), 400);
+    if (comboEl) comboEl.textContent = _gs.combo;
+    // 정답류
+    const answered = _gs.qIndex + 1;
+    const acc = answered > 0 ? Math.round((_gs.correctCount / answered) * 100) : 0;
+    _setEl('hud-accuracy-val', acc + '%');
+    // 평균 응답시간 (토글 ON일 때만)
+    if (_toggleState.avgtime && _gs.timings.length > 0) {
+      const avg = (_gs.timings.reduce((a, b) => a + b, 0) / _gs.timings.length).toFixed(1);
+      _setEl('hud-avgtime-val', avg);
     }
-    const fireEl = document.getElementById('combo-fire');
-    fireEl.className = 'combo-fire' + (_gs.combo >= 3 ? ' combo-fire--show' : '');
+  }
+
+  /* ── 내부: 점수 팝업 ─────────────────────────────────── */
+
+  function _showScorePopup(amount) {
+    const badge = document.getElementById('hud-score-badge');
+    if (!badge) return;
+    badge.style.position = 'relative';
+    const popup = document.createElement('span');
+    popup.className = 'score-popup';
+    popup.textContent = '+' + amount + '점';
+    badge.appendChild(popup);
+    setTimeout(() => popup.remove(), 1300);
+  }
+
+  /* ── 내부: 토글 로드/저장 ─────────────────────────────── */
+
+  function _loadToggles() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('triToggles') || 'null');
+      if (saved) _toggleState = Object.assign(_toggleState, saved);
+    } catch(e) {}
+    _applyToggleUI('avgtime');
+    _applyToggleUI('elapsed');
+    _applyToggleUI('scorepop');
+    ['avgtime', 'elapsed', 'scorepop'].forEach(key => {
+      const btn = document.getElementById('toggle-' + key);
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        _toggleState[key] = !_toggleState[key];
+        _applyToggleUI(key);
+        try { localStorage.setItem('triToggles', JSON.stringify(_toggleState)); } catch(e) {}
+      });
+    });
+  }
+
+  function _applyToggleUI(key) {
+    const track = document.getElementById('track-' + key);
+    if (!track) return;
+    const thumb = track.querySelector('.toggle-thumb');
+    if (_toggleState[key]) {
+      track.classList.add('toggle-track--on');
+      if (thumb) thumb.classList.add('toggle-thumb--on');
+    } else {
+      track.classList.remove('toggle-track--on');
+      if (thumb) thumb.classList.remove('toggle-thumb--on');
+    }
+    if (key === 'avgtime') {
+      const b = document.getElementById('hud-avgtime-badge');
+      if (b) b.style.display = _toggleState.avgtime ? '' : 'none';
+    } else if (key === 'elapsed') {
+      const b = document.getElementById('hud-elapsed-badge');
+      if (b) b.style.display = _toggleState.elapsed ? '' : 'none';
+    }
   }
 
   /* ── 내부: 진행 도트 ─────────────────────────────────── */

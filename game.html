@@ -75,28 +75,56 @@
 
   <!-- HUD -->
   <div class="hud">
+    <!-- 좌측: 실시간 스탯 뜨지 -->
     <div class="hud-left">
-      <div class="trainer-chip" id="trainer-chip">
-        <img class="trainer-chip__avatar" id="hud-pokemon-img" src="" alt="포켓몬">
-        <span class="trainer-chip__name" id="hud-nickname">트레이너</span>
+      <div class="stat-badge stat-badge--blue" id="hud-accuracy" title="정답률">
+        🎯 <span id="hud-accuracy-val">0%</span>
       </div>
-      <div class="combo-wrap">
-        <span class="combo-label">콤보</span>
-        <span class="combo-value" id="hud-combo">0</span>
-        <span class="combo-fire" id="combo-fire">🔥</span>
+      <div class="stat-badge stat-badge--purple" id="hud-score-badge" title="점수">
+        🏆 <span id="hud-score">0</span>
+      </div>
+      <div class="stat-badge stat-badge--orange" id="hud-combo-badge" title="연속 정답">
+        🔥 <span id="hud-combo">0</span>연속
+      </div>
+      <div class="stat-badge stat-badge--green" id="hud-avgtime-badge" title="평균 응답시간" style="display:none">
+        ⚡ <span id="hud-avgtime-val">-어끝</span>s
+      </div>
+      <div class="stat-badge stat-badge--gray" id="hud-elapsed-badge" title="경과 시간" style="display:none">
+        🕐 <span id="hud-elapsed-val">0</span>s
       </div>
     </div>
+
+    <!-- 우측: 토글 패널 + 문항번호 -->
     <div class="hud-right">
-      <div class="score-item">
-        <span class="score-item__label">점수</span>
-        <span class="score-item__value score-item__value--accent" id="hud-score">0</span>
+      <!-- 미니 토글 스위치 패널 -->
+      <div class="toggle-panel">
+        <button class="toggle-item" id="toggle-avgtime" title="평균 응답시간">
+          <span class="toggle-label">응답시간</span>
+          <div class="toggle-track" id="track-avgtime">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+        <button class="toggle-item" id="toggle-elapsed" title="경과 시간">
+          <span class="toggle-label">경과시간</span>
+          <div class="toggle-track" id="track-elapsed">
+            <div class="toggle-thumb"></div>
+          </div>
+        </button>
+        <button class="toggle-item" id="toggle-scorepop" title="점수 팝업">
+          <span class="toggle-label">점수팝업</span>
+          <div class="toggle-track toggle-track--on" id="track-scorepop">
+            <div class="toggle-thumb toggle-thumb--on"></div>
+          </div>
+        </button>
       </div>
+      <!-- 문항 번호 -->
       <div class="q-counter">
         <span class="q-counter__current" id="hud-qnum">1</span>
         <span class="q-counter__total" id="hud-qtotal">/10</span>
       </div>
     </div>
   </div>
+
 
   <!-- 타이머 -->
   <div class="timer-section">

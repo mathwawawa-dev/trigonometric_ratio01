@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>일차식의 계산 - v1.1.7_260519_1219_힌트_문구_수정</title>
+  
+  <!-- 개발자 도구 및 소스보기 방지 스크립트 -->
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('keydown', event => {
+      // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U 방지
+      if (event.keyCode === 123 || 
+         (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74 || event.keyCode === 67)) ||
+         (event.ctrlKey && event.keyCode === 85)) {
+        document.body.style.userSelect = 'none';
+        event.preventDefault();
+      }
+    });
+  </script>
+
+  <!-- 디자인을 위한 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            /* 수식 폰트 */
+            serif: ['"Times New Roman"', 'Times', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- React 및 ReactDOM 라이브러리 -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- 브라우저에서 JSX 코드를 실행하게 해주는 Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+    @keyframes bounceSlight {
+      0%, 100% { transform: translateY(-8%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+      50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+    }
+    .animate-bounce-slight {
+      animation: bounceSlight 1.2s infinite;
+    }
+
+    /* 그림 통통거리기 */
+    @keyframes bouncePikachu {
+      0%, 100% { transform: translateY(-2%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+      50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+    }
+    .animate-pikachu-bounce {
+      animation: bouncePikachu 1.5s infinite;
+    }
+
+    /* 포인트 둥실 떠오르는 애니메이션 */
+    @keyframes floatUpAndFade {
+      0% { opacity: 1; transform: translateY(0px) scale(1); }
+      30% { opacity: 1; transform: translateY(-10px) scale(1.15); }
+      100% { opacity: 0; transform: translateY(-25px) scale(1); }
+    }
+    .animate-float-up-fade {
+      animation: floatUpAndFade 1.2s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+
+    /* 간소화된 콤보 미니 팝업 애니메이션 */
+    @keyframes comboMiniPop {
+      0% { opacity: 0; transform: translateY(10px) scale(0.9); }
+      20% { opacity: 1; transform: translateY(0) scale(1.1); }
+      80% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+    .animate-combo-mini-pop {
+      animation: comboMiniPop 1.2s ease-out forwards;
+    }
+
+    button { 
+      touch-action: manipulation; 
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* 스크롤바 숨기기 */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c7c7cc; 
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a1a1aa; 
+    }
+    
+    /* 어두운 테마 스크롤바 (명예의 전당용) */
+    .dark-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .dark-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 4px; }
+    .dark-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+    .dark-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+    /* 숫자 입력기(number) 화살표 숨기기 및 수식 폰트 적용 */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+    
+    .math-input {
+      font-family: "Times New Roman", Times, serif !important;
+    }
+  </style>
+
+  <!-- Firebase 실시간 데이터베이스 모듈 불러오기 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue, query, orderByChild, remove } 
+    from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaAsJrR3ACNFyteIwWoyOsyeCm5SHY-Bs",
+      authDomain: "linear-and-number-grade7.firebaseapp.com",
+      databaseURL: "https://linear-and-number-grade7-default-rtdb.firebaseio.com",
+      projectId: "linear-and-number-grade7",
+      storageBucket: "linear-and-number-grade7.firebasestorage.app",
+      messagingSenderId: "271768536680",
+      appId: "1:271768536680:web:872bff86043259d3f41ddd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.saveRecordToDB = function(nickname, finalScore, totalTime, accuracy) {
+      const today = new Date();
+      const dateString = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+      const recordsRef = ref(db, 'hallOfFame_linear'); // DB 경로를 일차식용으로 분리
+      const newRecordRef = push(recordsRef);
+      
+      set(newRecordRef, {
+        name: nickname,         
+        score: finalScore,
+        time: totalTime,
+        accuracy: accuracy,
+        date: dateString,
+        timestamp: Date.now()
+      }).catch((error) => console.error("등록 실패: ", error));
+    };
+
+    window.loadLeaderboard = function(callback) {
+      const recordsRef = ref(db, 'hallOfFame_linear');
+      const topScoresQuery = query(recordsRef, orderByChild('score')); 
+
+      onValue(topScoresQuery, (snapshot) => {
+        let records = [];
+        snapshot.forEach((childSnapshot) => {
+          records.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+        records.reverse(); 
+        callback(records);
+      });
+    };
+
+    window.deleteRecordFromDB = function(recordId, onSuccess) {
+      const recordRef = ref(db, `hallOfFame_linear/${recordId}`);
+      remove(recordRef).then(() => {
+        if (onSuccess) onSuccess(); 
+      }).catch((error) => {
+        console.error("삭제 권한이 없거나 오류가 발생했습니다: ", error);
+      });
+    };
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    // --- 아이콘 컴포넌트 ---
+    const Clock = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
+    const HelpCircle = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>;
+    const CheckCircle2 = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>;
+    const XCircle = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>;
+    const RotateCcw = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>;
+    const AlertCircle = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
+    const ArrowRight = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 19"/></svg>;
+    const Target = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>;
+    const Zap = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>;
+    const Edit3 = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>;
+    const Trash2 = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>;
+    const UndoIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>;
+    const RedoIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>;
+    const Flame = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>;
+    const PauseIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>;
+    const Trophy = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
+
+    // =========================================================================
+    // 이전 훈련 기능(알고리즘 훈련)을 위한 복구된 유틸리티 함수 모음
+    // =========================================================================
+    const formatTermJSX = (coef, variable, isFirst) => {
+      if (coef === 0) return null;
+      let absCoef = Math.abs(coef);
+      let coefStr = (absCoef === 1 && variable) ? "" : absCoef;
+      
+      let signNode = null;
+      if (isFirst) {
+        if (coef < 0) signNode = <span className="inline-block mr-[3px] md:mr-[4px] relative" style={{ top: '-0.03em' }}>−</span>;
+      } else {
+        if (coef > 0) signNode = <span className="mx-1.5">+</span>;
+        else signNode = <span className="mx-1.5"><span className="inline-block mr-[3px] md:mr-[4px] relative" style={{ top: '-0.03em' }}>−</span></span>;
+      }
+      
+      let varNode = null;
+      if (variable === 'x2') {
+        varNode = <><i className="font-serif italic ml-[1px]">x</i><sup className="font-serif text-[0.55em] relative top-[-0.8em] ml-[0.08em]">2</sup></>;
+      } else if (variable === 'x') {
+        varNode = <i className="font-serif italic ml-[1px]">x</i>;
+      }
+      
+      return <span className="inline-flex items-center">{signNode}{coefStr}{varNode}</span>;
+    };
+
+    const formatQuadraticJSX = (a, b, c) => {
+      let terms = [];
+      if (a !== 0) terms.push({ c: a, v: 'x2' });
+      if (b !== 0) terms.push({ c: b, v: 'x' });
+      if (c !== 0) terms.push({ c: c, v: '' });
+      
+      return (
+        <span className="inline-flex items-center">
+          {terms.map((t, idx) => <React.Fragment key={idx}>{formatTermJSX(t.c, t.v, idx === 0)}</React.Fragment>)}
+        </span>
+      );
+    };
+
+    const formatTightTermJSX = (coef, variable, isFirst) => {
+      if (coef === 0) return null;
+      let absCoef = Math.abs(coef);
+      let coefStr = (absCoef === 1 && variable) ? "" : absCoef;
+      
+      let signNode = null;
+      if (isFirst) {
+        if (coef < 0) signNode = <span className="inline-block mr-[3px] md:mr-[4px] relative" style={{ top: '-0.03em' }}>−</span>;
+      } else {
+        if (coef > 0) signNode = <span className="mx-0.5">+</span>;
+        else signNode = <span className="mx-0.5"><span className="inline-block mr-[3px] md:mr-[4px] relative" style={{ top: '-0.03em' }}>−</span></span>;
+      }
+      
+      let varNode = null;
+      if (variable === 'x2') {
+        varNode = <><i className="font-serif italic ml-[1px]">x</i><sup className="font-serif text-[0.55em] relative top-[-0.8em] ml-[0.08em]">2</sup></>;
+      } else if (variable === 'x') {
+        varNode = <i className="font-serif italic ml-[1px]">x</i>;
+      }
+      
+      return <span className="inline-flex items-center">{signNode}{coefStr}{varNode}</span>;
+    };
+
+    const formatTightQuadraticJSX = (a, b, c) => {
+      let terms = [];
+      if (a !== 0) terms.push({ c: a, v: 'x2' });
+      if (b !== 0) terms.push({ c: b, v: 'x' });
+      if (c !== 0) terms.push({ c: c, v: '' });
+      
+      return (
+        <span className="inline-flex items-center">
+          {terms.map((t, idx) => <React.Fragment key={idx}>{formatTightTermJSX(t.c, t.v, idx === 0)}</React.Fragment>)}
+        </span>
+      );
+    };
+
+    const formatBinomialStr = (p, q) => {
+      if (p === 0) return `${q}`;
+      let pStr = p === 1 ? "" : (p === -1 ? "-" : p);
+      let qStr = q === 0 ? "" : (q > 0 ? `+${q}` : `${q}`);
+      return `${pStr}x${qStr}`;
+    };
+
+    const formatBinomialJSX = (str) => {
+      let formatted = String(str).replace(/-/g, '−');
+      let parts = formatted.split('x');
+      if (parts.length === 1) return <span className="font-serif tracking-wide">{formatted}</span>;
+      
+      let head = parts[0];
+      let tail = parts[1];
+      
+      let tailJSX = tail;
+      if (tail && (tail.startsWith('+') || tail.startsWith('−'))) {
+        let sign = tail.charAt(0);
+        let num = tail.slice(1);
+        tailJSX = <><span className="mx-[3px]">{sign}</span>{num}</>;
+      }
+      
+      return <span className="font-serif tracking-wide">{head}<i className="font-serif italic text-[1.1em] mx-[1px]">x</i>{tailJSX}</span>;
+    };
+
+    const formatFactoredExpression = (str1, str2) => {
+        const isMono = (s) => !s.includes('+') && s.lastIndexOf('-') <= 0;
+        let first = str1, second = str2;
+        if (isMono(str2) && !isMono(str1)) { first = str2; second = str1; }
+        const wrap = (s) => isMono(s) ? <span className="mr-[2px]">{formatBinomialJSX(s)}</span> : <span className="font-serif tracking-wide">(<span className="inline-block mx-[0px]">{formatBinomialJSX(s)}</span>)</span>;
+        return <span className="inline-flex items-center text-[1.05em]">{wrap(first)}{wrap(second)}</span>;
+    };
+
+    const getJosa = (num) => {
+        const lastDigit = Math.abs(num) % 10;
+        return [0, 1, 3, 6, 7, 8].includes(lastDigit) ? '이' : '가';
+    };
+
+    // =========================================================================
+    // 일차식의 계산 문제 생성 엔진 및 유틸 함수
+    // =========================================================================
+    const Minus = () => <span className="inline-block mr-[3px] md:mr-[4px] relative" style={{ top: '-0.03em' }}>−</span>;
+
+    const formatSignedNumJSX = (num) => {
+      if (num === null) return '';
+      const absNum = Math.abs(num);
+      const sign = num >= 0 ? '+' : '−';
+      return (
+        <span className="inline-flex items-center">
+          <span className="mr-[4px]">{sign}</span>
+          {absNum}
+        </span>
+      );
+    };
+
+    const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+
+    const randInt = (min, max, excludeZero = true) => {
+      let val;
+      do {
+        val = Math.floor(Math.random() * (max - min + 1)) + min;
+      } while (excludeZero && val === 0);
+      return val;
+    };
+
+    const shuffleArray = (array) => {
+      let currentIndex = array.length, randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    };
+
+    const fmtTerm = (c, v, isFirst) => {
+        if (c === 0) return "";
+        let abs = Math.abs(c);
+        let numStr = (abs === 1 && v !== "") ? "" : abs;
+        if (isFirst) return c < 0 ? `-${numStr}${v}` : `${numStr}${v}`;
+        return c < 0 ? ` - ${numStr}${v}` : ` + ${numStr}${v}`;
+    };
+
+    const joinTerms = (...terms) => {
+        let res = terms.filter(t => t !== "").join(" ").trim();
+        if (res === "") return "0";
+        if (res.startsWith("+ ")) return res.substring(2);
+        return res;
+    };
+
+    // 공통 수식 포맷팅 컴포넌트 (텍스트와 수식을 혼합해서 이쁘게 출력)
+    const DisplayMath = ({ text }) => {
+      if (typeof text !== 'string') return <span>{text}</span>;
+      if (text.includes("답이 아니다") || text.includes("간단히 할 수 없다") || text.includes("알 수 없음") || text.includes("위 선지")) {
+          return <span className="text-[13px] md:text-sm font-bold text-slate-700 tracking-tight">{text}</span>;
+      }
+      
+      let formatted = text.replace(/-/g, '−').replace(/\*/g, '×').replace(/\//g, '÷');
+      const parts = formatted.split(/([a-zA-Z](?:\^[0-9]+)?)/g);
+      
+      return (
+        <span className="font-serif tracking-wide">
+          {parts.map((p, i) => {
+            if (/^[a-zA-Z]/.test(p)) {
+              if (p.includes('^')) {
+                 const [base, exp] = p.split('^');
+                 return <span key={i}><i className="font-serif italic mx-[1px]">{base}</i><sup className="text-[0.65em] relative top-[-0.6em] ml-[1px]">{exp}</sup></span>;
+              }
+              return <i key={i} className="font-serif italic mx-[1px]">{p}</i>;
+            }
+            return <span key={i}>{p}</span>;
+          })}
+        </span>
+      );
+    };
+
+    const getC = (min, max, allowNeg) => {
+       if (!allowNeg) {
+          min = Math.max(1, min);
+          max = Math.max(1, max);
+       }
+       return randInt(min, max);
+    };
+
+    // 곱해지는 수에서 0과 1을 완벽히 배제하는 전용 난수 생성기
+    const getMultiplier = (min, max, allowNeg) => {
+       let val;
+       do {
+          val = getC(min, max, allowNeg);
+       } while (val === 1 || val === 0);
+       return val;
+    };
+
+    const parseLinearExpression = (str) => {
+      let s = String(str).replace(/\s+/g, '').replace(/−/g, '-');
+      let degree = 0; // 상수항 처리를 위해 기본값을 0으로 변경
+      let coeff = 0;
+      let constant = 0;
+
+      if (/[a-zA-Z]/.test(s)) {
+          degree = s.includes('^2') ? 2 : 1;
+      }
+
+      const terms = s.match(/[+-]?[^+-]+/g);
+      if (terms) {
+         terms.forEach(term => {
+            if (/[a-zA-Z]/.test(term)) {
+               let cStr = term.replace(/[a-zA-Z](?:\^[0-9]+)?/g, '');
+               if (cStr === '' || cStr === '+') coeff += 1;
+               else if (cStr === '-') coeff += -1;
+               else coeff += parseInt(cStr, 10);
+            } else {
+               constant += parseInt(term, 10);
+            }
+         });
+      }
+      return { degree, coeff, constant };
+    };
+
+    // [핵심] 5-Bag 시스템과 엄격한 수학적 오름차순 정렬을 혼합하여 선지를 생성하는 함수
+    const generateOptionsList = (ansStr, trap1, trap2, v, targetPos) => {
+        const fixedText = "다른 것은 답이 아니다.";
+        
+        // 정렬 규칙: 1. 일차항 (1) -> 2. 이차항 (2) -> 3. 상수항 (3)
+        const getTypeOrder = (degree) => {
+            if (degree === 1) return 1;
+            if (degree === 2) return 2;
+            if (degree === 0) return 3;
+            return 4;
+        };
+
+        // 완벽한 수학적 오름차순 비교 함수
+        const compareParsed = (valA, valB) => {
+            let typeA = getTypeOrder(valA.degree);
+            let typeB = getTypeOrder(valB.degree);
+            // 1. 차수 기준 정렬 (일차항 -> 이차항 -> 상수항)
+            if (typeA !== typeB) return typeA - typeB;
+
+            // 2. 일차항/이차항일 경우: 계수 오름차순 정렬
+            if (valA.degree !== 0) {
+                if (valA.coeff !== valB.coeff) return valA.coeff - valB.coeff;
+            }
+            // 3. 계수가 같거나 상수항 그룹인 경우: 상수항 오름차순 정렬
+            return valA.constant - valB.constant;
+        };
+
+        // 텍스트 정답인 경우의 예외 처리
+        if (ansStr === fixedText) {
+            const wrongSet = new Set();
+            if (trap1 && trap1 !== fixedText) wrongSet.add(trap1);
+            if (trap2 && trap2 !== fixedText) wrongSet.add(trap2);
+            
+            let attempts = 0;
+            while (wrongSet.size < 5 && attempts < 200) {
+                attempts++;
+                let rC = randInt(-10, 10);
+                let rConst = randInt(-10, 10, false);
+                let opt = joinTerms(fmtTerm(rC, v, true), fmtTerm(rConst, "", false));
+                if (opt !== fixedText) wrongSet.add(opt);
+            }
+            
+            let arr = Array.from(wrongSet).sort((a, b) => compareParsed(parseLinearExpression(a), parseLinearExpression(b)));
+            arr.push(fixedText);
+            return arr;
+        }
+
+        // --- 수학 식 정답에 대한 동적 타겟 배치 및 찍기방지(2x2) 교사 로직 ---
+        const ansParsed = parseLinearExpression(ansStr);
+        let correctA = ansParsed.coeff;
+        let correctB = ansParsed.constant;
+
+        // 5-Bag에서 지정된 목표 위치
+        let pos = targetPos !== null ? targetPos : Math.floor(Math.random() * 5);
+        
+        // 목표 위치에 맞추기 위해 필요한 '정답보다 작은 선지'와 '큰 선지'의 개수
+        let smallerNeeded = pos;
+        let largerNeeded = 4 - pos;
+
+        const smallerSet = new Set();
+        const largerSet = new Set();
+
+        // 헬퍼: 생성된 오답을 크기 비교하여 알맞은 Set에 넣는 함수
+        const addTrap = (a, b) => {
+            let str = joinTerms(fmtTerm(a, v, true), fmtTerm(b, "", false));
+            if (str === fixedText || str === ansStr || str === "") return;
+            const parsed = parseLinearExpression(str);
+            const cmp = compareParsed(parsed, ansParsed);
+            if (cmp < 0 && smallerSet.size < smallerNeeded) smallerSet.add(str);
+            if (cmp > 0 && largerSet.size < largerNeeded) largerSet.add(str);
+        };
+
+        const addRawTrap = (str) => {
+            if (!str || str === fixedText || str === ansStr) return;
+            const parsed = parseLinearExpression(str);
+            const cmp = compareParsed(parsed, ansParsed);
+            if (cmp < 0 && smallerSet.size < smallerNeeded) smallerSet.add(str);
+            if (cmp > 0 && largerSet.size < largerNeeded) largerSet.add(str);
+        }
+        
+        // 기본 문제 로직에서 제공된 함정 우선 배정
+        addRawTrap(trap1);
+        addRawTrap(trap2);
+
+        // [찍기방지] 2x2 일차/상수항 꼼수 방지용 기본 재료 생성
+        let wrongA = correctA !== 0 ? correctA + (Math.random() < 0.5 ? 2 : -2) : (Math.random() < 0.5 ? 2 : -2); 
+        if (wrongA === 0 && correctA !== 0) wrongA = correctA > 0 ? correctA + 2 : correctA - 2;
+        let wrongB = correctB + (Math.random() < 0.5 ? 3 : -3); 
+        
+        // 2x2 교차 함정 배정 시도 (크기 비교 후 알아서 smaller/larger로 들어감)
+        addTrap(correctA, wrongB);
+        addTrap(wrongA, correctB);
+        addTrap(wrongA, wrongB);
+
+        // 그래도 목표 개수가 부족하다면 동적으로 추가 생성
+        let attempt = 1;
+        while ((smallerSet.size < smallerNeeded || largerSet.size < largerNeeded) && attempt < 100) {
+            if (correctA === 0) { // 정답이 상수항일 경우 특별 처리
+                if (smallerSet.size < smallerNeeded) {
+                    addTrap(0, correctB - attempt);
+                    addTrap(attempt, correctB); // 일차항은 상수항보다 무조건 앞에 정렬됨
+                    addTrap(-attempt, correctB); 
+                }
+                if (largerSet.size < largerNeeded) {
+                    addTrap(0, correctB + attempt); // 상수항보다 큰 건 더 큰 상수항뿐
+                }
+            } else {
+                if (smallerSet.size < smallerNeeded) {
+                    addTrap(correctA - attempt, correctB);
+                    addTrap(correctA, correctB - attempt);
+                    addTrap(correctA - attempt, correctB - attempt);
+                }
+                if (largerSet.size < largerNeeded) {
+                    addTrap(correctA + attempt, correctB);
+                    addTrap(correctA, correctB + attempt);
+                    addTrap(correctA + attempt, correctB + attempt);
+                }
+            }
+            attempt++;
+        }
+
+        // 완성된 smaller 배열, 정답, larger 배열을 합침 (자연스럽게 정답이 targetPos에 위치)
+        let finalMath = [...Array.from(smallerSet), ansStr, ...Array.from(largerSet)];
+        
+        // 만에 하나 중복이나 누락으로 5개가 안 될 경우를 대비한 안전 장치
+        let fallbackAttempt = 1;
+        while (finalMath.length < 5 && fallbackAttempt < 100) {
+            let rC = randInt(-10 - fallbackAttempt, 10 + fallbackAttempt);
+            let rConst = randInt(-10 - fallbackAttempt, 10 + fallbackAttempt, false);
+            let str = joinTerms(fmtTerm(rC, v, true), fmtTerm(rConst, "", false));
+            if (str !== fixedText && !finalMath.includes(str) && str !== "") {
+                finalMath.push(str);
+            }
+            fallbackAttempt++;
+        }
+
+        // 전체를 다시 한번 완벽하게 오름차순 정렬
+        finalMath.sort((a, b) => compareParsed(parseLinearExpression(a), parseLinearExpression(b)));
+        
+        // 6번 선지 고정
+        finalMath.push(fixedText);
+
+        return finalMath;
+    };
+
+    // 일차식 문제 생성기 (7가지 유형 통합) 및 상세 힌트 생성
+    const generateLinearQuestion = (type, allowNeg, targetPos = null) => {
+      const vars = ['a', 'x'];
+      const v = vars[Math.floor(Math.random() * vars.length)];
+      let expr = "", ans = "", hint = "", trap1 = "", trap2 = "";
+
+      switch(type) {
+        case 1: // 단항식 * 수
+          {
+            let a = getC(-9, 9, allowNeg);
+            let b = getMultiplier(-9, 9, allowNeg);
+            expr = `${fmtTerm(a, v, true)} × ${b < 0 ? '('+b+')' : b}`;
+            ans = fmtTerm(a*b, v, true) || "0";
+            hint = `<단항식과 수의 곱셈>\n① 숫자는 숫자끼리 먼저 곱합니다.\n👉 ${a} × ${b} = ${a*b}\n② ①의 결과 뒤에 문자 ${v}를 그대로 붙여줍니다.`;
+            trap1 = fmtTerm(a+b, v, true) || "0";
+            trap2 = (a*b).toString();
+          }
+          break;
+        case 2: // 단항식 / 수
+          {
+            let b = getMultiplier(-5, 5, allowNeg);
+            let ansC = getC(-5, 5, allowNeg);
+            let a = ansC * b;
+            expr = `${fmtTerm(a, v, true)} ÷ ${b < 0 ? '('+b+')' : b}`;
+            ans = fmtTerm(ansC, v, true) || "0";
+            hint = `① 나눗셈도 마찬가지로 숫자끼리 먼저 나눕니다.\n👉 ${a} ÷ ${b} = ${ansC}\n② 결과 뒤에 문자 ${v}를 그대로 붙여줍니다.`;
+            trap1 = fmtTerm(a*b, v, true) || "0";
+            trap2 = (ansC).toString();
+          }
+          break;
+        case 3: // 단항식 + 수 (결합 불가)
+          {
+            let a = getC(-9, 9, allowNeg);
+            let b = getC(-9, 9, allowNeg);
+            expr = joinTerms(fmtTerm(a, v, true), fmtTerm(b, '', false));
+            ans = "다른 것은 답이 아니다.";
+            hint = `① ${fmtTerm(a, v, true)}는 문자가 있는 '일차항'이고, ${b > 0 ? '+'+b : b}는 숫자만 있는 '상수항'입니다.\n② 사과와 연필을 더할 수 없듯이, 종류가 다른 두 항은 덧셈이나 뺄셈을 할 수 없어요.`;
+            trap1 = fmtTerm(a+b, v, true) || "0";
+            trap2 = (a+b).toString();
+          }
+          break;
+        case 4: // 단항식 + 단항식
+          {
+            let a = getC(-9, 9, allowNeg);
+            let b = getC(-9, 9, allowNeg);
+            expr = joinTerms(fmtTerm(a, v, true), fmtTerm(b, v, false));
+            ans = fmtTerm(a+b, v, true) || "0";
+            hint = `① 두 항 모두 문자 ${v}를 가지고 있는 '동류항'입니다!\n② 동류항의 덧셈, 뺄셈은 앞의 숫자(계수)끼리만 계산합니다.\n👉 ${a} ${b > 0 ? '+ '+b : '- '+Math.abs(b)} = ${a+b}\n③ 마지막으로 문자 ${v}를 붙여줍니다.`;
+            trap1 = fmtTerm(a+b, v+'^2', true) || "0";
+            trap2 = fmtTerm(a*b, v, true) || "0";
+          }
+          break;
+        case 4.5: // 단항식 + 단항식 (다른 문자)
+          {
+            let a = getC(-9, 9, allowNeg);
+            let b = getC(-9, 9, allowNeg);
+            let v2 = v === 'a' ? 'b' : 'y';
+            expr = joinTerms(fmtTerm(a, v, true), fmtTerm(b, v2, false));
+            ans = "다른 것은 답이 아니다.";
+            hint = `① 앞의 항은 문자 ${v}, 뒤의 항은 문자 ${v2}를 가지고 있습니다.\n② 문자가 서로 다르면 동류항이 아니기 때문에 덧셈, 뺄셈을 할 수 없습니다.`;
+            trap1 = fmtTerm(a+b, v, true) || "0";
+            trap2 = fmtTerm(a+b, v+v2, true) || "0";
+          }
+          break;
+        case 5: // 일차식 + 일차식
+          {
+            let a = getC(-5, 5, allowNeg);
+            let b = getC(-5, 5, allowNeg);
+            let c = getC(-5, 5, allowNeg);
+            let d = getC(-5, 5, allowNeg);
+            expr = joinTerms(fmtTerm(a, v, true), fmtTerm(b, '', false), fmtTerm(c, v, false), fmtTerm(d, '', false));
+            ans = joinTerms(fmtTerm(a+c, v, true), fmtTerm(b+d, '', (a+c)===0)) || "0";
+            hint = `① 끼리끼리 모으기: ${v}항은 ${v}항끼리, 숫자는 숫자끼리 모아서 풉니다.\n② ${v}항 계산: ${fmtTerm(a,v,true)} ${c >= 0 ? '+' : '-'} ${Math.abs(c)}${v} = ${fmtTerm(a+c,v,true) || '0'}\n③ 상수항 계산: ${b > 0 ? '+'+b : b} ${d >= 0 ? '+' : '-'} ${Math.abs(d)} = ${b+d > 0 ? '+'+(b+d) : b+d}`;
+            trap1 = joinTerms(fmtTerm(a+c, v, true), fmtTerm(b-d, '', (a+c)===0)) || "0";
+            trap2 = fmtTerm(a+b+c+d, v, true) || "0";
+          }
+          break;
+        case 6: // 분배법칙
+          {
+            let a = getMultiplier(-5, 5, allowNeg);
+            let b = getC(-5, 5, allowNeg);
+            let c = getC(-5, 5, allowNeg);
+            expr = `${a === -1 ? "-" : a}(${joinTerms(fmtTerm(b, v, true), fmtTerm(c, '', false))})`;
+            ans = joinTerms(fmtTerm(a*b, v, true), fmtTerm(a*c, '', (a*b)===0)) || "0";
+            hint = `① 분배법칙: 괄호 밖의 수 ${a}를 괄호 안의 두 항에 각각 곱합니다.\n② 첫 번째 곱하기: ${a} × ${fmtTerm(b,v,true)} = ${fmtTerm(a*b,v,true)}\n③ 두 번째 곱하기: ${a} × (${c}) = ${a*c > 0 ? '+'+(a*c) : a*c}`;
+            trap1 = joinTerms(fmtTerm(a*b, v, true), fmtTerm(c, '', (a*b)===0)) || "0";
+            trap2 = joinTerms(fmtTerm(a+b, v, true), fmtTerm(a+c, '', (a+b)===0)) || "0";
+          }
+          break;
+        case 7: // 분배법칙 + 일차식
+          {
+            let a1 = getMultiplier(-3, 3, allowNeg), b1 = getC(-4, 4, allowNeg), c1 = getC(-4, 4, allowNeg);
+            let a2 = getMultiplier(-3, 3, allowNeg), b2 = getC(-4, 4, allowNeg), c2 = getC(-4, 4, allowNeg);
+            
+            // 괄호 앞 계수가 1이나 -1일 경우 1 생략 포맷팅
+            let a2Str = a2 === 1 ? " + " : (a2 === -1 ? " - " : (a2 > 0 ? ` + ${a2}` : ` - ${Math.abs(a2)}`));
+            
+            expr = `${a1 === -1 ? "-" : a1}(${joinTerms(fmtTerm(b1, v, true), fmtTerm(c1, '', false))})${a2Str}(${joinTerms(fmtTerm(b2, v, true), fmtTerm(c2, '', false))})`;
+            ans = joinTerms(fmtTerm(a1*b1 + a2*b2, v, true), fmtTerm(a1*c1 + a2*c2, '', (a1*b1 + a2*b2)===0)) || "0";
+            
+            // [이전 단일 단 레이아웃 백업]
+            // 언제라도 아래 주석을 풀고 기존 hint 변수 설정을 활성화하면 이전 버전으로 돌아갑니다.
+            /*
+            hint = `① 각각 분배법칙으로 괄호를 먼저 풉니다.\n  앞쪽: ${fmtTerm(a1*b1, v, true)} ${a1*c1 > 0 ? '+'+(a1*c1) : a1*c1}\n  뒤쪽: ${fmtTerm(a2*b2, v, true)} ${a2*c2 > 0 ? '+'+(a2*c2) : a2*c2}\n② 끼리끼리(동류항) 덧셈, 뺄셈을 합니다.\n  ${v} 항: ${a1*b1}${v} ${a2*b2 > 0 ? '+'+(a2*b2) : a2*b2}${v} = ${fmtTerm(a1*b1+a2*b2, v, true) || '0'}\n  상수항: ${a1*c1} ${a2*c2 > 0 ? '+'+(a2*c2) : a2*c2} = ${a1*c1+a2*c2 > 0 ? '+'+(a1*c1+a2*c2) : a1*c1+a2*c2}`;
+            */
+
+            // [새로운 다단 레이아웃 분리용 (||| 구분자 사용)]
+            hint = `① 각각 분배법칙으로 괄호를 먼저 풉니다.\n앞쪽: ${fmtTerm(a1*b1, v, true)} ${a1*c1 > 0 ? '+'+(a1*c1) : a1*c1}\n뒤쪽: ${fmtTerm(a2*b2, v, true)} ${a2*c2 > 0 ? '+'+(a2*c2) : a2*c2}|||② 끼리끼리(동류항) 덧셈, 뺄셈을 합니다.\n${v} 항: ${a1*b1}${v} ${a2*b2 > 0 ? '+'+(a2*b2) : a2*b2}${v} = ${fmtTerm(a1*b1+a2*b2, v, true) || '0'}\n상수항: ${a1*c1} ${a2*c2 > 0 ? '+'+(a2*c2) : a2*c2} = ${a1*c1+a2*c2 > 0 ? '+'+(a1*c1+a2*c2) : a1*c1+a2*c2}`;
+
+            trap1 = joinTerms(fmtTerm(a1*b1 + a2*b2, v, true), fmtTerm(c1 + c2, '', (a1*b1 + a2*b2)===0)) || "0";
+            trap2 = joinTerms(fmtTerm(a1*b1 - a2*b2, v, true), fmtTerm(a1*c1 - a2*c2, '', (a1*b1 - a2*b2)===0)) || "0";
+          }
+          break;
+      }
+
+      const finalOptions = generateOptionsList(ans, trap1, trap2, v, targetPos);
+      return { ans: ans, options: finalOptions, exprDisplay: expr, hint: hint };
+    };
+
+    // 6번 선지가 텍스트로 고정되어 있으므로, 5개의 수학 선지 위치(0~4)를 관리하는 5-Bag 시스템
+    const PosGenerator = {
+      bag: [],
+      currentPos: null,
+      next: function() {
+        if (this.currentPos !== null) return this.currentPos;
+        if (this.bag.length === 0) {
+          this.bag = [0, 1, 2, 3, 4];
+          for (let i = this.bag.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.bag[i], this.bag[j]] = [this.bag[j], this.bag[i]];
+          }
+        }
+        this.currentPos = this.bag.pop();
+        return this.currentPos;
+      },
+      commit: function() { this.currentPos = null; },
+      reset: function() { this.bag = []; this.currentPos = null; }
+    };
+
+    const generateQuestions = (count, mode = 'normal') => {
+      PosGenerator.reset();
+      const qs = [];
+      const usedSignatures = new Set(); 
+      
+      const isExpertRotation = (mode === 'advanced' && count === 50);
+      const rotationPattern = [6, 7, 5, 2, 7, 4, 1, 7, 5, 7, 3, 6, 7, 5, 7];
+
+      for(let i=0; i<count; i++) {
+        let level = mode;
+        let t;
+        
+        if (isExpertRotation) {
+           t = rotationPattern[i % rotationPattern.length];
+           level = 'level4';
+        } else {
+           if (mode === 'positive_only') level = 'level1';
+           if (mode === 'basic_negative') level = 'level2';
+           if (mode === 'normal') level = 'level3';
+           if (mode === 'advanced') level = 'level4';
+           
+           let types = [];
+           if (level === 'level1') types = [1, 2, 3, 4];
+           if (level === 'level2') types = [1, 2, 3, 4, 4.5];
+           if (level === 'level3') types = [5];
+           if (level === 'level4') types = [6, 7];
+           t = types[Math.floor(Math.random() * types.length)];
+        }
+
+        let allowNeg = level !== 'level1';
+        let isTextAnswer = (t === 3 || t === 4.5);
+        let posForMath = isTextAnswer ? null : PosGenerator.next();
+        
+        let qData;
+        let signature;
+        let totalAttempts = 0;
+        
+        do {
+          qData = generateLinearQuestion(t, allowNeg, posForMath);
+          signature = `${qData.exprDisplay}_${qData.ans}`;
+          totalAttempts++;
+        } while (usedSignatures.has(signature) && totalAttempts < 50); 
+        
+        usedSignatures.add(signature);
+        if (!isTextAnswer) {
+            PosGenerator.commit();
+        }
+        
+        qs.push({ ...qData, answer: qData.ans });
+      }
+      return qs;
+    };
+
+    const generateTrainingQuestions = (count) => {
+      const qs = [];
+      for(let i=0; i<count; i++) {
+        let level;
+        if (i === 1) level = 1;
+        else if (i === 5) level = 2;
+        else level = (i % 2 === 0) ? 3 : 4; 
+        
+        let p, r, q, s, a, b, c;
+        let isDuplicate;
+        
+        do {
+            isDuplicate = false;
+            if (level === 1) { p = 1; r = 1; q = randInt(1, 6); s = randInt(1, 6); }
+            else if (level === 2) { p = 1; r = 1; do { q = randInt(-6, 6); s = randInt(-6, 6); } while (q + s === 0 || q === 0 || s === 0); }
+            else if (level === 3) { const primes = [2, 3, 5]; p = primes[Math.floor(Math.random() * primes.length)]; r = 1; do { q = randInt(-5, 5); s = randInt(-5, 5); a = p * r; b = p * s + r * q; c = q * s; } while (b === 0 || c === 0 || Math.abs(gcd(Math.abs(a), gcd(Math.abs(b), Math.abs(c)))) !== 1); }
+            else { do { p = randInt(2, 4); r = randInt(2, 4); q = randInt(-5, 5); s = randInt(-5, 5); a = p * r; b = p * s + r * q; c = q * s; } while (b === 0 || c === 0 || gcd(p, Math.abs(q)) !== 1 || gcd(r, Math.abs(s)) !== 1 || Math.abs(gcd(Math.abs(a), gcd(Math.abs(b), Math.abs(c)))) !== 1); }
+            
+            a = p * r; b = p * s + r * q; c = q * s;
+            
+            for (let j = 0; j < qs.length; j++) {
+                if (qs[j].a === a && qs[j].b === b && qs[j].c === c) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+        } while (isDuplicate);
+
+        qs.push({ a, b, c, p, q, r, s, exprDisplay: formatQuadraticJSX(a, b, c) });
+      }
+      return qs;
+    };
+
+    // 문제 표시 영역 (일반 퀴즈용)
+    const QuestionDisplay = ({ q }) => {
+      if (!q) return <div className="text-red-500 font-bold p-4">문제를 불러오는 중 오류가 발생했습니다.</div>;
+      return (
+        <div className="w-full text-center flex flex-col items-center justify-start relative z-10 pt-[5px] md:pt-[13px]">
+          <div className="text-2xl md:text-3xl lg:text-4xl font-serif text-gray-900 tracking-wide drop-shadow-sm mt-1 md:mt-2">
+            <DisplayMath text={q.exprDisplay} />
+          </div>
+        </div>
+      );
+    };
+
+    const getResultQuestionText = (q) => {
+      if (!q) return "오류 문제";
+      return (
+        <div className="flex items-center flex-wrap gap-2 text-base md:text-lg">
+           <span className="font-normal text-gray-800 flex items-center text-xl font-serif tracking-wide"><DisplayMath text={q.exprDisplay} /></span>
+           <span className="text-gray-600 text-sm md:text-base font-semibold bg-gray-100 px-2 py-0.5 rounded">간단히</span>
+        </div>
+      );
+    };
+
+    const DrawableQuestionArea = ({ isActive, currentIndex, totalQuestions, onPause, canPause, children }) => {
+      const canvasRef = useRef(null);
+      const [isDrawing, setIsDrawing] = useState(false);
+      const [lines, setLines] = useState([]);
+      const [historyStep, setHistoryStep] = useState(0);
+      const currentLineRef = useRef(null);
+
+      const linesRef = useRef([]);
+      const historyStepRef = useRef(0);
+
+      useEffect(() => { linesRef.current = lines; historyStepRef.current = historyStep; }, [lines, historyStep]);
+
+      const redraw = (canvas, linesData, step) => {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 2.0; ctx.strokeStyle = '#F97316';
+        for (let i = 0; i < step; i++) {
+          const line = linesData[i];
+          if (!line || line.points.length === 0) continue;
+          ctx.beginPath(); ctx.moveTo(line.points[0].x, line.points[0].y);
+          for (let j = 1; j < line.points.length; j++) { ctx.lineTo(line.points[j].x, line.points[j].y); }
+          ctx.stroke();
+        }
+      };
+
+      const clearCanvas = () => {
+        setLines([]); setHistoryStep(0);
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      };
+
+      useEffect(() => { clearCanvas(); }, [currentIndex]);
+
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        const container = canvas.parentElement;
+        if (!canvas || !container) return;
+        
+        const resizeObserver = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            const { width, height } = entry.contentRect;
+            canvas.width = width; canvas.height = height;
+            redraw(canvas, linesRef.current, historyStepRef.current);
+          }
+        });
+        resizeObserver.observe(container);
+        return () => resizeObserver.disconnect();
+      }, []);
+
+      const getCoordinates = (e, canvas) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      };
+
+      const startDrawing = (e) => {
+        if (!isActive) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const { x, y } = getCoordinates(e, canvas);
+        ctx.beginPath(); ctx.moveTo(x, y); setIsDrawing(true); currentLineRef.current = { points: [{ x, y }] };
+      };
+
+      const draw = (e) => {
+        if (!isDrawing || !isActive) return;
+        if (e.cancelable) e.preventDefault(); 
+        const canvas = canvasRef.current; const ctx = canvas.getContext('2d');
+        const { x, y } = getCoordinates(e, canvas);
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 2.0; ctx.strokeStyle = '#F97316';
+        ctx.lineTo(x, y); ctx.stroke();
+        if (currentLineRef.current) { currentLineRef.current.points.push({ x, y }); }
+      };
+
+      const stopDrawing = () => {
+        if (!isDrawing) return;
+        setIsDrawing(false);
+        if (currentLineRef.current && currentLineRef.current.points.length > 0) {
+          const newLines = lines.slice(0, historyStep);
+          newLines.push(currentLineRef.current);
+          setLines(newLines); setHistoryStep(newLines.length);
+        }
+        currentLineRef.current = null;
+      };
+
+      const undo = () => { if (historyStep > 0) { const newStep = historyStep - 1; setHistoryStep(newStep); redraw(canvasRef.current, lines, newStep); } };
+      const redo = () => { if (historyStep < lines.length) { const newStep = historyStep + 1; setHistoryStep(newStep); redraw(canvasRef.current, lines, newStep); } };
+
+      return (
+        <div className={`relative w-full transition-all duration-300 overflow-hidden bg-transparent min-h-[320px] md:min-h-[396px] mb-[-80px] md:mb-[-96px]`}>
+           {/* 좌측 상단 문제 진행 상황 */}
+           <div className="absolute top-1 left-[3px] md:top-2 md:left-[11px] z-40 pointer-events-none flex items-center h-8 md:h-10 transform -translate-y-[15px]">
+             <span className="text-[11px] md:text-sm font-bold text-gray-500 font-sans ml-1">{currentIndex + 1} / {totalQuestions}</span>
+           </div>
+           {/* 중앙 상단 안내 문구 */}
+           <div className="absolute top-1 left-0 w-full md:top-2 z-30 pointer-events-none flex items-center justify-center h-8 md:h-10 transform -translate-y-[15px]">
+             <span className="text-[11px] md:text-[13px] text-gray-500 font-bold" style={{ fontFamily: "'Malgun Gothic', '맑은 고딕', sans-serif" }}>
+               다음 식을 간단히 하시오.
+             </span>
+           </div>
+
+           <div className="absolute top-1 right-2 md:top-2 md:right-3 z-40 flex items-center gap-0.5 md:gap-1 pointer-events-auto h-8 md:h-10 transform -translate-y-[15px]">
+             {isActive && (
+               <div className="flex gap-0.5 md:gap-1 opacity-80 hover:opacity-100 transition-opacity">
+                  <button onClick={undo} disabled={historyStep === 0} className="p-1.5 bg-white border border-gray-200 rounded-lg shadow-sm text-gray-500 hover:text-indigo-500 disabled:opacity-40 active:scale-95 transition-all" title="실행 취소"><UndoIcon className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+                  <button onClick={redo} disabled={historyStep === lines.length} className="p-1.5 bg-white border border-gray-200 rounded-lg shadow-sm text-gray-500 hover:text-indigo-500 disabled:opacity-40 active:scale-95 transition-all" title="다시 실행"><RedoIcon className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+                  <button onClick={clearCanvas} className="p-1.5 bg-white border border-gray-200 rounded-lg shadow-sm text-gray-500 hover:text-red-500 active:scale-95 transition-all" title="전체 지우기"><Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+               </div>
+             )}
+             <button onClick={onPause} disabled={!canPause} className="p-1.5 bg-white rounded-lg border border-gray-200 shadow-sm transition-colors active:scale-95 text-gray-600 hover:bg-gray-50 disabled:opacity-50" title="일시정지"><PauseIcon className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+           </div>
+           
+           <canvas ref={canvasRef} onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing} onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing} className={`absolute inset-0 w-full h-full z-20 touch-none ${isActive ? 'cursor-crosshair pointer-events-auto' : 'pointer-events-none opacity-0'}`} />
+           
+           <div className="relative w-full h-full flex flex-col items-center justify-start py-2 px-4 z-10 pointer-events-none mt-1 md:mt-2">
+             {children}
+           </div>
+
+           {isActive && (
+             <div className="absolute bottom-[15px] left-[15px] pointer-events-none opacity-30 text-[10px] md:text-xs font-semibold text-gray-500 flex items-center z-30">
+               <Edit3 className="w-2.5 h-2.5 md:w-3 md:h-3 mr-1" /> 빈 곳이나 문제 위에 자유롭게 써보세요
+             </div>
+           )}
+        </div>
+      );
+    };
+    
+    // --- 메인 App 컴포넌트 ---
+    function App() {
+      // 명예의 전당 최소 커트라인 설정
+      const MIN_SCORE_REQUIRED = 3000;
+      const MIN_ACCURACY_REQUIRED = 80;
+
+      const [step, setStep] = useState('start'); // 'start', 'confirm', 'quiz', 'result', 'train'
+      const [pendingCount, setPendingCount] = useState(0); 
+      const [quizMode, setQuizMode] = useState('normal');
+      const [totalQuestions, setTotalQuestions] = useState(0);
+      const [questions, setQuestions] = useState([]);
+      const [currentIndex, setCurrentIndex] = useState(0);
+      
+      const [results, setResults] = useState([]);
+      const [stats, setStats] = useState({ attempts: 0, corrects: 0 });
+      
+      const [score, setScore] = useState(0);
+      const [scoreChange, setScoreChange] = useState(null);
+      const [showScorePopup, setShowScorePopup] = useState(true); 
+      const [showTimer, setShowTimer] = useState(false);
+      const [showAvgTime, setShowAvgTime] = useState(false);
+      const isAdv50 = quizMode === 'advanced' && totalQuestions === 50;
+
+      const [currentAttempts, setCurrentAttempts] = useState(0);
+      const [currentSelectedOpts, setCurrentSelectedOpts] = useState([]);
+
+      const [startTime, setStartTime] = useState(0);
+      const [hintVisible, setHintVisible] = useState(false);
+      const [elapsedTimer, setElapsedTimer] = useState("0.0");
+      const [hintUsedInSession, setHintUsedInSession] = useState(false); // 전문가 단계 힌트 사용 여부 추적
+      
+      const [feedbackState, setFeedbackState] = useState(null); 
+      const [feedbackImage, setFeedbackImage] = useState(null);
+      const [selectedOption, setSelectedOption] = useState(null);
+
+      const [showScratchpad, setShowScratchpad] = useState(true);
+      const [history, setHistory] = useState([]); 
+      const [consecutiveCorrects, setConsecutiveCorrects] = useState(0);
+      const [comboPopup, setComboPopup] = useState(0); 
+
+      const [pwdRequestTarget, setPwdRequestTarget] = useState(null); 
+      const [devNoteState, setDevNoteState] = useState('hidden'); 
+      const [showGlobalLeaderboard, setShowGlobalLeaderboard] = useState(false);
+      const [showExitWarning, setShowExitWarning] = useState(false); 
+      
+      const [pwdInput, setPwdInput] = useState('');
+      const [pwdError, setPwdError] = useState(false);
+
+      const [isPaused, setIsPaused] = useState(false);
+      const [pauseStartTime, setPauseStartTime] = useState(0);
+      const [currentPauseImage, setCurrentPauseImage] = useState("");
+
+      const [globalLeaderboardData, setGlobalLeaderboardData] = useState([]);
+      const [nickname, setNickname] = useState(localStorage.getItem('math_nickname') || '');
+      const [isSubmitted, setIsSubmitted] = useState(false);
+      const [isAdmin, setIsAdmin] = useState(false);
+      const [deleteTarget, setDeleteTarget] = useState(null);
+
+      // --- 알고리즘 훈련 전용 State ---
+      const trainTotalQuestions = 10;
+      const [trainQuestions, setTrainQuestions] = useState([]);
+      const [currentTrainIndex, setCurrentTrainIndex] = useState(0);
+      const [trainInputs, setTrainInputs] = useState({ tl: '', bl: '', tr: '', br: '' });
+      const [trainSuccess, setTrainSuccess] = useState(false);
+      const [trainWrongSelections, setTrainWrongSelections] = useState([]);
+      
+      // 훈련용 가이드 토글 상태
+      const [showGuide0, setShowGuide0] = useState(false);
+      const [showGuide1, setShowGuide1] = useState(false);
+      const [showGuide2, setShowGuide2] = useState(false);
+      const [showGuide3, setShowGuide3] = useState(false);
+      const [showGuide4, setShowGuide4] = useState(false);
+
+      const tlRef = useRef(null);
+      const blRef = useRef(null);
+      const trRef = useRef(null);
+      const brRef = useRef(null);
+      // -------------------------------
+
+      const goodImages = [
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good01.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good02.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good03.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good04.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good05.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good06.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good07.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good08.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/good09.png"
+      ];
+
+      const goforitImages = [
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit01.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit02.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit03.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit04.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit05.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit06.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit07.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit08.png",
+        "https://raw.githubusercontent.com/mathwawawa-dev/substitution_02/refs/heads/main/goforit09.png"
+      ];
+
+      // 브라우저 기본 페이지 이탈 방지
+      useEffect(() => {
+        const handleBeforeUnload = (e) => {
+          if (step === 'quiz') {
+            e.preventDefault();
+            e.returnValue = '정말 나가시겠습니까? 진행 중인 기록이 모두 사라집니다.'; 
+            return '정말 나가시겠습니까? 진행 중인 기록이 모두 사라집니다.'; 
+          }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+      }, [step]);
+
+      // 브라우저 뒤로가기(Back) 버튼 방지 트랩
+      useEffect(() => {
+        if (step === 'quiz') {
+          window.history.pushState(null, '', window.location.href);
+          
+          const handlePopState = (e) => {
+            window.history.pushState(null, '', window.location.href);
+            setShowExitWarning(true); 
+          };
+          
+          window.addEventListener('popstate', handlePopState);
+          return () => window.removeEventListener('popstate', handlePopState);
+        }
+      }, [step]);
+
+      // F5, Ctrl+R 강제 새로고침 방지
+      useEffect(() => {
+        const handleKeyDownUnload = (e) => {
+          if (step === 'quiz') {
+            if (e.key === 'F5' || (e.ctrlKey && e.key.toLowerCase() === 'r') || (e.metaKey && e.key.toLowerCase() === 'r')) {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowExitWarning(true); 
+              return false;
+            }
+          }
+        };
+        window.addEventListener('keydown', handleKeyDownUnload, { capture: true });
+        return () => window.removeEventListener('keydown', handleKeyDownUnload, { capture: true });
+      }, [step]);
+
+      // 시작 화면이나 확인 화면으로 돌아올 때 무조건 힌트 사용 내역을 초기화 (안전장치)
+      useEffect(() => {
+        if (step === 'start' || step === 'confirm') {
+          setHintUsedInSession(false);
+        }
+      }, [step]);
+
+      useEffect(() => {
+        if ((step === 'result' && isAdv50) || showGlobalLeaderboard) {
+          if (window.loadLeaderboard) {
+            window.loadLeaderboard((data) => {
+              setGlobalLeaderboardData(data);
+            });
+          }
+        }
+      }, [step, isAdv50, showGlobalLeaderboard]);
+
+      useEffect(() => {
+        let timer;
+        if (step === 'quiz' && feedbackState === null && !isPaused && !showExitWarning) {
+          timer = setInterval(() => {
+            setElapsedTimer(((Date.now() - startTime) / 1000).toFixed(1));
+          }, 100);
+        }
+        return () => clearInterval(timer);
+      }, [step, startTime, feedbackState, isPaused, showExitWarning]);
+
+      const handleCheckPwd = () => {
+        if (btoa(pwdInput) === "MjM1NzEx") {
+          setPwdError(false);
+          setPwdInput("");
+          
+          if (pwdRequestTarget === 'devNote') {
+            setDevNoteState('view');
+          } else if (pwdRequestTarget === 'resultAdmin') {
+            setIsAdmin(true);
+            alert("관리자 권한이 활성화되었습니다. 이제 삭제 버튼이 보입니다.");
+          } else if (pwdRequestTarget === 'globalAdmin') {
+            setIsAdmin(true);
+            setShowGlobalLeaderboard(true);
+          }
+          setPwdRequestTarget(null);
+        } else {
+          setPwdError(true);
+        }
+      };
+
+      const handlePause = () => {
+        if (feedbackState !== null) return; 
+        const randomImg = goforitImages[Math.floor(Math.random() * goforitImages.length)];
+        setCurrentPauseImage(randomImg);
+        setPauseStartTime(Date.now());
+        setIsPaused(true);
+      };
+
+      const handleResume = () => {
+        const pauseDuration = Date.now() - pauseStartTime;
+        setStartTime(prev => prev + pauseDuration);
+        setIsPaused(false);
+      };
+
+      const handleSelectCount = (count, mode = 'normal') => {
+        setQuizMode(mode);
+        setHintUsedInSession(false); // 모드 선택 시 무조건 힌트 사용 초기화 보장
+        if (count >= 50) {
+          setPendingCount(count);
+          setStep('confirm');
+        } else {
+          actuallyStartQuiz(count, mode);
+        }
+      };
+
+      const actuallyStartQuiz = (count, mode = quizMode) => {
+        setQuestions(generateQuestions(count, mode));
+        setTotalQuestions(count);
+        setCurrentIndex(0);
+        setResults([]);
+        setStats({ attempts: 0, corrects: 0 });
+        setConsecutiveCorrects(0);
+        setScore(0);
+        setScoreChange(null);
+        setIsSubmitted(false);
+        setHintUsedInSession(false); // 퀴즈 시작 시 힌트 사용 내역 세션 초기화
+        resetCurrentQuestionState();
+        setIsPaused(false);
+        setStep('quiz');
+        setStartTime(Date.now());
+      };
+
+      const handleRetryIncorrect = () => {
+        const wrongQuestions = results.filter(r => !r.isCorrect).map(r => r.question);
+        setQuestions(wrongQuestions);
+        setTotalQuestions(wrongQuestions.length);
+        setCurrentIndex(0);
+        setResults([]);
+        setStats({ attempts: 0, corrects: 0 });
+        setConsecutiveCorrects(0);
+        setScoreChange(null);
+        resetCurrentQuestionState();
+        setIsPaused(false);
+        setStep('quiz');
+        setStartTime(Date.now());
+      };
+
+      const resetCurrentQuestionState = () => {
+        setCurrentAttempts(0);
+        setCurrentSelectedOpts([]);
+        setFeedbackState(null);
+        setSelectedOption(null);
+        setHintVisible(false);
+      };
+
+      const handleAnswer = (selectedAns) => {
+        if (feedbackState !== null || isPaused || showExitWarning) return;
+        if (currentSelectedOpts.includes(selectedAns)) return;
+
+        const currentQ = questions[currentIndex];
+        const isCorrect = selectedAns === currentQ.answer;
+        
+        setStats(prev => ({
+          attempts: prev.attempts + 1,
+          corrects: prev.corrects + (isCorrect ? 1 : 0)
+        }));
+
+        const newAttempts = currentAttempts + 1;
+        setCurrentAttempts(newAttempts);
+        
+        const newSelectedOpts = [...currentSelectedOpts, selectedAns];
+        setCurrentSelectedOpts(newSelectedOpts);
+        setSelectedOption(selectedAns);
+
+        const timeSpent = ((Date.now() - startTime) / 1000).toFixed(1);
+        const timeSpentNum = parseFloat(timeSpent);
+
+        if (isCorrect) {
+          const newConsecutive = consecutiveCorrects + 1;
+          setConsecutiveCorrects(newConsecutive);
+          setFeedbackState('correct');
+          setResults(prev => [...prev, {
+            question: currentQ,
+            selectedOptions: newSelectedOpts,
+            attempts: newAttempts,
+            isCorrect: true,
+            timeSpent
+          }]);
+
+          if (isAdv50) {
+            const baseScore = 100;
+            const speedBonus = Math.floor(Math.max(0, 20 - timeSpentNum) * 5); 
+            const comboBonus = newConsecutive >= 2 ? Math.min(150, (newConsecutive - 1) * 20) : 0;
+            
+            const pointsEarned = baseScore + speedBonus + comboBonus;
+            
+            setScore(prev => prev + pointsEarned);
+            setScoreChange({ amount: pointsEarned, type: 'plus', id: Date.now() });
+
+            if (newConsecutive >= 3) {
+              setComboPopup(newConsecutive);
+              setTimeout(() => setComboPopup(0), 1200);
+            }
+          }
+          
+          let imagePool = goodImages;
+          if (imagePool.length > 0) {
+            const randomImage = imagePool[Math.floor(Math.random() * imagePool.length)];
+            setFeedbackImage(randomImage);
+          } else {
+            setFeedbackImage(null);
+          }
+
+          if (totalQuestions !== 10) {
+            const delay = totalQuestions >= 50 ? 1000 : 1100;
+            setTimeout(goToNext, delay);
+          }
+        } else {
+          setConsecutiveCorrects(0); 
+
+          if (isAdv50) {
+            const penalty = 200;
+            setScore(prev => prev - penalty);
+            setScoreChange({ amount: penalty, type: 'minus', id: Date.now() });
+          }
+
+          if (newAttempts >= 3) {
+            setFeedbackState('incorrect_final');
+            setResults(prev => [...prev, {
+              question: currentQ,
+              selectedOptions: newSelectedOpts,
+              attempts: newAttempts,
+              isCorrect: false,
+              timeSpent
+            }]);
+          } else {
+            setFeedbackState('incorrect_retryable'); 
+          }
+        }
+      };
+
+      const handleSkip = () => {
+        const timeSpent = ((Date.now() - startTime) / 1000).toFixed(1);
+        setResults(prev => [...prev, {
+          question: questions[currentIndex],
+          selectedOptions: currentSelectedOpts,
+          attempts: currentAttempts,
+          isCorrect: false,
+          timeSpent
+        }]);
+        setConsecutiveCorrects(0);
+        goToNext();
+      };
+
+      const handleSkipInRetry = () => {
+        handleSkip();
+      };
+
+      const handleRetry = () => {
+        setFeedbackState(null);
+        setSelectedOption(null);
+      };
+
+      const goToNext = () => {
+        if (currentIndex + 1 < totalQuestions) {
+          setCurrentIndex(prev => prev + 1);
+          setStartTime(Date.now());
+          resetCurrentQuestionState();
+        } else {
+          setStep('result');
+        }
+      };
+
+      const handleRankSubmit = () => {
+        if (!nickname.trim()) return;
+        const finalName = nickname.trim().slice(0, 7); 
+        localStorage.setItem('math_nickname', finalName);
+        
+        if (window.saveRecordToDB) {
+           window.saveRecordToDB(finalName, score, currentAvgTime, currentAccuracy);
+           setIsSubmitted(true);
+        }
+      };
+
+      const handleDeleteRecord = (id) => {
+        if (confirm("정말로 이 기록을 삭제하시겠습니까?")) {
+          if (window.deleteRecordFromDB) {
+            window.deleteRecordFromDB(id);
+          }
+        }
+      };
+
+      const currentAccuracy = stats.attempts > 0 ? Math.round((stats.corrects / stats.attempts) * 100) : 0;
+      const correctResults = results.filter(r => r.isCorrect);
+      const currentAvgTime = correctResults.length > 0
+        ? (correctResults.reduce((sum, r) => sum + parseFloat(r.timeSpent), 0) / correctResults.length).toFixed(1)
+        : "0.0";
+
+      const saveHistory = () => {
+        const modeLabel = quizMode === 'positive_only' ? '완전 기초 20문제' : 
+                          quizMode === 'basic_negative' ? '기초 20문제' : 
+                          quizMode === 'advanced' ? (totalQuestions === 50 ? '전문가 50문제' : '고급 20문제') : '기본 20문제';
+        setHistory(prev => [...prev, {
+          attemptNum: prev.length + 1,
+          total: totalQuestions,
+          modeLabel,
+          accuracy: currentAccuracy,
+          avgTime: currentAvgTime
+        }]);
+      };
+
+      const canEnterHallOfFame = score >= MIN_SCORE_REQUIRED && currentAccuracy >= MIN_ACCURACY_REQUIRED;
+
+      // 도움0(Tip): 1초 후 자동 닫힘
+      useEffect(() => {
+        let timer;
+        if (showGuide0) {
+          timer = setTimeout(() => setShowGuide0(false), 1000);
+        }
+        return () => clearTimeout(timer);
+      }, [showGuide0]);
+
+      // =========================================================================
+      // 알고리즘 훈련 (Tutorial) 핸들러 함수들
+      // =========================================================================
+      const startTraining = () => {
+        setTrainQuestions(generateTrainingQuestions(trainTotalQuestions));
+        setCurrentTrainIndex(0);
+        resetTrainInputs();
+        setShowGuide0(false);
+        setShowGuide1(false);
+        setShowGuide2(false);
+        setShowGuide3(false);
+        setShowGuide4(false);
+        setStep('train');
+      };
+
+      const handleTrainInputChange = (e, field) => {
+        let val = e.target.value;
+        val = val.replace(/-/g, '−').replace(/[^0-9−]/g, '');
+        if (val.lastIndexOf('−') > 0) {
+            val = val[0] === '−' ? '−' + val.substring(1).replace(/−/g, '') : val.replace(/−/g, '');
+        }
+        setTrainInputs(prev => ({ ...prev, [field]: val }));
+      };
+      
+      const handleTrainKeyDown = (e, field) => {
+          if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+              e.preventDefault(); 
+              if (e.key === 'ArrowUp') { 
+                  if (field === 'br') trRef.current?.focus();
+                  else if (field === 'tr') blRef.current?.focus();
+                  else if (field === 'bl') tlRef.current?.focus();
+              } else if (e.key === 'ArrowDown') { 
+                  if (field === 'tl') blRef.current?.focus();
+                  else if (field === 'bl') trRef.current?.focus();
+                  else if (field === 'tr') brRef.current?.focus();
+              }
+          }
+      };
+      
+      const getTrainNum = (val) => {
+        if (!val || val === '-' || val === '−') return null;
+        const parsed = parseInt(val.replace(/−/g, '-'), 10);
+        return isNaN(parsed) ? null : parsed;
+      };
+
+      const resetTrainInputs = () => {
+        setTrainInputs({ tl: '', bl: '', tr: '', br: '' });
+        setTrainSuccess(false);
+        setTrainWrongSelections([]);
+        // 약간의 딜레이를 주어 렌더링 후 포커스 되도록 처리
+        setTimeout(() => tlRef.current?.focus(), 50);
+      };
+
+      const nextTrainQuestion = () => {
+        if (currentTrainIndex + 1 < trainTotalQuestions) { 
+          setCurrentTrainIndex(prev => prev + 1); 
+          resetTrainInputs(); 
+        } else { 
+          setCurrentTrainIndex(0); 
+          resetTrainInputs(); 
+          setTrainQuestions(generateTrainingQuestions(trainTotalQuestions)); 
+        }
+        setShowGuide0(false);
+        setShowGuide1(false);
+        setShowGuide2(false);
+        setShowGuide3(false);
+        setShowGuide4(false);
+      };
+
+      const currentTrainQ = trainQuestions[currentTrainIndex];
+      const trainTl = getTrainNum(trainInputs.tl);
+      const trainBl = getTrainNum(trainInputs.bl);
+      const trainTr = getTrainNum(trainInputs.tr);
+      const trainBr = getTrainNum(trainInputs.br);
+
+      const trainAVal = (trainTl !== null && trainBl !== null) ? trainTl * trainBl : null;
+      const trainCVal = (trainTr !== null && trainBr !== null) ? trainTr * trainBr : null;
+      const trainTopCross = (trainBl !== null && trainTr !== null) ? trainBl * trainTr : null;
+      const trainBottomCross = (trainTl !== null && trainBr !== null) ? trainTl * trainBr : null;
+      const trainSum = (trainTopCross !== null && trainBottomCross !== null) ? trainTopCross + trainBottomCross : null;
+
+      const isTrainACorrect = currentTrainQ && trainAVal === currentTrainQ.a;
+      const isTrainCCorrect = currentTrainQ && trainCVal === currentTrainQ.c;
+      const isTrainBCorrect = currentTrainQ && trainSum === currentTrainQ.b;
+      const isTrainAllCorrect = isTrainACorrect && isTrainCCorrect && isTrainBCorrect;
+
+      const trainChoicesData = useMemo(() => {
+          if (!isTrainAllCorrect || !currentTrainQ) return null;
+          
+          const a = trainTl, b = trainBl, c = trainTr, d = trainBr;
+          const makeChoice = (a_val, c_val, b_val, d_val, isCorrect = false) => {
+              let f1 = formatBinomialStr(a_val, c_val);
+              let f2 = formatBinomialStr(b_val, d_val);
+              let sortedId = [f1, f2].sort().join('|');
+              return { f1, f2, id: `(${f1})(${f2})`, sortedId, isCorrect };
+          };
+
+          const set = new Map();
+          const seenIds = new Set(); 
+
+          const tryAddChoice = (a_v, c_v, b_v, d_v, isCorrect = false) => {
+              if (set.size >= 4) return;
+              const choice = makeChoice(a_v, c_v, b_v, d_v, isCorrect);
+              if (!seenIds.has(choice.sortedId)) {
+                  set.set(choice.id, choice);
+                  seenIds.add(choice.sortedId);
+              }
+          };
+
+          tryAddChoice(a, c, b, d, true);
+          tryAddChoice(a, d, b, c, false);
+          tryAddChoice(a, -c, b, -d, false);
+          
+          let offset = 1;
+          while (set.size < 4) {
+              tryAddChoice(a, c + offset, b, d - offset, false);
+              tryAddChoice(a, c - offset, b, d + offset, false); 
+              offset++;
+              if (offset > 50) break;
+          }
+          
+          const arr = Array.from(set.values());
+          for (let i = arr.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+      }, [isTrainAllCorrect, trainTl, trainTr, trainBl, trainBr, currentTrainQ]);
+
+      const handleTrainChoiceClick = (choice) => {
+          if (choice.isCorrect) setTrainSuccess(true);
+          else if (!trainWrongSelections.includes(choice.id)) { setTrainWrongSelections(prev => [...prev, choice.id]); }
+      };
+
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-start justify-center p-2 md:p-4 pt-0 md:pt-2">
+          <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden mt-0">
+            
+            {/* 시작 화면 */}
+            {step === 'start' && (
+              <div className="px-6 pb-6 pt-[17px] md:px-10 md:pb-10 md:pt-[33px] text-center animate-fade-in flex flex-col items-center">
+                
+                <div className="mb-8 flex flex-col items-center">
+                  <h1 className="text-[6.5vw] min-[400px]:text-3xl sm:text-4xl md:text-5xl font-extrabold text-indigo-700 tracking-tight md:tracking-wide mb-3 drop-shadow-sm whitespace-nowrap">
+                    일차식의 계산
+                  </h1>
+                  <div className="inline-flex items-center">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                    <span className="font-mono text-xs text-gray-400 tracking-widest font-semibold">
+                      v1.1.7_260519_1219_힌트_문구_수정
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-sm md:text-base text-gray-600 mb-6 break-keep w-full">
+                  주어진 일차식의 덧셈, 뺄셈, 분배법칙을 풀어봅시다<span onClick={() => setPwdRequestTarget('globalAdmin')} className="cursor-pointer text-gray-600 relative z-50">!</span><br/>
+                  동류항끼 모아서 차근차근 계산해보세요.
+                </p>
+
+                <h2 className="text-base font-semibold mb-3 w-full text-center">도전할 단계를 선택하세요</h2>
+                
+                {/* 알고리즘 훈련 (Tutorial) 박스 - 임시 박스로 비활성화 */}
+                <div className="mb-4 w-full">
+                  <button
+                    onClick={() => {}}
+                    className="w-full py-3 md:py-4 bg-gray-100 text-gray-500 font-bold rounded-xl transition-all border-2 border-gray-200 shadow-sm flex flex-col items-center justify-center relative cursor-default"
+                  >
+                    <span className="text-base md:text-lg font-extrabold mb-0.5 tracking-tight flex items-center">
+                      🚧 임시로 만들어둔 박스입니다.
+                    </span>
+                    <span className="text-xs md:text-sm font-medium opacity-80">현재 연결된 기능이 없습니다.</span>
+                  </button>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full mb-3">
+                  <button
+                    onClick={() => handleSelectCount(20, 'positive_only')}
+                    className="flex-1 py-4 bg-indigo-50/50 hover:bg-indigo-50 text-indigo-500 font-bold rounded-xl transition-colors border-2 border-indigo-100 shadow-sm active:scale-95 text-sm md:text-base flex flex-col items-center justify-center"
+                  >
+                    <span>🥚 완전 기초</span>
+                    <span className="text-[11px] md:text-xs font-normal mt-1 opacity-70">(양수 계수의 기본 연산)</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelectCount(20, 'basic_negative')}
+                    className="flex-1 py-4 bg-indigo-50 hover:bg-indigo-100/50 text-indigo-600 font-bold rounded-xl transition-colors border-2 border-indigo-200 shadow-sm active:scale-95 text-sm md:text-base flex flex-col items-center justify-center"
+                  >
+                    <span>🐣 기초</span>
+                    <span className="text-[11px] md:text-xs font-normal mt-1 opacity-80">(음수 포함 기본 연산)</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelectCount(20, 'normal')}
+                    className="flex-1 py-4 bg-indigo-100 hover:bg-indigo-200/50 text-indigo-700 font-bold rounded-xl transition-colors border-2 border-indigo-300 shadow-sm active:scale-95 text-sm md:text-base flex flex-col items-center justify-center"
+                  >
+                    <span>🐥 기본</span>
+                    <span className="text-[11px] md:text-xs font-normal mt-1 opacity-90">(일차식의 혼합 계산)</span>
+                  </button>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full">
+                  <button
+                    onClick={() => handleSelectCount(20, 'advanced')}
+                    className="flex-1 py-4 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold rounded-xl transition-colors border-2 border-purple-200 shadow-sm active:scale-95 text-sm md:text-base flex flex-col items-center justify-center"
+                  >
+                    <span>🐔 고급</span>
+                    <span className="text-[11px] md:text-xs font-normal mt-1 opacity-90">(분배법칙의 활용)</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => handleSelectCount(50, 'advanced')}
+                    className="flex-1 py-4 bg-red-50 hover:bg-red-100 text-red-700 font-bold rounded-xl transition-colors border-2 border-red-400 shadow-sm active:scale-95 text-sm md:text-base relative overflow-hidden flex flex-col items-center justify-center"
+                  >
+                    <span className="absolute top-0 right-0 bg-yellow-300 text-yellow-900 text-[9px] md:text-xs px-1.5 md:px-2.5 py-0.5 md:py-1 rounded-bl-lg font-extrabold animate-pulse shadow-md">🏆 SCORE</span>
+                    <span>🦖 전문가</span>
+                    <span className="text-[11px] md:text-xs font-normal mt-1 opacity-100">(두뇌 풀가동! 50문제)</span>
+                  </button>
+                </div>
+
+                <div className="mt-4 w-full">
+                  <button
+                    onClick={() => setShowGlobalLeaderboard(true)}
+                    className="w-full py-3.5 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-extrabold rounded-xl transition-all shadow-md active:scale-95 text-[15px] md:text-lg flex items-center justify-center"
+                  >
+                    🏆 명예의 전당 (랭킹 보기)
+                  </button>
+                </div>
+                {history.length > 0 && (
+                  <div className="mt-8 w-full text-left bg-white border border-gray-200 rounded-xl p-4 md:p-5 shadow-sm animate-fade-in">
+                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                      <Clock className="w-5 h-5 mr-2 text-indigo-500" />
+                      나의 도전 기록
+                    </h3>
+                    <div className="max-h-48 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                      {history.slice().reverse().map((record, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-gray-700">{record.modeLabel}</span>
+                            <span className="text-xs text-gray-500">{record.total}문제</span>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 md:gap-4">
+                            <div className="flex items-center" title="정답률">
+                              <span className="text-sm font-semibold text-indigo-600">{record.accuracy}%</span>
+                            </div>
+                            <div className="flex items-center" title="평균 응답시간">
+                              <Clock className="w-3.5 h-3.5 mr-1 text-gray-400" />
+                              <span className="text-sm text-gray-600">{record.avgTime}s</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-8 text-center text-xs md:text-sm text-gray-400 w-full">
+                  이 활동은 <strong className="text-gray-600">안경<span onClick={() => setPwdRequestTarget('devNote')} className="cursor-pointer">모</span>선생님</strong>과 <strong className="text-indigo-400">Gemini</strong>가 함께 힘을 모아 만들었습니다.
+                </div>
+              </div>
+            )}
+
+            {/* 대규모 도전 확인 화면 */}
+            {step === 'confirm' && (
+              <div className="px-8 pb-8 pt-[25px] md:px-14 md:pb-14 md:pt-[49px] text-center animate-fade-in flex flex-col items-center justify-center min-h-[400px]">
+                <div className="mb-6 flex justify-center">
+                  {pendingCount === 50 ? (
+                    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FdEEX4t%2FdJMcacv49bh%2FAAAAAAAAAAAAAAAAAAAAACoEM3ZMfNrmMHY5qd_c60fulM0n2OqgCkhPEw2NEIH1%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1777561199%26allow_ip%3D%26allow_referer%3D%26signature%3DoMauEBp2h712hirF5zEuAnpbRqo%253D" alt="50문제 도전" className="w-28 h-28 object-contain drop-shadow-sm" />
+                  ) : (
+                    <div className="text-6xl mb-6">🚀</div>
+                  )}
+                </div>
+                <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-indigo-800">도전을 응원합니다!</h1>
+                
+                {pendingCount >= 50 && (
+                  <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 mb-8 w-full max-w-md shadow-sm text-left">
+                    <p className="text-base text-indigo-900 font-extrabold mb-2 text-center">
+                      🏆 명예의 전당 등극 조건
+                    </p>
+                    <ul className="text-xs md:text-sm text-indigo-700 space-y-1 font-medium list-disc list-inside">
+                      <li><span className="font-extrabold text-red-500 underline underline-offset-2 decoration-red-300">힌트를 단 한 번도 사용하지 않고</span> 스스로 풀기</li>
+                      <li>최종 점수 <span className="font-bold text-indigo-900">????점 이상</span> 획득하기</li>
+                      <li>최종 정확도 <span className="font-bold text-indigo-900">??% 이상</span> 기록하기</li>
+                    </ul>
+                  </div>
+                )}
+                
+                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+                  <button
+                    onClick={() => actuallyStartQuiz(pendingCount)}
+                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95 text-lg"
+                  >
+                    도전하겠습니다
+                  </button>
+                  <button
+                    onClick={() => { setStep('start'); setIsAdmin(false); }}
+                    className="flex-1 py-4 bg-white hover:bg-gray-50 border-2 border-gray-300 text-gray-600 font-bold rounded-xl transition-all shadow-sm active:scale-95 text-lg"
+                  >
+                    물러나겠습니다
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* X자 알고리즘 훈련 화면 (Tutorial) */}
+            {step === 'train' && trainQuestions.length > 0 && currentTrainQ && (
+              <div className="px-2 pb-4 pt-[1px] md:px-4 md:pb-4 md:pt-[9px] w-full flex flex-col items-center animate-fade-in relative min-h-[500px]">
+
+                {/* 닫기(돌아가기) 버튼 */}
+                <button
+                  onClick={() => setStep('start')}
+                  className="absolute top-2 right-2 md:top-4 md:right-4 z-50 p-1.5 md:p-2 text-gray-400 hover:text-red-500 transition-colors bg-gray-100/50 hover:bg-red-50 rounded-full"
+                  title="훈련 종료"
+                >
+                  <XCircle className="w-5 h-5 md:w-6 md:h-6" />
+                </button>
+
+                {/* 진행 카운터 */}
+                <div className="absolute top-4 left-[3px] md:top-6 md:left-[11px] z-40 pointer-events-none flex items-center transform -translate-y-[10px] -translate-x-[5px]">
+                  <span className="text-[10px] md:text-[11px] font-bold text-gray-500 opacity-70 px-1 py-1 drop-shadow-sm tracking-wide">
+                    {currentTrainIndex + 1} / {trainTotalQuestions}
+                  </span>
+                </div>
+
+                {/* Tip 가이드 */}
+                {showGuide0 && (
+                  <div className="absolute top-[45px] md:top-[55px] left-2 md:left-4 w-max text-violet-600 font-bold text-[10px] md:text-xs z-50 animate-fade-in text-left whitespace-nowrap transform-none">
+                    키보드 방향키 ↑, ↓로 칸을 이동할 수 있습니다.
+                  </div>
+                )}
+
+                {/* 도움말 토글 버튼 그룹 */}
+                <div className="absolute top-3 md:top-5 left-1/2 transform -translate-x-1/2 z-40 flex flex-wrap justify-center gap-1.5 md:gap-2 w-[220px] md:w-auto">
+                  <button onClick={() => setShowGuide0(!showGuide0)} className={`text-[9px] md:text-[11px] px-2.5 py-1 rounded-full border shadow-sm transition-colors active:scale-95 ${showGuide0 ? 'bg-violet-50 border-violet-300 text-violet-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}>Tip</button>
+                  <button onClick={() => setShowGuide1(!showGuide1)} className={`text-[9px] md:text-[11px] px-2.5 py-1 rounded-full border shadow-sm transition-colors active:scale-95 ${showGuide1 ? 'bg-violet-50 border-violet-300 text-violet-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}>절차1</button>
+                  <button onClick={() => setShowGuide2(!showGuide2)} className={`text-[9px] md:text-[11px] px-2.5 py-1 rounded-full border shadow-sm transition-colors active:scale-95 ${showGuide2 ? 'bg-violet-50 border-violet-300 text-violet-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}>절차2</button>
+                  <button onClick={() => setShowGuide3(!showGuide3)} className={`text-[9px] md:text-[11px] px-2.5 py-1 rounded-full border shadow-sm transition-colors active:scale-95 ${showGuide3 ? 'bg-violet-50 border-violet-300 text-violet-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}>절차3</button>
+                  <button onClick={() => setShowGuide4(!showGuide4)} className={`text-[9px] md:text-[11px] px-2.5 py-1 rounded-full border shadow-sm transition-colors active:scale-95 ${showGuide4 ? 'bg-violet-50 border-violet-300 text-violet-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'}`}>절차4</button>
+                </div>
+
+                {/* 전체 래퍼 */}
+                <div className="w-full flex flex-col items-center transform -translate-y-[28px] relative">
+
+                  {/* 절차4 가이드 */}
+                  {showGuide4 && (
+                    <div className="absolute top-[130px] md:top-[155px] left-2 md:left-4 ml-[66px] text-violet-600 font-bold text-[10px] md:text-xs z-50 animate-fade-in text-left whitespace-nowrap">
+                      가로로 읽기!
+                    </div>
+                  )}
+
+                  {/* [1] 상단 문제 영역 */}
+                  <div className="w-full max-w-lg relative overflow-visible mt-20 md:mt-24 px-2 bg-transparent translate-x-[5px]">
+                    <div className="flex justify-center items-start gap-2 md:gap-4 relative w-full">
+
+                      {/* Left Column (a value) */}
+                      <div className="flex flex-col items-center z-10 w-12 md:w-16 relative">
+                        <div className="h-8 md:h-10 flex items-center justify-center text-xl md:text-2xl font-serif font-bold text-gray-900 tracking-wide mb-1">
+                          {formatTermJSX(currentTrainQ.a, 'x2', true)}
+                        </div>
+                        <div className="flex flex-col gap-1.5 md:gap-2 items-center w-full relative">
+                          <input
+                            type="text" inputMode="text" ref={tlRef} value={trainInputs.tl}
+                            onChange={(e) => handleTrainInputChange(e, 'tl')} onKeyDown={(e) => handleTrainKeyDown(e, 'tl')}
+                            className={`text-center w-10 h-10 md:w-12 md:h-12 text-lg md:text-xl font-bold bg-white border border-gray-300 rounded-xl outline-none transition-colors focus:border-black focus:ring-1 focus:ring-black math-input ${trainAVal !== null && trainAVal !== currentTrainQ.a ? 'border-red-400 bg-red-50 text-red-700' : isTrainACorrect ? 'border-green-400 bg-green-50 text-green-700' : 'text-gray-800 shadow-sm'}`}
+                          />
+                          <input
+                            type="text" inputMode="text" ref={blRef} value={trainInputs.bl}
+                            onChange={(e) => handleTrainInputChange(e, 'bl')} onKeyDown={(e) => handleTrainKeyDown(e, 'bl')}
+                            className={`text-center w-10 h-10 md:w-12 md:h-12 text-lg md:text-xl font-bold bg-white border border-gray-300 rounded-xl outline-none transition-colors focus:border-black focus:ring-1 focus:ring-black math-input ${trainAVal !== null && trainAVal !== currentTrainQ.a ? 'border-red-400 bg-red-50 text-red-700' : isTrainACorrect ? 'border-green-400 bg-green-50 text-green-700' : 'text-gray-800 shadow-sm'}`}
+                          />
+                          {/* 절차2 가이드 (좌측 입력창 아래) */}
+                          {showGuide2 && (
+                            <div className="absolute top-[100%] mt-1 md:mt-2 left-0 flex flex-col items-start text-violet-600 font-bold text-[10px] md:text-xs z-50 animate-fade-in whitespace-nowrap">
+                              <div className="pl-[20px] md:pl-[26px] mb-[1px]">↑</div>
+                              <div className="transform -translate-x-[28px] flex flex-col items-start">
+                                <span>
+                                  곱하여 <i className="font-serif italic text-[1.1em] mx-[1px]">x</i><sup className="font-serif text-[0.65em]">2</sup>의 계수 <span className="font-serif text-[1.15em] mx-0.5">{currentTrainQ.a}</span>{getJosa(currentTrainQ.a)}
+                                </span>
+                                <span>되는 수 찾기</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Middle Column (b value & Cross SVG) */}
+                      <div className="flex flex-col items-center w-16 md:w-20 shrink-0 relative">
+                        <div className={`h-8 md:h-10 flex items-center justify-center text-xl md:text-2xl font-serif font-bold tracking-wide whitespace-nowrap mb-1 transition-all duration-300 transform -translate-x-[1px] ${trainSum !== null && trainSum !== currentTrainQ.b ? 'text-red-500 scale-110 drop-shadow-md' : isTrainBCorrect ? 'text-green-600' : 'text-gray-900'}`}>
+                          {formatTermJSX(currentTrainQ.b, 'x', false)}
+                        </div>
+                        <div className="absolute left-1/2 -translate-x-1/2 ml-[1px] top-[36px] md:top-[44px] w-[97px] md:w-[141px] h-[86px] md:h-[104px] pointer-events-none overflow-visible">
+                          <svg className="absolute inset-0 w-full h-full overflow-visible">
+                            <line x1="0" y1="23%" x2="100%" y2="77%"
+                                  stroke={trainTl !== null && trainBr !== null ? '#000000' : '#cbd5e1'}
+                                  strokeWidth="3" strokeLinecap="round" className="transition-all duration-300" />
+                            <line x1="0" y1="77%" x2="100%" y2="23%"
+                                  stroke={trainBl !== null && trainTr !== null ? '#000000' : '#cbd5e1'}
+                                  strokeWidth="3" strokeLinecap="round" className="transition-all duration-300" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Right Column (c value) */}
+                      <div className="flex flex-col items-center z-10 w-12 md:w-16 relative">
+                        <div className="h-8 md:h-10 flex items-center justify-center text-xl md:text-2xl font-serif font-bold text-gray-900 tracking-wide whitespace-nowrap mb-1">
+                          {formatTermJSX(currentTrainQ.c, '', false)}
+                        </div>
+                        <div className="flex flex-col gap-1.5 md:gap-2 items-center w-full translate-x-[5px] relative">
+                          <input
+                            type="text" inputMode="text" ref={trRef} value={trainInputs.tr}
+                            onChange={(e) => handleTrainInputChange(e, 'tr')} onKeyDown={(e) => handleTrainKeyDown(e, 'tr')}
+                            className={`text-center w-10 h-10 md:w-12 md:h-12 text-lg md:text-xl font-bold bg-white border border-gray-300 rounded-xl outline-none transition-colors focus:border-black focus:ring-1 focus:ring-black math-input ${trainCVal !== null && trainCVal !== currentTrainQ.c ? 'border-red-400 bg-red-50 text-red-700' : isTrainCCorrect ? 'border-green-400 bg-green-50 text-green-700' : 'text-gray-800 shadow-sm'}`}
+                          />
+                          <input
+                            type="text" inputMode="text" ref={brRef} value={trainInputs.br}
+                            onChange={(e) => handleTrainInputChange(e, 'br')} onKeyDown={(e) => handleTrainKeyDown(e, 'br')}
+                            className={`text-center w-10 h-10 md:w-12 md:h-12 text-lg md:text-xl font-bold bg-white border border-gray-300 rounded-xl outline-none transition-colors focus:border-black focus:ring-1 focus:ring-black math-input ${trainCVal !== null && trainCVal !== currentTrainQ.c ? 'border-red-400 bg-red-50 text-red-700' : isTrainCCorrect ? 'border-green-400 bg-green-50 text-green-700' : 'text-gray-800 shadow-sm'}`}
+                          />
+                          {/* 절차1 가이드 (우측 입력창 아래) */}
+                          {showGuide1 && (
+                            <div className="absolute top-[100%] mt-1 md:mt-2 right-0 flex flex-col items-end text-violet-600 font-bold text-[10px] md:text-xs z-50 animate-fade-in whitespace-nowrap">
+                              <div className="pr-[20px] md:pr-[26px] mb-[1px]">↑</div>
+                              <div className="transform translate-x-[20px] flex flex-col items-start">
+                                <span>
+                                  곱하여 상수항 <span className="font-serif text-[1.15em] mx-0.5">{currentTrainQ.c > 0 ? '+' : '−'}{Math.abs(currentTrainQ.c)}</span>{getJosa(currentTrainQ.c)}
+                                </span>
+                                <span>되는 수 찾기</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Cross Results Column */}
+                      <div className="flex flex-col items-center justify-start pl-2 md:pl-4 w-14 md:w-20 -translate-x-[3px] relative">
+                        <div className="h-8 md:h-10 mb-1"></div>
+                        <div className="flex flex-col items-center w-full gap-1.5 md:gap-2">
+                          <div className="h-10 md:h-12 flex items-center justify-center font-serif text-xl md:text-2xl font-bold text-blue-700 w-full tracking-wide">
+                            {trainTopCross !== null ? formatSignedNumJSX(trainTopCross) : ''}
+                          </div>
+                          <div className="h-10 md:h-12 flex items-center justify-center font-serif text-xl md:text-2xl font-bold text-blue-700 w-full tracking-wide">
+                            {trainBottomCross !== null ? formatSignedNumJSX(trainBottomCross) : ''}
+                          </div>
+                        </div>
+                        <div className="w-full border-t border-dashed border-gray-400 mt-1 md:mt-2 pt-1 flex flex-col items-center relative">
+                          <span className="text-[10px] md:text-[11px] font-bold text-gray-500 opacity-70 mb-0.5 whitespace-nowrap">합산 결과</span>
+                          <span className={`text-base md:text-xl font-serif font-extrabold transition-all duration-300 ${trainSum !== null && trainSum !== currentTrainQ.b ? 'text-red-500 scale-110 drop-shadow-md' : isTrainBCorrect ? 'text-green-600' : 'text-gray-400'}`}>
+                            {trainSum !== null ? formatSignedNumJSX(trainSum) : '?'}
+                          </span>
+                          {/* 절차3 가이드 (합산 결과 우측) */}
+                          {showGuide3 && (
+                            <div className="absolute top-1/2 -translate-y-1/2 -mt-[20px] left-[100%] ml-3 md:ml-4 flex flex-col items-start text-violet-600 font-bold text-[10px] md:text-xs z-50 animate-fade-in whitespace-nowrap">
+                              <span>대각선 방향으로 곱한</span>
+                              <span>두 수의 합과</span>
+                              <span>일차항의 계수를 비교</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* [2] 하단 선택지 영역 */}
+                  <div className="mt-4 flex flex-col items-center w-full max-w-lg min-h-[260px] md:min-h-[280px] relative px-2">
+                    {isTrainAllCorrect ? (
+                      <div className="w-full h-full flex flex-col justify-start animate-fade-in translate-y-[10px]">
+                        <div className="text-sm md:text-base font-medium text-gray-800 mb-2 flex justify-center items-center gap-1.5 tracking-tight min-h-[28px]">
+                          <span className="inline-flex items-center -translate-y-[1px] font-serif tracking-wide text-lg md:text-xl text-gray-900">
+                            {formatTightQuadraticJSX(currentTrainQ.a, currentTrainQ.b, currentTrainQ.c)}
+                          </span>
+                          <span>을(를) 인수분해하면?</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 md:gap-3 w-full justify-center px-1 z-10">
+                          {trainChoicesData.map((choice, i) => {
+                            const isWrong = trainWrongSelections.includes(choice.id);
+                            const isCorrectSelected = trainSuccess && choice.isCorrect;
+                            return (
+                              <button
+                                key={i} onClick={() => handleTrainChoiceClick(choice)} disabled={isWrong || trainSuccess}
+                                className={`py-2 md:py-3 px-1 md:px-2 rounded-xl border border-gray-200 text-base md:text-lg font-medium transition-all shadow-sm flex-1 flex justify-center items-center active:scale-95 whitespace-nowrap
+                                  ${isCorrectSelected ? 'bg-green-100 border-green-500 text-green-800 font-bold transform scale-[1.02]'
+                                  : isWrong ? 'bg-red-50 text-red-400 opacity-50'
+                                  : 'bg-white text-gray-800 hover:border-indigo-400 hover:bg-indigo-50'}`}
+                              >
+                                {formatFactoredExpression(choice.f1, choice.f2)}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div className="w-full mt-2 min-h-[60px] flex justify-center relative">
+                          {trainSuccess && (
+                            <div className="absolute top-0 w-full flex flex-col md:flex-row items-center justify-center gap-3 bg-emerald-50/50 py-2.5 px-4 rounded-xl border border-emerald-100 animate-fade-in z-20">
+                              <div className="text-xl md:text-2xl font-extrabold text-emerald-600 drop-shadow-sm flex items-center whitespace-nowrap">
+                                <CheckCircle2 className="w-6 h-6 mr-1" /> 굿굿👍
+                              </div>
+                              <div className="flex gap-2">
+                                <button onClick={resetTrainInputs} className="px-4 py-2 bg-white hover:bg-gray-50 border border-indigo-400 text-indigo-600 font-bold rounded-lg active:scale-95 transition-all text-xs md:text-sm shadow-sm">다시 풀기</button>
+                                <button onClick={nextTrainQuestion} className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg shadow-sm active:scale-95 transition-all text-xs md:text-sm">다음 문제</button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-full w-full"></div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* 퀴즈 화면 (일차식의 계산 게임 메인) */}
+            {step === 'quiz' && (
+              <div className="px-3 pt-[1px] pb-[17px] md:px-6 md:pt-[9px] md:pb-[25px] flex flex-col min-h-full relative transform -translate-y-[5px]">
+                
+                {isPaused && (
+                  <div 
+                    className="absolute inset-0 z-50 bg-white/95 flex flex-col items-center justify-center cursor-pointer rounded-2xl backdrop-blur-sm"
+                    onClick={handleResume}
+                  >
+                     <img src={currentPauseImage} alt="일시정지 이미지" className="w-48 h-48 md:w-64 md:h-64 object-contain animate-pikachu-bounce drop-shadow-md" />
+                     <p className="mt-8 text-sm md:text-lg font-bold text-yellow-800 bg-yellow-50 border border-yellow-400 px-6 py-3 rounded-full shadow-sm animate-fade-in">
+                       그림을 클릭하면 게임을 이어서 진행합니다.
+                     </p>
+                  </div>
+                )}
+
+                <div className="flex flex-row items-center justify-between px-2 md:px-3 py-1 md:py-1.5 mb-1 md:mb-2 w-full gap-2">
+                   
+                   {/* 좌측 상단바: 정답률, 점수, 평균 응답시간, 연속 정답, 진행시간 */}
+                   <div className="flex flex-1 items-center justify-start gap-2 md:gap-4 text-[10px] md:text-xs font-bold flex-wrap overflow-hidden pr-2">
+                     <div className="flex items-center text-blue-600 whitespace-nowrap" title="정답률"><Target className="w-3 h-3 md:w-3.5 md:h-3.5 mr-0.5 md:mr-1"/>{currentAccuracy}%</div>
+                     
+                     {isAdv50 && (
+                       <div className="flex items-center text-purple-600 relative whitespace-nowrap" title="점수">
+                         <Trophy className="w-3 h-3 md:w-3.5 md:h-3.5 mr-0.5 md:mr-1" />
+                         {score.toLocaleString()}점
+                         {scoreChange && (
+                           <span key={scoreChange.id} className={`absolute left-full ml-1 text-[9px] md:text-[10px] font-extrabold whitespace-nowrap animate-float-up-fade ${scoreChange.type === 'plus' ? 'text-purple-500' : 'text-red-500'}`}>
+                             {scoreChange.type === 'plus' ? `+${scoreChange.amount}` : `-${scoreChange.amount}`}
+                           </span>
+                         )}
+                       </div>
+                     )}
+
+                     {showAvgTime && (
+                       <div className="flex items-center text-emerald-600 whitespace-nowrap" title="평균 응답시간"><Zap className="w-3 h-3 md:w-3.5 md:h-3.5 mr-0.5 md:mr-1"/>{currentAvgTime}초</div>
+                     )}
+                     <div className="flex items-center text-orange-500 whitespace-nowrap" title="연속 정답">
+                       <span key={`combo-${consecutiveCorrects}`} className={consecutiveCorrects > 1 ? "animate-combo-pulse flex items-center whitespace-nowrap" : "flex items-center whitespace-nowrap"}>
+                         <Flame className="w-3 h-3 md:w-3.5 md:h-3.5 mr-0.5 md:mr-1" />
+                         {consecutiveCorrects}연속
+                       </span>
+                     </div>
+                     {showTimer && (
+                       <div className="flex items-center text-gray-500 whitespace-nowrap" title="진행시간"><Clock className="w-3 h-3 md:w-3.5 md:h-3.5 mr-0.5 md:mr-1"/>{elapsedTimer}초</div>
+                     )}
+                   </div>
+
+                   {/* 우측 상단바: 토글 버튼들 및 닫기 버튼 */}
+                   <div className={`flex shrink-0 items-center gap-2 md:gap-3 transition-opacity duration-300 ${isPaused ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                     
+                     <div className="flex shrink-0 opacity-80 hover:opacity-100 border border-gray-200 rounded-md overflow-hidden shadow-sm bg-white/90">
+                       <button 
+                         onClick={() => setShowAvgTime(!showAvgTime)}
+                         className={`flex flex-col items-center justify-center px-1.5 py-1 border-r border-gray-100 transition-all w-11 md:w-12 ${showAvgTime ? 'opacity-100 hover:bg-gray-50' : 'opacity-60 hover:opacity-80'}`}
+                         title={showAvgTime ? '응답시간 끄기' : '응답시간 켜기'}
+                       >
+                         <span className="text-[7px] md:text-[8px] font-bold text-gray-500 mb-1 pointer-events-none tracking-tighter leading-none">응답시간</span>
+                         <div className={`w-[20px] h-[9px] rounded-full flex items-center px-[1px] transition-colors pointer-events-none ${showAvgTime ? 'bg-emerald-400' : 'bg-gray-300'}`}>
+                           <div className={`w-[7px] h-[7px] bg-white rounded-full transform transition-transform duration-200 ${showAvgTime ? 'translate-x-[11px]' : 'translate-x-0'}`}></div>
+                         </div>
+                       </button>
+
+                       <button 
+                         onClick={() => setShowTimer(!showTimer)}
+                         className={`flex flex-col items-center justify-center px-1.5 py-1 border-r border-gray-100 transition-all w-11 md:w-12 ${showTimer ? 'opacity-100 hover:bg-gray-50' : 'opacity-60 hover:opacity-80'}`}
+                         title={showTimer ? '타이머 끄기' : '타이머 켜기'}
+                       >
+                         <span className="text-[7px] md:text-[8px] font-bold text-gray-500 mb-1 pointer-events-none tracking-tighter leading-none">타이머</span>
+                         <div className={`w-[20px] h-[9px] rounded-full flex items-center px-[1px] transition-colors pointer-events-none ${showTimer ? 'bg-emerald-400' : 'bg-gray-300'}`}>
+                           <div className={`w-[7px] h-[7px] bg-white rounded-full transform transition-transform duration-200 ${showTimer ? 'translate-x-[11px]' : 'translate-x-0'}`}></div>
+                         </div>
+                       </button>
+
+                       {isAdv50 ? (
+                         <button 
+                           onClick={() => setShowScorePopup(!showScorePopup)}
+                           className="flex flex-col items-center justify-center px-1.5 py-1 hover:bg-gray-50 transition-colors w-11 md:w-12 opacity-100 rounded-r-md"
+                           title={showScorePopup ? '점수 팝업 끄기' : '점수 팝업 켜기'}
+                         >
+                           <span className="text-[7px] md:text-[8px] font-bold text-gray-500 mb-1 pointer-events-none tracking-tighter leading-none">점수 팝업</span>
+                           <div className={`w-[20px] h-[9px] rounded-full flex items-center px-[1px] transition-colors pointer-events-none ${showScorePopup ? 'bg-indigo-400' : 'bg-gray-300'}`}>
+                             <div className={`w-[7px] h-[7px] bg-white rounded-full transform transition-transform duration-200 ${showScorePopup ? 'translate-x-[11px]' : 'translate-x-0'}`}></div>
+                           </div>
+                         </button>
+                       ) : (
+                         <div className="w-11 md:w-12 bg-transparent flex items-center justify-center border-l border-gray-100">
+                           <span className="text-gray-300 text-[9px]"></span>
+                         </div>
+                       )}
+                     </div>
+
+                     {/* 닫기 박스 */}
+                     <button 
+                       onClick={() => setShowExitWarning(true)}
+                       className="p-1.5 md:p-2 text-gray-400 hover:text-red-500 transition-colors bg-gray-100/50 hover:bg-red-50 rounded-full shrink-0"
+                       title="대문으로 돌아가기"
+                     >
+                       <XCircle className="w-5 h-5 md:w-6 md:h-6" />
+                     </button>
+                   </div>
+                </div>
+
+                <DrawableQuestionArea 
+                  isActive={showScratchpad} 
+                  currentIndex={currentIndex} 
+                  totalQuestions={totalQuestions}
+                  onPause={handlePause}
+                  canPause={feedbackState === null}
+                >
+                  <div className="leading-none flex flex-col items-center justify-start space-y-1 mt-1 z-10 relative break-keep text-center animate-fade-in w-full">
+                    <QuestionDisplay q={questions[currentIndex]} />
+                  </div>
+                </DrawableQuestionArea>
+
+                {/* 연습장과 선지 사이의 피드백 영역 */}
+                <div className="min-h-[70px] md:min-h-[86px] w-full flex flex-col items-center justify-end pb-1 mt-2 mb-2 md:mt-3 md:mb-3 transition-all relative z-40 transform translate-y-[2px] md:translate-y-[4px] pointer-events-none">
+                  {feedbackState === 'correct' && (
+                    <div className="flex flex-col items-center animate-fade-in w-full pointer-events-none relative">
+                      
+                      {isAdv50 && showScorePopup && comboPopup >= 3 && (
+                        <div key={`combo-pop-${comboPopup}`} className="absolute bottom-full mb-10 md:mb-12 text-orange-500 font-extrabold text-sm md:text-base animate-combo-mini-pop italic drop-shadow-sm">
+                          {comboPopup} COMBO! 🔥
+                        </div>
+                      )}
+
+                      {isAdv50 && showScorePopup && scoreChange && scoreChange.type === 'plus' && (
+                        <div key={`point-${scoreChange.id}`} className="absolute bottom-full mb-2 text-purple-600 font-extrabold text-lg md:text-xl animate-bounce-slight tracking-wider drop-shadow-sm">
+                          +{scoreChange.amount} 점 획득! ✨
+                        </div>
+                      )}
+
+                      <div className="flex flex-row items-center justify-center gap-3 pointer-events-auto">
+                        <div className="text-green-700 font-bold text-lg md:text-xl flex items-center bg-green-50 px-5 py-2 md:py-3 rounded-full shadow-sm border border-green-200">
+                          <CheckCircle2 className="w-5 h-5 mr-1.5 md:mr-2" /> 정답!
+                        </div>
+                        {feedbackImage && (
+                          <img 
+                            src={feedbackImage} 
+                            alt="정답 축하 그림" 
+                            className="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-md animate-bounce-slight"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {feedbackState === 'incorrect_final' && (
+                    <div className="flex flex-col items-center animate-fade-in w-full max-w-sm pointer-events-none relative">
+                      <span className="absolute bottom-full mb-3 text-[13px] md:text-sm font-semibold text-red-500 pointer-events-auto">기회를 모두 소진하였습니다.</span>
+                      <div className="flex gap-2 w-full justify-center pointer-events-auto px-4 md:px-0 mt-1 max-w-[280px]">
+                        <button 
+                          onClick={goToNext}
+                          className="flex-1 px-5 py-2 bg-white border border-gray-300 text-gray-500 font-bold rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center text-xs md:text-sm shadow-sm active:scale-95"
+                        >
+                          다음 문제 <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 ml-1 md:ml-1.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {feedbackState === 'incorrect_retryable' && (
+                    <div className="flex flex-col items-center animate-fade-in w-full pointer-events-none relative">
+                      <div className="absolute bottom-full mb-3 text-red-500 font-bold text-[13px] md:text-sm flex items-center pointer-events-auto">
+                        <AlertCircle className="w-4 h-4 mr-1.5" /> 기회가 {3 - currentAttempts}번 남았습니다!
+                      </div>
+                      <div className="flex gap-2 w-full max-w-[280px] pointer-events-auto mt-1">
+                        <button 
+                          onClick={handleRetry}
+                          className="flex-1 px-5 py-2 bg-white border-2 border-indigo-400 text-indigo-600 font-bold rounded-lg md:rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center text-xs md:text-sm shadow-sm active:scale-95"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1 md:mr-1.5" /> 다시 풀기
+                        </button>
+                        <button 
+                          onClick={handleSkipInRetry}
+                          className="flex-1 px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 font-bold rounded-lg md:rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center text-xs md:text-sm shadow-sm active:scale-95"
+                        >
+                          다음 문제 <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 ml-1 md:ml-1.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 선지 영역 및 상시 Hint 버튼 */}
+                <div className="relative w-full z-50">
+                  {(feedbackState === null || feedbackState === 'incorrect_retryable') && !isPaused && (
+                    <React.Fragment>
+                      {!hintVisible ? (
+                        <div className="absolute right-0 bottom-full mb-2 pointer-events-auto z-50 flex items-end">
+                          <div className="opacity-80 hover:opacity-100 transition-opacity">
+                            <button 
+                              onClick={() => {
+                                setHintVisible(true);
+                                if (isAdv50) setHintUsedInSession(true); // 전문가 모드일 경우 힌트 사용 체크 활성화
+                              }} 
+                              className="flex flex-col items-center justify-center bg-white/90 backdrop-blur-md px-2 py-1 rounded-md border border-gray-200 shadow-sm active:scale-95 transition-all text-blue-500"
+                              title="계산 과정 힌트 보기"
+                            >
+                              <span className="text-[9px] font-bold text-gray-500 mb-0.5 pointer-events-none font-sans">Hint</span>
+                              <HelpCircle className="w-[14px] h-[14px] pointer-events-none" />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        /* 요청 반영: 여백(padding/margin) 축소 적용 */
+                        <div 
+                          className="absolute bg-white border-2 border-indigo-200 px-4 py-3 rounded-2xl animate-fade-in shadow-[0_0_30px_rgba(0,0,0,0.15)] flex flex-col pointer-events-auto z-[100]"
+                          style={{ top: '-60px', bottom: '-15px', left: '-15px', right: '-15px' }}
+                        >
+                          <div className="flex-1 flex flex-col h-full">
+                            {/* 닫기 버튼: 여백 축소로 인한 위치 상향 조정 (top-2) */}
+                            <button 
+                              onClick={() => setHintVisible(false)} 
+                              className="absolute top-2 right-[9px] p-1.5 text-gray-400 hover:text-red-500 transition-colors bg-gray-50/50 hover:bg-red-50 rounded-full z-10"
+                              title="가이드 닫기"
+                            >
+                              <XCircle className="w-5 h-5" />
+                            </button>
+                            
+                            <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-1 pt-1">
+                              {questions[currentIndex].hint.includes('|||') ? (
+                                <div className="flex flex-col min-[500px]:flex-row gap-4 w-full h-full">
+                                  {questions[currentIndex].hint.split('|||').map((colText, cIdx) => (
+                                    <div key={cIdx} className="flex-1 space-y-1.5 min-[500px]:border-l min-[500px]:border-indigo-100 min-[500px]:first:border-none min-[500px]:pl-3 min-[500px]:first:pl-0">
+                                      {colText.split('\n').map((line, idx) => (
+                                        <div key={idx} className="text-[14px] md:text-base text-gray-800 leading-relaxed font-sans break-keep"><DisplayMath text={line} /></div>
+                                      ))}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="space-y-1.5">
+                                  {questions[currentIndex].hint.split('\n').map((line, idx) => (
+                                    <div key={idx} className="text-[14px] md:text-base text-gray-800 leading-relaxed font-sans break-keep"><DisplayMath text={line} /></div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  )}
+
+                  {/* 보기 컨테이너 (힌트 노출 시 선지 버튼들이 보이지 않도록 오파시티 0 및 클릭 차단) */}
+                  <div className={`grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 w-full transform translate-y-[0.5px] transition-all duration-300 ${isPaused || hintVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                    {(questions[currentIndex]?.options || []).map((opt, i) => {
+                      const isAlreadySelected = currentSelectedOpts.includes(opt);
+                      const isCurrentSelection = opt === selectedOption;
+                      
+                      let btnClass = "min-h-[50px] md:min-h-[60px] p-1.5 text-lg md:text-xl font-medium bg-white border-2 rounded-xl transition-all shadow-sm flex justify-center items-center active:scale-95 ";
+                      
+                      let disabled = feedbackState !== null || isAlreadySelected || isPaused || hintVisible;
+                      
+                      if (feedbackState !== null) {
+                        if (isCurrentSelection && feedbackState.startsWith('incorrect')) {
+                          btnClass += " border-red-500 bg-red-50 text-red-700";
+                        } else if (isCurrentSelection && feedbackState === 'correct') {
+                          btnClass += " border-green-500 bg-green-50 text-green-700";
+                        } else {
+                          btnClass += " border-gray-100 text-gray-300 opacity-40";
+                        }
+                      } else {
+                        if (isAlreadySelected) {
+                          btnClass += " border-red-200 bg-red-50 text-red-400 opacity-60"; 
+                        } else {
+                          btnClass += " border-gray-200 text-gray-800 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={`q-${currentIndex}-opt-${i}`} 
+                          onClick={() => handleAnswer(opt)}
+                          disabled={disabled}
+                          className={btnClass}
+                        >
+                          <DisplayMath text={opt} />
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 결과 화면 */}
+            {step === 'result' && (
+              <div className="px-6 pb-6 pt-0 md:px-8 md:pb-8 md:pt-[5px] animate-fade-in w-full max-w-2xl mx-auto">
+                <div className="text-center mb-4">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">결과 분석</h2>
+                  <div className="text-lg md:text-xl text-gray-600 mb-4">
+                    총 {totalQuestions}문제 중 
+                    <span className="text-indigo-600 font-bold text-3xl mx-2">
+                      {results.filter(r => r.isCorrect).length}
+                    </span>
+                    문제 최종 정답<span onClick={() => setPwdRequestTarget('resultAdmin')} className="cursor-pointer text-gray-600 relative z-50">!</span>
+                  </div>
+                  
+                  <div className="flex justify-center gap-2 md:gap-4 mb-6 flex-wrap">
+                    {isAdv50 && (
+                      <div className="bg-purple-50 px-3 md:px-6 py-4 rounded-2xl text-center flex-1 min-w-[100px] max-w-[140px] shadow-sm border border-purple-100">
+                        <div className="text-[11px] md:text-sm text-purple-600 mb-1 font-semibold">최종 점수</div>
+                        <div className={`text-2xl md:text-3xl font-bold ${score < 0 ? 'text-red-500' : 'text-purple-800'}`}>
+                          {score.toLocaleString()}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="bg-indigo-50 px-3 md:px-6 py-4 rounded-2xl text-center flex-1 min-w-[100px] max-w-[140px] shadow-sm border border-indigo-100 relative group">
+                      <div className="text-[11px] md:text-sm text-indigo-600 mb-1 font-semibold flex items-center justify-center">
+                        정답률 <HelpCircle className="w-3 h-3 ml-1 text-indigo-400"/>
+                      </div>
+                      <div className="text-2xl md:text-3xl font-bold text-indigo-800">{currentAccuracy}%</div>
+                      <div className="absolute hidden group-hover:block bottom-full mb-2 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg text-center z-10 left-1/2 transform -translate-x-1/2">
+                        총 정답 수({stats.corrects}) ÷ 총 시도 횟수({stats.attempts})
+                      </div>
+                    </div>
+
+                    <div className="bg-emerald-50 px-3 md:px-6 py-4 rounded-2xl text-center flex-1 min-w-[100px] max-w-[140px] shadow-sm border border-emerald-100">
+                      <div className="text-[11px] md:text-sm text-emerald-600 mb-1 font-semibold">평균 응답시간</div>
+                      <div className="text-2xl md:text-3xl font-bold text-emerald-800">{currentAvgTime}<span className="text-sm md:text-base ml-1">초</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                {isAdv50 && (
+                  <div className="mt-4 mb-8 bg-gray-900 rounded-2xl p-4 md:p-6 shadow-2xl relative overflow-hidden w-full">
+                     <h3 className="text-2xl md:text-3xl font-extrabold text-yellow-400 mb-6 text-center tracking-widest mt-2">
+                       🏆 HALL OF FAME 🏆
+                     </h3>
+                     
+                     {!isSubmitted ? (
+                        canEnterHallOfFame ? (
+                          // 전문가 단계에서 한 번이라도 힌트를 사용했다면 등록 제외 문구 제공
+                          hintUsedInSession ? (
+                            <div className="flex flex-col items-center mb-8 bg-gray-800 p-6 rounded-xl border border-red-500/30 w-full max-w-sm mx-auto shadow-inner text-center">
+                              <span className="text-3xl mb-3">💡</span>
+                              <p className="text-red-400 font-extrabold text-sm md:text-base leading-relaxed break-keep">
+                                힌트를 사용하여 명예의 전당 등록 대상에서 제외되었습니다.
+                              </p>
+                              <p className="text-gray-400 text-xs md:text-sm mt-2 font-medium break-keep">
+                                스스로의 힘으로 도움 없이 푸는 완벽한 도전에 다시 도전해보세요! 💪
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center mb-8 bg-gray-800 p-4 md:p-5 rounded-xl border border-gray-700 w-full max-w-sm mx-auto shadow-inner">
+                               <p className="text-yellow-200 mb-4 text-sm md:text-base font-semibold text-center leading-relaxed">
+                                 명예의 전당에 닉네임을 남기세요.<br/>
+                                 <span className="text-red-400/90 text-[11px] md:text-xs mt-1.5 block font-medium">
+                                   ⚠️ 디지털 발자국이 남습니다.<br/>부적절한 닉네임은 삭제될 수 있습니다.
+                                 </span>
+                               </p>
+                               <div className="flex gap-2 w-full">
+                                 <input 
+                                   type="text" 
+                                   maxLength={7}
+                                   value={nickname}
+                                   onChange={e => setNickname(e.target.value)}
+                                   placeholder="닉네임 (최대 7자)"
+                                   className="flex-1 px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-600 focus:border-yellow-400 focus:outline-none font-bold text-center"
+                                 />
+                                 <button 
+                                   onClick={handleRankSubmit}
+                                   className="px-5 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-extrabold rounded-lg transition-colors active:scale-95"
+                                 >
+                                   등록
+                                 </button>
+                               </div>
+                            </div>
+                          )
+                        ) : (
+                          <div className="flex flex-col items-center mb-8 bg-gray-800 p-6 rounded-xl border border-gray-700 w-full max-w-sm mx-auto shadow-inner text-center">
+                            <span className="text-3xl mb-3">💪</span>
+                            <p className="text-gray-300 font-bold text-sm md:text-base">명예의 전당을 향해 한 걸음 더!</p>
+                            <p className="text-gray-500 text-xs md:text-sm mt-2 font-medium">
+                              총점 {MIN_SCORE_REQUIRED.toLocaleString()}점 이상, 정확도 {MIN_ACCURACY_REQUIRED}% 이상 달성 시 등록 가능합니다.
+                            </p>
+                          </div>
+                        )
+                     ) : (
+                        <div className="text-center text-yellow-400 font-bold mb-8 animate-pulse bg-gray-800 py-3 rounded-xl border border-yellow-500/30">
+                           당신의 기록이 명예의 전당에 새겨졌습니다!
+                        </div>
+                     )}
+                     
+                     <div className="bg-gray-800 rounded-xl p-2 md:p-4 overflow-x-auto dark-scrollbar border border-gray-700">
+                       <table className="w-full text-left text-gray-300 text-[13px] md:text-base min-w-[320px]">
+                         <thead>
+                           <tr className="border-b border-gray-700 text-gray-500">
+                             <th className="py-2 text-center w-12">순위</th>
+                             <th className="py-2 pl-2">닉네임</th>
+                             <th className="py-2 text-right">점수</th>
+                             <th className="py-2 text-right whitespace-nowrap">평균 응답시간</th>
+                             <th className="py-2 text-right whitespace-nowrap">정확도</th>
+                             {isAdmin && <th className="py-2 text-center text-red-400 whitespace-nowrap">관리</th>}
+                           </tr>
+                         </thead>
+                         <tbody>
+                           {globalLeaderboardData.map((record, idx) => {
+                             let rankMedal = `${idx + 1}`;
+                             let rankStyle = "text-gray-400";
+                             if (idx === 0) { rankMedal = '🥇'; rankStyle = "text-yellow-400 font-black text-lg md:text-xl"; }
+                             if (idx === 1) { rankMedal = '🥈'; rankStyle = "text-gray-300 font-bold text-lg"; }
+                             if (idx === 2) { rankMedal = '🥉'; rankStyle = "text-amber-600 font-bold text-lg"; }
+
+                             return (
+                               <tr key={record.id} className="border-b border-gray-700/50 hover:bg-gray-700 transition-colors">
+                                 <td className={`py-3 text-center ${rankStyle}`}>{rankMedal}</td>
+                                 <td className={`py-3 pl-2 font-extrabold tracking-wide ${idx < 3 ? 'text-white' : 'text-gray-300'}`}>{record.name}</td>
+                                 <td className={`py-3 text-right font-bold ${record.score < 0 ? 'text-red-400' : 'text-yellow-400'}`}>
+                                   {record.score.toLocaleString()}
+                                 </td>
+                                 <td className="py-3 text-right text-gray-400 font-mono whitespace-nowrap">{record.time}s</td>
+                                 <td className="py-3 text-right text-gray-400 whitespace-nowrap">{record.accuracy}%</td>
+                                 {isAdmin && (
+                                   <td className="py-3 text-center">
+                                     <button onClick={() => setDeleteTarget(record.id)} className="text-red-500 hover:text-red-400 p-1 bg-red-500/10 rounded active:scale-95 transition-transform">
+                                       <Trash2 className="w-4 h-4 mx-auto" />
+                                     </button>
+                                   </td>
+                                 )}
+                               </tr>
+                             )
+                           })}
+                           {globalLeaderboardData.length === 0 && (
+                             <tr>
+                               <td colSpan={isAdmin ? 6 : 5} className="py-10 text-center text-gray-500 font-medium">
+                                 아직 등록된 기록이 없습니다.<br/>첫 번째 전설이 되어보세요!
+                               </td>
+                             </tr>
+                           )}
+                         </tbody>
+                       </table>
+                     </div>
+                  </div>
+                )}
+
+                <div className="max-h-[45vh] overflow-y-auto border rounded-xl divide-y mb-8 bg-gray-50/50 text-left shadow-inner custom-scrollbar">
+                  {results.map((r, i) => (
+                    <div key={i} className={`p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0 ${r.isCorrect ? 'hover:bg-white' : 'bg-red-50/40 hover:bg-red-50/60'}`}>
+                      <div className="w-full">
+                        <div className="font-semibold text-gray-800 break-keep flex flex-wrap items-center gap-1">
+                          <span className="text-indigo-400 mr-1 w-6 shrink-0">{i+1}.</span>
+                          <span className="flex-1">{getResultQuestionText(r.question)}</span>
+                        </div>
+                        <p className="text-sm mt-2 text-gray-600 flex items-center flex-wrap gap-1">
+                          선택한 답: 
+                          {r.selectedOptions.map((opt, idx) => (
+                            <span key={idx} className="flex items-center">
+                              {idx > 0 && <ArrowRight className="w-3 h-3 mx-1 text-gray-400" />}
+                              <span className={`px-2 py-0.5 rounded text-xs font-bold tracking-widest ${idx === r.selectedOptions.length - 1 && r.isCorrect ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                                <DisplayMath text={opt} />
+                              </span>
+                            </span>
+                          ))}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm shrink-0 w-full md:w-auto justify-end mt-2 md:mt-0">
+                        <span className="text-gray-500 font-mono bg-white px-2 py-1 rounded border shadow-sm">
+                          {r.timeSpent}초
+                        </span>
+                        {r.isCorrect ? (
+                          <div className="flex items-center text-green-600 font-bold"><CheckCircle2 className="w-5 h-5 mr-1" /> 정답</div>
+                        ) : (
+                          <div className="flex items-center text-red-600 font-bold"><XCircle className="w-5 h-5 mr-1" /> 오답</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {results.some(r => !r.isCorrect) && (
+                    <button
+                      onClick={handleRetryIncorrect}
+                      className="flex-1 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-all shadow-md active:scale-95 text-lg"
+                    >
+                      틀린 문제 다시 풀기
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      saveHistory();
+                      setStep('start');
+                      setIsAdmin(false);
+                    }}
+                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-md active:scale-95 text-lg"
+                  >
+                    처음으로 돌아가기
+                  </button>
+                </div>
+
+              </div>
+            )}
+          </div>
+          
+          {/* 통합된 비밀번호 입력 모달 (개발노트 & 관리자 로그인 공용) */}
+          {pwdRequestTarget !== null && (
+            <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full animate-fade-in">
+                <h3 className="text-xl font-bold mb-4 text-gray-800">보안 구역</h3>
+                <p className="text-sm text-gray-600 mb-4">접근을 위한 비밀번호를 입력해주세요.</p>
+                <input 
+                  type="password" 
+                  value={pwdInput}
+                  onChange={(e) => { setPwdInput(e.target.value); setPwdError(false); }}
+                  onKeyDown={(e) => { if(e.key === 'Enter') handleCheckPwd(); }}
+                  className="w-full border-2 border-gray-200 rounded-lg p-3 outline-none focus:border-indigo-500 mb-2"
+                  placeholder="Password"
+                  autoFocus
+                />
+                {pwdError && <p className="text-red-500 text-xs mb-4">비밀번호가 일치하지 않습니다.</p>}
+                <div className="flex gap-2 mt-4">
+                  <button onClick={() => { setPwdRequestTarget(null); setPwdError(false); setPwdInput(''); }} className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-semibold text-gray-600 transition-colors">취소</button>
+                  <button onClick={handleCheckPwd} className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold text-white transition-colors">확인</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 자체 페이지 이탈 경고 모달 */}
+          {showExitWarning && (
+            <div className="fixed inset-0 z-[70] bg-black/50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full animate-fade-in text-center border-t-4 border-orange-500">
+                <h3 className="text-xl font-bold mb-3 text-gray-800 flex justify-center items-center gap-2">
+                  <AlertCircle className="w-6 h-6 text-orange-500" />
+                  페이지 이탈 경고
+                </h3>
+                <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                  퀴즈 진행 중에는 페이지를 새로고침하거나<br/>뒤로가기를 사용할 수 없습니다.
+                </p>
+                <div className="flex gap-2">
+                  <button onClick={() => { setShowExitWarning(false); setStep('start'); setIsAdmin(false); }} className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-semibold text-gray-600 transition-colors">학습 종료하기</button>
+                  <button onClick={() => setShowExitWarning(false)} className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold text-white transition-colors">계속 풀기</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 자체 삭제 확인 모달 */}
+          {deleteTarget && (
+            <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full animate-fade-in text-center border-t-4 border-red-500">
+                <h3 className="text-xl font-bold mb-3 text-gray-800 flex justify-center items-center gap-2">
+                  <AlertCircle className="w-6 h-6 text-red-500" />
+                  기록 영구 삭제
+                </h3>
+                <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                  정말로 이 기록을 삭제하시겠습니까?<br/>
+                  이 작업은 되돌릴 수 없습니다.
+                </p>
+                <div className="flex gap-2">
+                  <button onClick={() => setDeleteTarget(null)} className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-semibold text-gray-600 transition-colors">취소</button>
+                  <button onClick={() => {
+                    if (window.deleteRecordFromDB) {
+                      window.deleteRecordFromDB(deleteTarget, () => {
+                        setDeleteTarget(null);
+                      });
+                    }
+                  }} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold text-white transition-colors">
+                    삭제하기
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 개발노트 뷰 모달 */}
+          {devNoteState === 'view' && (
+            <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 md:p-6">
+              <div className="bg-white rounded-xl shadow-2xl p-6 max-w-3xl w-full max-h-[85vh] flex flex-col animate-fade-in">
+                <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+                  <h3 className="text-2xl font-bold text-indigo-700 flex items-center gap-2">🛠️ 선생님 전용 개발 노트</h3>
+                  <button onClick={() => setDevNoteState('hidden')} className="text-gray-400 hover:text-gray-800 transition-colors">
+                    <XCircle className="w-6 h-6" />
+                  </button>
+                </div>
+                
+                <div className="overflow-y-auto pr-2 space-y-6 text-sm text-gray-700 leading-relaxed custom-scrollbar">
+                  
+                  <section>
+                    <h4 className="text-lg font-bold text-gray-800 mb-2 flex items-center before:content-[''] before:w-1 before:h-4 before:bg-indigo-500 before:mr-2 before:rounded-sm">1. 일차식의 계산 업데이트 내역</h4>
+                    <ul className="list-disc pl-5 space-y-1.5 text-gray-600">
+                      <li>기존의 "이차식의 인수 찾기" 퀴즈를 <strong>"일차식의 덧셈과 뺄셈"</strong>으로 전면 개편했습니다.</li>
+                      <li>모든 문제는 단항식의 곱셈/나눗셈부터 동류항 계산, 분배법칙을 포함하는 복잡한 계산까지 7가지 유형으로 <strong>6지선다형</strong>으로 제공됩니다.</li>
+                      <li>Firebase 데이터베이스 수집 경로를 분리(hallOfFame_linear)하여 기존 랭킹과 혼용되지 않도록 처리했습니다.</li>
+                      <li>학생들이 원리를 파악할 수 있도록 언제든 열어볼 수 있는 <strong>Hint 가이드 버튼</strong>을 상시 활성화해두었습니다.</li>
+                      <li>"다른 것은 답이 아니다.", "다른 셋은 답이 아니다" 등의 텍스트형 함정 선지도 자연스럽게 처리됩니다.</li>
+                    </ul>
+                  </section>
+                  <section>
+                    <h4 className="text-lg font-bold text-gray-800 mb-2 flex items-center before:content-[''] before:w-1 before:h-4 before:bg-indigo-500 before:mr-2 before:rounded-sm">2. 현재 구현된 핵심 기능 요약</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h5 className="font-bold text-indigo-600 mb-1">🎮 다이나믹 수학 문제 생성기</h5>
+                        <p>일차식의 계산 규칙에 맞게 무한정 랜덤 문제를 생성하며, 함정 선지를 지능적으로 배치합니다.</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h5 className="font-bold text-indigo-600 mb-1">✍️ 디지털 연습장 (Canvas API)</h5>
+                        <p>학생들이 별도의 종이 없이 화면에 바로 필기하며 풀 수 있습니다. 터치스크린과 마우스를 모두 지원하며, Undo(실행 취소)/Redo(다시 실행)/Clear 기능을 지원합니다.</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h5 className="font-bold text-indigo-600 mb-1">📊 실시간 피드백 및 랭크</h5>
+                        <p>타이머, 정답률, 연속 정답뿐만 아니라 속도와 난이도에 따른 <strong>실시간 포인트 획득/감점 시스템</strong>을 지원합니다. (사용자 선택에 따른 팝업 ON/OFF 가능)</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h5 className="font-bold text-indigo-600 mb-1">📝 명예의 전당 및 오답 노트</h5>
+                        <p>Firebase와 연동된 온라인 랭킹보드에서 반 친구들과 실시간으로 순위를 겨룰 수 있으며, 퀴즈가 끝난 뒤 틀린 문제들만 모아 완벽하게 숙지할 때까지 반복해서 다시 풀 수 있습니다.</p>
+                      </div>
+                    </div>
+                  </section>
+                  
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 글로벌 명예의 전당 */}
+          {showGlobalLeaderboard && (
+            <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 md:p-6">
+              <div className="bg-gray-900 rounded-2xl shadow-2xl p-4 md:p-6 max-w-2xl w-full max-h-[85vh] flex flex-col animate-fade-in relative border border-gray-700">
+                <button onClick={() => { setShowGlobalLeaderboard(false); setIsAdmin(false); }} className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                  <XCircle className="w-6 h-6" />
+                </button>
+                
+                <h3 className="text-2xl md:text-3xl font-extrabold text-yellow-400 mb-6 text-center tracking-widest mt-2">
+                  🏆 HALL OF FAME 🏆
+                </h3>
+                
+                <div className="bg-gray-800 rounded-xl p-2 md:p-4 overflow-y-auto flex-1 dark-scrollbar border border-gray-700">
+                  <table className="w-full text-left text-gray-300 text-[13px] md:text-base min-w-[320px]">
+                    <thead>
+                      <tr className="border-b border-gray-700 text-gray-500">
+                        <th className="py-2 text-center w-12">순위</th>
+                        <th className="py-2 pl-2">닉네임</th>
+                        <th className="py-2 text-right">점수</th>
+                        <th className="py-2 text-right whitespace-nowrap">평균 응답시간</th>
+                        <th className="py-2 text-right whitespace-nowrap">정확도</th>
+                        {isAdmin && <th className="py-2 text-center text-red-400 whitespace-nowrap">관리</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {globalLeaderboardData.map((record, idx) => {
+                        let rankMedal = `${idx + 1}`;
+                        let rankStyle = "text-gray-400";
+                        if (idx === 0) { rankMedal = '🥇'; rankStyle = "text-yellow-400 font-black text-lg md:text-xl"; }
+                        if (idx === 1) { rankMedal = '🥈'; rankStyle = "text-gray-300 font-bold text-lg"; }
+                        if (idx === 2) { rankMedal = '🥉'; rankStyle = "text-amber-600 font-bold text-lg"; }
+
+                        return (
+                          <tr key={record.id} className="border-b border-gray-700/50 hover:bg-gray-700 transition-colors">
+                            <td className={`py-3 text-center ${rankStyle}`}>{rankMedal}</td>
+                            <td className={`py-3 pl-2 font-extrabold tracking-wide ${idx < 3 ? 'text-white' : 'text-gray-300'}`}>{record.name}</td>
+                            <td className={`py-3 text-right font-bold ${record.score < 0 ? 'text-red-400' : 'text-yellow-400'}`}>
+                              {record.score.toLocaleString()}
+                            </td>
+                            <td className="py-3 text-right text-gray-400 font-mono whitespace-nowrap">{record.time}s</td>
+                            <td className="py-3 text-right text-gray-400 whitespace-nowrap">{record.accuracy}%</td>
+                            {isAdmin && (
+                              <td className="py-3 text-center">
+                                <button onClick={() => setDeleteTarget(record.id)} className="text-red-500 hover:text-red-400 p-1 bg-red-500/10 rounded active:scale-95 transition-transform">
+                                  <Trash2 className="w-4 h-4 mx-auto" />
+                                </button>
+                              </td>
+                            )}
+                          </tr>
+                        )
+                      })}
+                      {globalLeaderboardData.length === 0 && (
+                        <tr>
+                          <td colSpan={isAdmin ? 6 : 5} className="py-10 text-center text-gray-500 font-medium">
+                            아직 등록된 기록이 없습니다.<br/>첫 번째 전설이 되어보세요!
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
