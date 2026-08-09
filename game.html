@@ -844,17 +844,38 @@ document.addEventListener('keydown', e => {
 
 // ── 초기 데이터 로드 ─────────────────────────────────────
 (async function init() {
+  // file:// 프로토콜 감지 → 서버 안내
+  if (location.protocol === 'file:') {
+    document.getElementById('question-text').innerHTML = `
+      <span style="font-size:var(--text-base);line-height:1.7;color:var(--text-secondary)">
+        ⚠️ <strong style="color:var(--warning-400)">로컬 서버가 필요합니다.</strong><br><br>
+        프로젝트 폴더의 <code style="background:var(--bg-elevated);padding:2px 6px;border-radius:4px;font-size:0.85em">서버시작.bat</code>
+        을 더블클릭하면<br>
+        자동으로 서버가 열립니다. 🚀
+      </span>
+    `;
+    return;
+  }
+
   try {
     const res = await fetch('data/questions.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     gs.allQuestions = await res.json();
     gs.session = buildSession(gs.allQuestions, difficulty);
     showQuestion(gs.session[0]);
   } catch(err) {
-    document.getElementById('question-text').textContent =
-      '⚠️ 문제를 불러올 수 없습니다. 파일 경로를 확인해주세요.';
+    document.getElementById('question-text').innerHTML = `
+      <span style="font-size:var(--text-sm);color:var(--danger-400)">
+        ⚠️ questions.json 로드 실패<br>
+        <code style="font-size:0.85em">${err.message}</code><br><br>
+        <span style="color:var(--text-muted)">서버시작.bat 을 실행한 뒤<br>
+        http://localhost:8080/index.html 로 접속하세요.</span>
+      </span>
+    `;
     console.error('questions.json 로드 실패:', err);
   }
 })();
+
 </script>
 
 </body>
