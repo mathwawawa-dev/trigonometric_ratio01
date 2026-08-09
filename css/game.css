@@ -28,68 +28,92 @@
 .hud-left  { display: flex; align-items: center; gap: var(--sp-3); }
 .hud-right { display: flex; align-items: center; gap: var(--sp-3); }
 
-/* ── 스탯 뜨지 ──────────────────────────────────────────────── */
+/* ── 스탯 배지 (테두리/배경 없이 순수 텍스트 + 아이콘) ─────── */
 .stat-badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 11px;
   font-weight: 700;
   font-family: var(--font-display);
-  padding: 3px 7px;
-  border-radius: var(--radius-full);
-  border: 1px solid transparent;
+  padding: 2px 4px;
   white-space: nowrap;
   line-height: 1.3;
-  transition: opacity 0.2s;
+  background: none;
+  border: none;
 }
-.stat-badge--blue   { color: #1d4ed8; background: #dbeafe; border-color: #93c5fd; }
-.stat-badge--purple { color: #6d28d9; background: #ede9fe; border-color: #c4b5fd; }
-.stat-badge--orange { color: #c2410c; background: #ffedd5; border-color: #fdba74; }
-.stat-badge--green  { color: #15803d; background: #dcfce7; border-color: #86efac; }
-.stat-badge--gray   { color: #374151; background: #f3f4f6; border-color: #d1d5db; }
+.stat-icon {
+  width: 13px; height: 13px;
+  flex-shrink: 0;
+  display: inline-block;
+  pointer-events: none;
+}
+.stat-badge--blue   { color: #1d4ed8; }
+.stat-badge--purple { color: #6d28d9; }
+.stat-badge--orange { color: #c2410c; }
+.stat-badge--green  { color: #15803d; }
+.stat-badge--gray   { color: #4b5563; }
 
-/* ── 토글 패널 ──────────────────────────────────────────────── */
-.toggle-panel {
+/* ── 플로팅 토글 패널 (Fixed 우상단) ─────────────────────── */
+.floating-toggle-panel {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 9999;
   display: flex;
   align-items: center;
+  background: rgba(255,255,255,0.96);
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  background: rgba(255,255,255,0.9);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+[data-theme="dark"] .floating-toggle-panel {
+  background: rgba(30,30,40,0.95);
+  border-color: rgba(255,255,255,0.12);
+}
+.toggle-icon {
+  width: 15px; height: 15px;
+  flex-shrink: 0;
+  pointer-events: none;
 }
 .toggle-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border: none;
   border-right: 1px solid #f3f4f6;
   background: transparent;
   cursor: pointer;
-  gap: 2px;
+  gap: 3px;
   transition: background 0.15s;
-  min-width: 44px;
+  min-width: 52px;
 }
+[data-theme="dark"] .toggle-item { border-right-color: rgba(255,255,255,0.08); }
 .toggle-item:last-child { border-right: none; }
-.toggle-item:hover { background: #f9fafb; }
+.toggle-item:hover { background: rgba(0,0,0,0.04); }
+[data-theme="dark"] .toggle-item:hover { background: rgba(255,255,255,0.06); }
 .toggle-label {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   color: #6b7280;
-  letter-spacing: -0.3px;
+  white-space: nowrap;
   line-height: 1;
   pointer-events: none;
+  letter-spacing: 0;
 }
+[data-theme="dark"] .toggle-label { color: #9ca3af; }
 .toggle-track {
-  width: 22px; height: 10px;
+  width: 24px; height: 11px;
   border-radius: 999px;
   background: #d1d5db;
   display: flex;
   align-items: center;
-  padding: 1px;
+  padding: 1.5px;
   pointer-events: none;
   transition: background 0.2s;
 }
@@ -102,7 +126,39 @@
   transition: transform 0.2s;
   pointer-events: none;
 }
-.toggle-thumb--on { transform: translateX(12px); }
+.toggle-thumb--on { transform: translateX(13px); }
+
+/* ── 플로팅 홈 버튼 (Fixed 우하단) ───────────────────────── */
+#floating-home-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 16px;
+  z-index: 9999;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+  border: 1.5px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s;
+  backdrop-filter: blur(6px);
+  color: #374151;
+}
+#floating-home-btn svg { width: 20px; height: 20px; }
+#floating-home-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  transform: scale(1.08);
+}
+[data-theme="dark"] #floating-home-btn {
+  background: rgba(30,30,40,0.95);
+  border-color: rgba(255,255,255,0.15);
+  color: #e5e7eb;
+}
+
 
 /* ── 점수 팝업 애니메이션 ───────────────────────────────── */
 @keyframes floatUpFade {
@@ -227,35 +283,6 @@
 
 
 
-/* ── 다크/라이트 모드 토글 버튼 ─────────────────────────── */
-#theme-toggle {
-  position: fixed;
-  top: var(--sp-3);
-  right: var(--sp-4);
-  z-index: var(--z-float);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: var(--glass-bg);
-  border: 1.5px solid var(--border-normal);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  cursor: pointer;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    transform var(--transition-spring);
-  box-shadow: var(--shadow-sm);
-}
-#theme-toggle:hover {
-  background: rgba(124,58,237,0.15);
-  border-color: var(--primary-400);
-  transform: scale(1.1);
-}
 
 /* ── 정답 해설 배너 ───────────────────────────────────────────── */
 
