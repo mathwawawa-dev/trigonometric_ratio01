@@ -152,6 +152,82 @@
     }
   },
   {
+    "filename": "tri3_T001_5a_B.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.7320508075688772,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_5a_C.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.7320508075688772,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_6a_B.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.0,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_6a_C.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.0,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
     "filename": "tri3_T001_1b_A.png",
     "triangle_id": "T001",
     "category": "특수각 계열",
@@ -301,6 +377,82 @@
     "side_labels": {
       "AB": "$1$",
       "CA": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_5b_B.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.0,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_5b_C.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.0,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_6b_B.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.7320508075688772,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$2$"
+    }
+  },
+  {
+    "filename": "tri3_T001_6b_C.png",
+    "triangle_id": "T001",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.7320508075688772,
+      "BC": 2.0
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$2$"
     }
   },
   {
@@ -456,6 +608,82 @@
     }
   },
   {
+    "filename": "tri3_T002_5a_B.png",
+    "triangle_id": "T002",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.0,
+      "BC": 1.4142135623730951
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T002_5a_C.png",
+    "triangle_id": "T002",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.0,
+      "BC": 1.4142135623730951
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T002_6a_B.png",
+    "triangle_id": "T002",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.0,
+      "BC": 1.4142135623730951
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T002_6a_C.png",
+    "triangle_id": "T002",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 1.0,
+      "BC": 1.4142135623730951
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{2}$"
+    }
+  },
+  {
     "filename": "tri3_T003_1a_A.png",
     "triangle_id": "T003",
     "category": "특수각 계열",
@@ -605,6 +833,82 @@
     "side_labels": {
       "AB": "$\\sqrt{3}$",
       "CA": "$\\sqrt{6}$"
+    }
+  },
+  {
+    "filename": "tri3_T003_5a_B.png",
+    "triangle_id": "T003",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.7320508075688772,
+      "BC": 2.449489742783178
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$\\sqrt{6}$"
+    }
+  },
+  {
+    "filename": "tri3_T003_5a_C.png",
+    "triangle_id": "T003",
+    "category": "특수각 계열",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.7320508075688772,
+      "BC": 2.449489742783178
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$\\sqrt{6}$"
+    }
+  },
+  {
+    "filename": "tri3_T003_6a_B.png",
+    "triangle_id": "T003",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.7320508075688772,
+      "BC": 2.449489742783178
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$\\sqrt{6}$"
+    }
+  },
+  {
+    "filename": "tri3_T003_6a_C.png",
+    "triangle_id": "T003",
+    "category": "특수각 계열",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 1.7320508075688772,
+      "BC": 2.449489742783178
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$\\sqrt{6}$"
     }
   },
   {
@@ -760,6 +1064,82 @@
     }
   },
   {
+    "filename": "tri3_T004_5a_B.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.4641016151377544,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_5a_C.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.4641016151377544,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_6a_B.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.4641016151377544,
+      "AC": 2.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_6a_C.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.4641016151377544,
+      "AC": 2.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
     "filename": "tri3_T004_1b_A.png",
     "triangle_id": "T004",
     "category": "특수각 배수",
@@ -909,6 +1289,82 @@
     "side_labels": {
       "AB": "$2$",
       "CA": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_5b_B.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.4641016151377544,
+      "AC": 2.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_5b_C.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.4641016151377544,
+      "AC": 2.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_6b_B.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.4641016151377544,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T004_6b_C.png",
+    "triangle_id": "T004",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.4641016151377544,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$4$"
     }
   },
   {
@@ -1064,6 +1520,82 @@
     }
   },
   {
+    "filename": "tri3_T005_5a_B.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 3.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_5a_C.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 3.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_6a_B.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_6a_C.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
     "filename": "tri3_T005_1b_A.png",
     "triangle_id": "T005",
     "category": "특수각 배수",
@@ -1213,6 +1745,82 @@
     "side_labels": {
       "AB": "$1$",
       "CA": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_5b_B.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_5b_C.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_6b_B.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 3.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T005_6b_C.png",
+    "triangle_id": "T005",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 3.0,
+      "BC": 3.1622776601683795
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{10}$"
     }
   },
   {
@@ -1368,6 +1976,82 @@
     }
   },
   {
+    "filename": "tri3_T006_5a_B.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 3.0,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_5a_C.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 3.0,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_6a_B.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.7320508075688772,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_6a_C.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.7320508075688772,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
     "filename": "tri3_T006_1b_A.png",
     "triangle_id": "T006",
     "category": "특수각 배수",
@@ -1517,6 +2201,82 @@
     "side_labels": {
       "AB": "$\\sqrt{3}$",
       "CA": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_5b_B.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.7320508075688772,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_5b_C.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 1.7320508075688772,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_6b_B.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 3.0,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
+    }
+  },
+  {
+    "filename": "tri3_T006_6b_C.png",
+    "triangle_id": "T006",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 3.0,
+      "BC": 3.4641016151377544
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$2\\sqrt{3}$"
     }
   },
   {
@@ -1672,6 +2432,82 @@
     }
   },
   {
+    "filename": "tri3_T007_5a_B.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 6.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_5a_C.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 6.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_6a_B.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 2.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_6a_C.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 2.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
     "filename": "tri3_T007_1b_A.png",
     "triangle_id": "T007",
     "category": "특수각 배수",
@@ -1821,6 +2657,82 @@
     "side_labels": {
       "AB": "$2$",
       "CA": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_5b_B.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 2.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_5b_C.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 2.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_6b_B.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 6.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T007_6b_C.png",
+    "triangle_id": "T007",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 6.0,
+      "BC": 6.324555320336759
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{10}$"
     }
   },
   {
@@ -1976,6 +2888,82 @@
     }
   },
   {
+    "filename": "tri3_T008_5a_B.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 9.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_5a_C.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 9.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_6a_B.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 3.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_6a_C.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 3.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
     "filename": "tri3_T008_1b_A.png",
     "triangle_id": "T008",
     "category": "특수각 배수",
@@ -2125,6 +3113,82 @@
     "side_labels": {
       "AB": "$3$",
       "CA": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_5b_B.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 3.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_5b_C.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 3.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_6b_B.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 9.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{10}$"
+    }
+  },
+  {
+    "filename": "tri3_T008_6b_C.png",
+    "triangle_id": "T008",
+    "category": "특수각 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 9.0,
+      "BC": 9.486832980505138
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{10}$"
     }
   },
   {
@@ -2280,6 +3344,82 @@
     }
   },
   {
+    "filename": "tri3_T009_5a_B.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 4.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_5a_C.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 4.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_6a_B.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 3.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_6a_C.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 3.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
     "filename": "tri3_T009_1b_A.png",
     "triangle_id": "T009",
     "category": "기본 피타고라스 쌍",
@@ -2429,6 +3569,82 @@
     "side_labels": {
       "AB": "$3$",
       "CA": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_5b_B.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 3.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_5b_C.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 3.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_6b_B.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 4.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$5$"
+    }
+  },
+  {
+    "filename": "tri3_T009_6b_C.png",
+    "triangle_id": "T009",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 4.0,
+      "BC": 5.0
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$5$"
     }
   },
   {
@@ -2584,6 +3800,82 @@
     }
   },
   {
+    "filename": "tri3_T010_5a_B.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 12.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AB": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_5a_C.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 12.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AB": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_6a_B.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 5.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AC": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_6a_C.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 5.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AC": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
     "filename": "tri3_T010_1b_A.png",
     "triangle_id": "T010",
     "category": "기본 피타고라스 쌍",
@@ -2733,6 +4025,82 @@
     "side_labels": {
       "AB": "$5$",
       "CA": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_5b_B.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 5.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AC": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_5b_C.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 5.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AC": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_6b_B.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 12.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AB": "$5$",
+      "BC": "$13$"
+    }
+  },
+  {
+    "filename": "tri3_T010_6b_C.png",
+    "triangle_id": "T010",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 12.0,
+      "BC": 13.0
+    },
+    "side_labels": {
+      "AB": "$5$",
+      "BC": "$13$"
     }
   },
   {
@@ -2888,6 +4256,82 @@
     }
   },
   {
+    "filename": "tri3_T011_5a_B.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 15.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AB": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_5a_C.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 15.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AB": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_6a_B.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 15.0,
+      "AC": 8.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AC": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_6a_C.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 15.0,
+      "AC": 8.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AC": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
     "filename": "tri3_T011_1b_A.png",
     "triangle_id": "T011",
     "category": "기본 피타고라스 쌍",
@@ -3037,6 +4481,82 @@
     "side_labels": {
       "AB": "$8$",
       "CA": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_5b_B.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 15.0,
+      "AC": 8.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AC": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_5b_C.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 15.0,
+      "AC": 8.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AC": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_6b_B.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 15.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AB": "$8$",
+      "BC": "$17$"
+    }
+  },
+  {
+    "filename": "tri3_T011_6b_C.png",
+    "triangle_id": "T011",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 15.0,
+      "BC": 17.0
+    },
+    "side_labels": {
+      "AB": "$8$",
+      "BC": "$17$"
     }
   },
   {
@@ -3192,6 +4712,82 @@
     }
   },
   {
+    "filename": "tri3_T012_5a_B.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 7.0,
+      "AC": 24.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AB": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_5a_C.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 7.0,
+      "AC": 24.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AB": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_6a_B.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 7.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AC": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_6a_C.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 7.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AC": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
     "filename": "tri3_T012_1b_A.png",
     "triangle_id": "T012",
     "category": "기본 피타고라스 쌍",
@@ -3341,6 +4937,82 @@
     "side_labels": {
       "AB": "$7$",
       "CA": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_5b_B.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 7.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AC": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_5b_C.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 7.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AC": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_6b_B.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 7.0,
+      "AC": 24.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AB": "$7$",
+      "BC": "$25$"
+    }
+  },
+  {
+    "filename": "tri3_T012_6b_C.png",
+    "triangle_id": "T012",
+    "category": "기본 피타고라스 쌍",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 7.0,
+      "AC": 24.0,
+      "BC": 25.0
+    },
+    "side_labels": {
+      "AB": "$7$",
+      "BC": "$25$"
     }
   },
   {
@@ -3496,6 +5168,82 @@
     }
   },
   {
+    "filename": "tri3_T013_5a_B.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 8.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AB": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_5a_C.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 8.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AB": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_6a_B.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 6.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AC": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_6a_C.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 6.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AC": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
     "filename": "tri3_T013_1b_A.png",
     "triangle_id": "T013",
     "category": "피타고라스 배수",
@@ -3645,6 +5393,82 @@
     "side_labels": {
       "AB": "$6$",
       "CA": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_5b_B.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 6.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AC": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_5b_C.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 6.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AC": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_6b_B.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 8.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AB": "$6$",
+      "BC": "$10$"
+    }
+  },
+  {
+    "filename": "tri3_T013_6b_C.png",
+    "triangle_id": "T013",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 8.0,
+      "BC": 10.0
+    },
+    "side_labels": {
+      "AB": "$6$",
+      "BC": "$10$"
     }
   },
   {
@@ -3800,6 +5624,82 @@
     }
   },
   {
+    "filename": "tri3_T014_5a_B.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 12.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AB": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_5a_C.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 12.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AB": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_6a_B.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 9.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AC": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_6a_C.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 9.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AC": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
     "filename": "tri3_T014_1b_A.png",
     "triangle_id": "T014",
     "category": "피타고라스 배수",
@@ -3949,6 +5849,82 @@
     "side_labels": {
       "AB": "$9$",
       "CA": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_5b_B.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 9.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AC": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_5b_C.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 9.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AC": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_6b_B.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 12.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AB": "$9$",
+      "BC": "$15$"
+    }
+  },
+  {
+    "filename": "tri3_T014_6b_C.png",
+    "triangle_id": "T014",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 9.0,
+      "AC": 12.0,
+      "BC": 15.0
+    },
+    "side_labels": {
+      "AB": "$9$",
+      "BC": "$15$"
     }
   },
   {
@@ -4104,6 +6080,82 @@
     }
   },
   {
+    "filename": "tri3_T015_5a_B.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 10.0,
+      "AC": 24.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AB": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_5a_C.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 10.0,
+      "AC": 24.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AB": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_6a_B.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 10.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AC": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_6a_C.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 10.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AC": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
     "filename": "tri3_T015_1b_A.png",
     "triangle_id": "T015",
     "category": "피타고라스 배수",
@@ -4253,6 +6305,82 @@
     "side_labels": {
       "AB": "$10$",
       "CA": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_5b_B.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 10.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AC": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_5b_C.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 24.0,
+      "AC": 10.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AC": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_6b_B.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 10.0,
+      "AC": 24.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AB": "$10$",
+      "BC": "$26$"
+    }
+  },
+  {
+    "filename": "tri3_T015_6b_C.png",
+    "triangle_id": "T015",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 10.0,
+      "AC": 24.0,
+      "BC": 26.0
+    },
+    "side_labels": {
+      "AB": "$10$",
+      "BC": "$26$"
     }
   },
   {
@@ -4408,6 +6536,82 @@
     }
   },
   {
+    "filename": "tri3_T016_5a_B.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 16.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AB": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_5a_C.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 16.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AB": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_6a_B.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 16.0,
+      "AC": 12.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AC": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_6a_C.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 16.0,
+      "AC": 12.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AC": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
     "filename": "tri3_T016_1b_A.png",
     "triangle_id": "T016",
     "category": "피타고라스 배수",
@@ -4557,6 +6761,82 @@
     "side_labels": {
       "AB": "$12$",
       "CA": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_5b_B.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 16.0,
+      "AC": 12.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AC": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_5b_C.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 16.0,
+      "AC": 12.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AC": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_6b_B.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 16.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AB": "$12$",
+      "BC": "$20$"
+    }
+  },
+  {
+    "filename": "tri3_T016_6b_C.png",
+    "triangle_id": "T016",
+    "category": "피타고라스 배수",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 12.0,
+      "AC": 16.0,
+      "BC": 20.0
+    },
+    "side_labels": {
+      "AB": "$12$",
+      "BC": "$20$"
     }
   },
   {
@@ -4712,6 +6992,82 @@
     }
   },
   {
+    "filename": "tri3_T017_5a_B.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_5a_C.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_6a_B.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_6a_C.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
     "filename": "tri3_T017_1b_A.png",
     "triangle_id": "T017",
     "category": "정수 일반형",
@@ -4861,6 +7217,82 @@
     "side_labels": {
       "AB": "$2$",
       "CA": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_5b_B.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_5b_C.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_6b_B.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T017_6b_C.png",
+    "triangle_id": "T017",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 3.0,
+      "BC": 3.605551275463989
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$\\sqrt{13}$"
     }
   },
   {
@@ -5016,6 +7448,82 @@
     }
   },
   {
+    "filename": "tri3_T018_5a_B.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 6.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_5a_C.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 6.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_6a_B.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 4.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_6a_C.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 4.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
     "filename": "tri3_T018_1b_A.png",
     "triangle_id": "T018",
     "category": "정수 일반형",
@@ -5165,6 +7673,82 @@
     "side_labels": {
       "AB": "$4$",
       "CA": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_5b_B.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 4.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_5b_C.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 6.0,
+      "AC": 4.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_6b_B.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 6.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$2\\sqrt{13}$"
+    }
+  },
+  {
+    "filename": "tri3_T018_6b_C.png",
+    "triangle_id": "T018",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 6.0,
+      "BC": 7.211102550927978
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$2\\sqrt{13}$"
     }
   },
   {
@@ -5320,6 +7904,82 @@
     }
   },
   {
+    "filename": "tri3_T019_5a_B.png",
+    "triangle_id": "T019",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.0,
+      "BC": 2.8284271247461903
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T019_5a_C.png",
+    "triangle_id": "T019",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.0,
+      "BC": 2.8284271247461903
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T019_6a_B.png",
+    "triangle_id": "T019",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.0,
+      "BC": 2.8284271247461903
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T019_6a_C.png",
+    "triangle_id": "T019",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.0,
+      "BC": 2.8284271247461903
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$2\\sqrt{2}$"
+    }
+  },
+  {
     "filename": "tri3_T020_1a_A.png",
     "triangle_id": "T020",
     "category": "정수 일반형",
@@ -5469,6 +8129,82 @@
     "side_labels": {
       "AB": "$3$",
       "CA": "$3\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T020_5a_B.png",
+    "triangle_id": "T020",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 3.0,
+      "BC": 4.242640687119285
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T020_5a_C.png",
+    "triangle_id": "T020",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 3.0,
+      "BC": 4.242640687119285
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T020_6a_B.png",
+    "triangle_id": "T020",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 3.0,
+      "BC": 4.242640687119285
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T020_6a_C.png",
+    "triangle_id": "T020",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 3.0,
+      "BC": 4.242640687119285
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$3\\sqrt{2}$"
     }
   },
   {
@@ -5624,6 +8360,82 @@
     }
   },
   {
+    "filename": "tri3_T021_5a_B.png",
+    "triangle_id": "T021",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 4.0,
+      "BC": 5.65685424949238
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T021_5a_C.png",
+    "triangle_id": "T021",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 4.0,
+      "BC": 5.65685424949238
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T021_6a_B.png",
+    "triangle_id": "T021",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 4.0,
+      "BC": 5.65685424949238
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{2}$"
+    }
+  },
+  {
+    "filename": "tri3_T021_6a_C.png",
+    "triangle_id": "T021",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 4.0,
+      "BC": 5.65685424949238
+    },
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{2}$"
+    }
+  },
+  {
     "filename": "tri3_T022_1a_A.png",
     "triangle_id": "T022",
     "category": "무리수 변 포함",
@@ -5773,6 +8585,82 @@
     "side_labels": {
       "BC": "$\\sqrt{7}$",
       "CA": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_5a_B.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.6457513110645907,
+      "AC": 3.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_5a_C.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.6457513110645907,
+      "AC": 3.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_6a_B.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.6457513110645907,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_6a_C.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.6457513110645907,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{7}$",
+      "BC": "$4$"
     }
   },
   {
@@ -5928,6 +8816,82 @@
     }
   },
   {
+    "filename": "tri3_T022_5b_B.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.6457513110645907,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_5b_C.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 2.6457513110645907,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AC": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_6b_B.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.6457513110645907,
+      "AC": 3.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
+    "filename": "tri3_T022_6b_C.png",
+    "triangle_id": "T022",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.6457513110645907,
+      "AC": 3.0,
+      "BC": 4.0
+    },
+    "side_labels": {
+      "AB": "$\\sqrt{7}$",
+      "BC": "$4$"
+    }
+  },
+  {
     "filename": "tri3_T023_1a_A.png",
     "triangle_id": "T023",
     "category": "무리수 변 포함",
@@ -6077,6 +9041,82 @@
     "side_labels": {
       "BC": "$2$",
       "CA": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_5a_B.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.23606797749979,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_5a_C.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.23606797749979,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_6a_B.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "AC": 2.0,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_6a_C.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "AC": 2.0,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$3$"
     }
   },
   {
@@ -6232,6 +9272,82 @@
     }
   },
   {
+    "filename": "tri3_T023_5b_B.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "AC": 2.0,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_5b_C.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "AC": 2.0,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AC": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_6b_B.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.23606797749979,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
+    "filename": "tri3_T023_6b_C.png",
+    "triangle_id": "T023",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 2.23606797749979,
+      "BC": 3.0
+    },
+    "side_labels": {
+      "AB": "$2$",
+      "BC": "$3$"
+    }
+  },
+  {
     "filename": "tri3_T024_1a_A.png",
     "triangle_id": "T024",
     "category": "정수 일반형",
@@ -6381,6 +9497,82 @@
     "side_labels": {
       "BC": "$1$",
       "CA": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_5a_B.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 4.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_5a_C.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 4.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_6a_B.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 1.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_6a_C.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 1.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{17}$"
     }
   },
   {
@@ -6536,6 +9728,82 @@
     }
   },
   {
+    "filename": "tri3_T024_5b_B.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 1.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_5b_C.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 1.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_6b_B.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 4.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
+    "filename": "tri3_T024_6b_C.png",
+    "triangle_id": "T024",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 4.0,
+      "BC": 4.123105625617661
+    },
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{17}$"
+    }
+  },
+  {
     "filename": "tri3_T025_1a_A.png",
     "triangle_id": "T025",
     "category": "정수 일반형",
@@ -6688,6 +9956,82 @@
     }
   },
   {
+    "filename": "tri3_T025_5a_B.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 5.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_5a_C.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 5.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_6a_B.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 3.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_6a_C.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 3.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
     "filename": "tri3_T025_1b_A.png",
     "triangle_id": "T025",
     "category": "정수 일반형",
@@ -6837,6 +10181,82 @@
     "side_labels": {
       "AB": "$3$",
       "CA": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_5b_B.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 3.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_5b_C.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 5.0,
+      "AC": 3.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AC": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_6b_B.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 5.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{34}$"
+    }
+  },
+  {
+    "filename": "tri3_T025_6b_C.png",
+    "triangle_id": "T025",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "image_type": 3,
+    "side_lengths": {
+      "AB": 3.0,
+      "AC": 5.0,
+      "BC": 5.830951894845301
+    },
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{34}$"
     }
   }
 ]

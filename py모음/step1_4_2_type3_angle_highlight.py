@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-STEP 1-4-2: 유형 ③ 각 하이라이트(부채꼴) 이미지 생성 (중간 길이 변 라벨 숨김 / 두 변만 표기)
-==============================================================================
+STEP 1-4-2: 유형 ③ 각 하이라이트(부채꼴) 이미지 생성 (중간 길이 변 라벨 숨김 / 두 변만 표기, 템플릿 6종)
+=============================================================================================
 triangle_data.json (25가지 삼각형 조합) ×
-4가지 방향 템플릿 × 최대 2가지 변형(등변 제외) × 2개 예각 (직각 제외)
-= 총 360개 PNG → Tri_img_03/
+6가지 방향 템플릿 × 최대 2가지 변형(등변 제외) × 2개 예각 (직각 제외)
+= 총 540개 PNG → Tri_img_03/
 
 동시에 data/type3_angle_metadata.json 생성 (questions.json 생성에 사용)
 
-[유형 ③ 특성]
-- 중간 길이 변 라벨 숨김 (빗변 + 나머지 한 변만 표기)
-- 중간 길이 변의 점선 호 미표기
-- 직각 기호 + 꼭짓점 A/B/C 표기
-- 예각 1개에 반투명 Red 부채꼴 (각 표시 로직01: 기본 7%, 30° 미만 예각 13%) 하이라이트
+[6가지 방향 템플릿]
+  tmpl 1: A 상좌 / B 하좌(직각) / C 하우
+  tmpl 2: A 상우 / B 하좌       / C 하우(직각)
+  tmpl 3: A 하좌 / B 상우       / C 상좌(직각)
+  tmpl 4: A 하우 / B 상우(직각) / C 상좌
+  tmpl 5: B-C 수평 바닥 (빗변) / A 상단(직각) (AB=p, AC=q)
+  tmpl 6: B-C 수평 바닥 (빗변) / A 상단(직각) (AB=q, AC=p)
 """
 
 import json, math, os, sys, importlib.util, time
@@ -28,33 +30,28 @@ _base_script = os.path.join(PY_DIR, 'v1.0.5_260809_0010_dash_trim3.py')
 spec = importlib.util.spec_from_file_location('tri_draw', _base_script)
 mod  = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
-mod.OUTPUT_DIR = TYPE3_DIR     # 출력 폴더를 Tri_img_03 으로 override
+mod.OUTPUT_DIR = TYPE3_DIR
 draw = mod.draw
 
 # ── 삼각형 데이터 로드 ────────────────────────────────────────────────────────
 with open(os.path.join(ROOT, 'data', 'triangle_data.json'), encoding='utf-8') as f:
     triangles = json.load(f)
 
-# ── 방향 템플릿 팩토리 (유형 ③: 중간 길이 변 라벨 제외) ─────────────────────────
+# ── 방향 템플릿 팩토리 (유형 ③: 중간 길이 변 라벨 제외 6종) ─────────────────────
 def make_orient_type3(tmpl, p, q, p_lbl, q_lbl, h_lbl):
-    """
-    유형 ③용 orientation 팩토리.
-    p(leg1), q(leg2), hyp 중 중간 길이 변(또는 이등변일 경우 leg1)의 라벨을 side_labels에서 제거.
-    """
-    # 세 변의 실제 값 계산
-    # tmpl 1, 4: AB=q, BC=p, CA=hyp
-    # tmpl 2, 3: AB=hyp, BC=p, CA=q
+    c = math.hypot(p, q)
     if tmpl in [1, 4]:
-        lens = [('AB', q, q_lbl), ('BC', p, p_lbl), ('CA', math.hypot(p, q), h_lbl)]
-    else:
-        lens = [('AB', math.hypot(p, q), h_lbl), ('BC', p, p_lbl), ('CA', q, q_lbl)]
+        lens = [('AB', q, q_lbl), ('BC', p, p_lbl), ('CA', c, h_lbl)]
+    elif tmpl in [2, 3]:
+        lens = [('AB', c, h_lbl), ('BC', p, p_lbl), ('CA', q, q_lbl)]
+    elif tmpl == 5:
+        lens = [('AB', p, p_lbl), ('AC', q, q_lbl), ('BC', c, h_lbl)]
+    elif tmpl == 6:
+        lens = [('AB', q, q_lbl), ('AC', p, p_lbl), ('BC', c, h_lbl)]
 
-    # 중간 길이 변 찾기 (크기순 정렬 시 index 1)
-    # 만약 p == q 이등변인 경우, 직각변 중 하나(예: leg1/p에 해당하는 변)가 중간 변 역할을 함
     lens_sorted = sorted(lens, key=lambda x: x[1])
     mid_side_key = lens_sorted[1][0]
 
-    # 모든 변 라벨 딕셔너리 구성 후 중간 변 라벨 제거
     full_labels = {k: lbl for k, val, lbl in lens}
     full_labels.pop(mid_side_key, None)
 
@@ -98,6 +95,24 @@ def make_orient_type3(tmpl, p, q, p_lbl, q_lbl, h_lbl):
             {'A': -12},
             extra
         )
+    elif tmpl == 5:
+        extra = {'side_gap_factors': {'BC': 1.6}} if 'BC' in full_labels else {}
+        return (
+            {'B': (0.0, 0.0), 'C': (c, 0.0), 'A': (p**2 / c, p * q / c)},
+            'A',
+            full_labels,
+            {'A': 0},
+            extra
+        )
+    elif tmpl == 6:
+        extra = {'side_gap_factors': {'BC': 1.6}} if 'BC' in full_labels else {}
+        return (
+            {'B': (0.0, 0.0), 'C': (c, 0.0), 'A': (q**2 / c, p * q / c)},
+            'A',
+            full_labels,
+            {'A': 0},
+            extra
+        )
 
 # ── 이미지 생성 루프 ──────────────────────────────────────────────────────────
 metadata = []
@@ -120,7 +135,7 @@ for t in triangles:
         variants.append(('b', l2v, l1v, l2lb, l1lb))
 
     for var, p, q, p_lbl, q_lbl in variants:
-        for tmpl in [1, 2, 3, 4]:
+        for tmpl in [1, 2, 3, 4, 5, 6]:
             verts, rv, slabels, rot, extra = make_orient_type3(tmpl, p, q, p_lbl, q_lbl, hlb)
             target_angles = [k for k in verts.keys() if k != rv]
             
@@ -142,8 +157,12 @@ for t in triangles:
                 
                 if tmpl in [1, 4]:
                     side_len = {'AB': q, 'BC': p, 'CA': hv}
-                else:
+                elif tmpl in [2, 3]:
                     side_len = {'AB': hv, 'BC': p, 'CA': q}
+                elif tmpl == 5:
+                    side_len = {'AB': p, 'AC': q, 'BC': hv}
+                elif tmpl == 6:
+                    side_len = {'AB': q, 'AC': p, 'BC': hv}
 
                 metadata.append({
                     'filename':        fname,
