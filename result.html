@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/hallOfFame.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="js/main.js"></script>
+  <script src="js/hallOfFame.js"></script>
 </head>
 <body>
 <div class="page-wrapper">
@@ -100,36 +102,19 @@
 </div>
 
 <script>
-// ── 세션 결과 복원 ────────────────────────────────────────
-let result, trainer;
-try {
-  result  = JSON.parse(sessionStorage.getItem('lastResult') || 'null');
-  trainer = JSON.parse(sessionStorage.getItem('trainer')    || 'null');
-} catch(e) {}
+// ── 세션 복원 (TriApp 위임) ─────────────────────────────
+const trainer = TriApp.requireTrainer();
+const result  = TriApp.getResult();
+if (!result) { window.location.href = 'index.html'; }
 
-if (!result || !trainer) {
-  // 직접 접근 시 대문으로
-  window.location.href = 'index.html';
-}
-
-const DIFF_KO = { easy: '쉬움', normal: '보통', hard: '어려움' };
-const POKEMON_IMG = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${trainer.pokemonId}.png`;
-const POKEMON_SM  = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${trainer.pokemonId}.png`;
-
-// ── 포켓몬 + 제목 ─────────────────────────────────────────
-document.getElementById('hero-pokemon').src = POKEMON_IMG;
-
-const TITLES = [
-  '아직 멀었어요...', '조금 더 힘내요!', '잘하고 있어요!',
-  '대단해요!', '완벽해요! 🎉'
-];
-const titleIdx = Math.min(Math.floor(result.accuracy / 25), 4);
-document.getElementById('hero-title').textContent = TITLES[titleIdx];
+// ── 포켓몬 + 제목 ───────────────────────────────────────
+document.getElementById('hero-pokemon').src = TriUtils.pokemonArtUrl(trainer.pokemonId);
+document.getElementById('hero-title').textContent = TriApp.resultTitle(result.accuracy);
 document.getElementById('hero-sub').textContent =
-  `${trainer.nickname} 트레이너 · ${DIFF_KO[trainer.difficulty] || ''} · ${new Date().toLocaleDateString('ko-KR')}`;
+  `${trainer.nickname} 트레이너 · ${TriApp.diffLabel(trainer.difficulty)} · ${new Date().toLocaleDateString('ko-KR')}`;
 
-// ── 별점 ─────────────────────────────────────────────────
-const stars = result.accuracy >= 90 ? 3 : result.accuracy >= 60 ? 2 : 1;
+// ── 별점 ───────────────────────────────────────────────────
+const stars   = TriApp.calcStars(result.accuracy);
 const starsEl = document.getElementById('stars-lg');
 [1,2,3].forEach(i => {
   const span = document.createElement('span');
@@ -138,31 +123,28 @@ const starsEl = document.getElementById('stars-lg');
   starsEl.appendChild(span);
 });
 
-// ── 스탯 카드 ─────────────────────────────────────────────
+// ── 스탯 카드 ──────────────────────────────────────────────
 document.getElementById('r-score').textContent   = (result.score || 0).toLocaleString();
 document.getElementById('r-correct').textContent = `${result.correctCount}/${result.totalCount}`;
 document.getElementById('r-combo').textContent   = result.maxCombo || 0;
 document.getElementById('r-time').textContent    =
   result.avgTime !== undefined ? `${result.avgTime}s` : '-';
 
-// ── 정확도 바 ─────────────────────────────────────────────
+// ── 정확도 바 ──────────────────────────────────────────────
 const pct = result.accuracy || 0;
 document.getElementById('r-accuracy').textContent = `${pct}%`;
-// 애니메이션: 약간 지연 후 채우기
-setTimeout(() => {
-  document.getElementById('accuracy-fill').style.width = pct + '%';
-}, 100);
+setTimeout(() => { document.getElementById('accuracy-fill').style.width = pct + '%'; }, 100);
 
-// ── 명예의 전당 등록 섹션 ─────────────────────────────────
+// ── 등록 폼 ────────────────────────────────────────────────
 document.getElementById('display-name').textContent = trainer.nickname;
-document.getElementById('display-diff').textContent = DIFF_KO[trainer.difficulty] || '';
+document.getElementById('display-diff').textContent = TriApp.diffLabel(trainer.difficulty);
 
 let registered = false;
 document.getElementById('register-btn').addEventListener('click', () => {
   if (registered) return;
   registered = true;
 
-  const record = {
+  TriHallOfFame.saveRecord({
     nickname:     trainer.nickname,
     pokemon:      trainer.pokemon,
     pokemonId:    trainer.pokemonId,
@@ -173,28 +155,18 @@ document.getElementById('register-btn').addEventListener('click', () => {
     avgTime:      result.avgTime,
     correctCount: result.correctCount,
     totalCount:   result.totalCount,
-    date:         new Date().toLocaleDateString('ko-KR'),
-  };
-
-  try {
-    const records = JSON.parse(localStorage.getItem('tri_records') || '[]');
-    records.push(record);
-    records.sort((a, b) => b.score - a.score);
-    localStorage.setItem('tri_records', JSON.stringify(records.slice(0, 50)));
-  } catch(e) {}
+  });
 
   const btn = document.getElementById('register-btn');
   btn.textContent = '✅ 등록 완료!';
   btn.disabled = true;
   btn.className = btn.className.replace('btn--primary', 'btn--ghost');
-  document.getElementById('register-hint').textContent =
-    '명예의 전당에 기록이 저장되었습니다!';
+  document.getElementById('register-hint').textContent = '명예의 전당에 기록이 저장되었습니다!';
 });
 
-// ── 다시 도전 ─────────────────────────────────────────────
+// ── 다시 도전 ──────────────────────────────────────────────
 document.getElementById('retry-btn').addEventListener('click', () => {
-  // trainer 정보는 유지, result만 제거
-  sessionStorage.removeItem('lastResult');
+  TriApp.clearResult();
   window.location.href = 'game.html';
 });
 </script>

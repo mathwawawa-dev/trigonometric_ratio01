@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/hallOfFame.css">
+  <script src="js/main.js"></script>
+  <script src="js/hallOfFame.js"></script>
 </head>
 <body>
 <div class="page-wrapper">
@@ -46,53 +48,38 @@
     </a>
   </div>
 
-  <footer class="version-badge">v1.0.26_260809_1724_step2_5_hallOfFame</footer>
+  <footer class="version-badge">v1.0.29_260809_1747_step3_3_hof_modules</footer>
 
 </div>
 </div>
 
 <script>
-// ── 상수 ─────────────────────────────────────────────────
-const POKEMON_SM = (id) =>
-  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+// ── 현재 트레이너 (하이라이트용, TriApp 위임) ─────────────
+const myNickname = (TriApp.getTrainer() || {}).nickname || '';
 
+// ── 상수 ────────────────────────────────────────────────────
 const RANK_MEDALS = ['🥇','🥈','🥉'];
-const DIFF_KO = { easy: '쉬움', normal: '보통', hard: '어려움' };
+const escHtml = TriUtils.escHtml;
 
-// ── 기록 로드 ─────────────────────────────────────────────
-function loadRecords() {
-  try { return JSON.parse(localStorage.getItem('tri_records') || '[]'); }
-  catch(e) { return []; }
-}
-
-// ── 현재 트레이너 (하이라이트용) ─────────────────────────
-let myNickname = '';
-try {
-  const trainer = JSON.parse(sessionStorage.getItem('trainer') || 'null');
-  if (trainer) myNickname = trainer.nickname;
-} catch(e) {}
-
-// ── 리더보드 렌더 ─────────────────────────────────────────
+// ── 리더보드 렌더 ────────────────────────────────────────────
 function renderLeaderboard(diff = 'all') {
-  const all = loadRecords();
-  const filtered = diff === 'all' ? all : all.filter(r => r.difficulty === diff);
+  const filtered = TriHallOfFame.getFiltered(diff);
   const el = document.getElementById('leaderboard');
   el.innerHTML = '';
 
   if (filtered.length === 0) {
-    el.innerHTML = `
-      <div class="hof-empty">
-        <span class="hof-empty__icon">📭</span>
-        <div class="hof-empty__title">아직 기록이 없어요</div>
-        <p>게임을 플레이하고 명예의 전당에 등록해보세요!</p>
-      </div>
-    `;
+    el.innerHTML =
+      '<div class="hof-empty">' +
+      '<span class="hof-empty__icon">📭</span>' +
+      '<div class="hof-empty__title">아직 기록이 없어요</div>' +
+      '<p>게임을 플레이하고 명예의 전당에 등록해보세요!</p>' +
+      '</div>';
     return;
   }
 
   filtered.forEach((record, idx) => {
-    const rank = idx + 1;
-    const isMine = record.nickname === myNickname;
+    const rank      = idx + 1;
+    const isMine    = record.nickname === myNickname;
     const rankClass = rank <= 3 ? `leaderboard-item--rank${rank}` : '';
     const mineClass = isMine ? 'leaderboard-item--mine' : '';
 
@@ -107,34 +94,28 @@ function renderLeaderboard(diff = 'all') {
     item.setAttribute('role', 'listitem');
     item.style.animationDelay = `${idx * 0.05}s`;
 
-    item.innerHTML = `
-      ${rankDisplay}
-      <img class="lb-pokemon"
-           src="${POKEMON_SM(record.pokemonId || 1)}"
+    item.innerHTML =
+      rankDisplay +
+      `<img class="lb-pokemon"
+           src="${TriUtils.pokemonSpriteUrl(record.pokemonId || 1)}"
            alt="${record.pokemon || ''}"
-           onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'">
-      <div class="lb-info">
+           onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'">` +
+      `<div class="lb-info">
         <div class="lb-name">${escHtml(record.nickname)}${isMine ? ' <span style="color:var(--primary-300);font-size:10px">← 나</span>' : ''}</div>
         <div class="lb-meta">
-          <span class="lb-diff-pill lb-diff-pill--${record.difficulty || 'easy'}">${DIFF_KO[record.difficulty] || '쉬움'}</span>
+          <span class="lb-diff-pill lb-diff-pill--${record.difficulty || 'easy'}">${TriApp.diffLabel(record.difficulty)}</span>
           <span>정확도 ${record.accuracy ?? '-'}%</span>
           <span>콤보 ${record.maxCombo ?? '-'}</span>
           ${record.date ? `<span>${record.date}</span>` : ''}
         </div>
-      </div>
-      <span class="lb-score ${scoreClass}">${(record.score || 0).toLocaleString()}</span>
-    `;
+      </div>` +
+      `<span class="lb-score ${scoreClass}">${(record.score || 0).toLocaleString()}</span>`;
+
     el.appendChild(item);
   });
 }
 
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── 필터 탭 클릭 ─────────────────────────────────────────
+// ── 필터 탭 클릭 ────────────────────────────────────────────
 let currentDiff = 'all';
 document.querySelectorAll('.filter-tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -149,14 +130,14 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
   });
 });
 
-// ── 기록 삭제 ─────────────────────────────────────────────
+// ── 기록 삭제 (TriHallOfFame 위임) ───────────────────────────
 document.getElementById('clear-btn').addEventListener('click', () => {
   if (!confirm('모든 기록을 삭제할까요? 이 작업은 되돌릴 수 없습니다.')) return;
-  localStorage.removeItem('tri_records');
+  TriHallOfFame.clearRecords();
   renderLeaderboard(currentDiff);
 });
 
-// ── 초기 렌더 ─────────────────────────────────────────────
+// ── 초기 렌더 ───────────────────────────────────────────────
 renderLeaderboard('all');
 </script>
 </body>
