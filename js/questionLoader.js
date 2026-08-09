@@ -24,34 +24,34 @@
   }
 
   /**
-   * file:// 프로토콜 여부 감지
-   * @returns {boolean}
-   */
-  function isFileProtocol() {
-    return location.protocol === 'file:';
-  }
-
-  /**
-   * questions.json 로드 + 세션 빌드를 한 번에 처리
-   * 에러 시 null 반환, err 콜백 호출
+   * 문항 데이터 로드 + 세션 빌드를 한 번에 처리.
+   *
+   * 우선순위:
+   *   1) window.QUESTIONS_DATA (js/questionsData.js 내장 데이터) → fetch 불필요
+   *   2) fetch(url) → HTTP 서버 필요
    *
    * @param {Object}   opts
-   * @param {string}   opts.difficulty - 'easy' | 'normal' | 'hard'
-   * @param {Function} opts.onSuccess  - (allQ, session) => void
-   * @param {Function} opts.onError    - (err) => void
-   * @param {Function} opts.onFileProtocol - () => void (file:// 감지 시)
+   * @param {string}   opts.difficulty      - 'easy' | 'normal' | 'hard'
+   * @param {Function} opts.onSuccess       - (allQ, session) => void
+   * @param {Function} [opts.onError]       - (err) => void
+   * @param {Function} [opts.onFileProtocol] - 더 이상 사용되지 않음 (하위호환 유지)
    */
   async function initQuestions({ difficulty, onSuccess, onError, onFileProtocol }) {
-    if (isFileProtocol()) {
-      onFileProtocol?.();
-      return;
-    }
     try {
-      const allQ    = await loadQuestions();
+      let allQ;
+
+      if (global.QUESTIONS_DATA && Array.isArray(global.QUESTIONS_DATA)) {
+        // ① 내장 데이터 사용 (file:// 포함 어디서나 동작)
+        allQ = global.QUESTIONS_DATA;
+      } else {
+        // ② fetch 폴백 (HTTP 서버 환경)
+        allQ = await loadQuestions();
+      }
+
       const session = TriUtils.buildSession(allQ, difficulty);
       onSuccess(allQ, session);
     } catch(err) {
-      console.error('[TriLoader] questions.json 로드 실패:', err);
+      console.error('[TriLoader] 데이터 로드 실패:', err);
       onError?.(err);
     }
   }
