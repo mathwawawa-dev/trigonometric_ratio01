@@ -67,46 +67,64 @@
   /* ── 문제 표시 ────────────────────────────────────────── */
 
   function showQuestion(q) {
-    _gs.answered = false;
+    try {
+      _gs.answered = false;
 
-    // 메타 뱃지
-    _setEl('type-badge', `유형${'①②③'[q.image_type - 1]}`);
-    document.getElementById('type-badge').className = `type-badge type-badge--${q.image_type}`;
-    _setEl('trig-badge', q.question_type);
-    document.getElementById('trig-badge').className = `trig-badge trig-badge--${q.question_type}`;
+      // 메타 뱃지
+      _setEl('type-badge', '유형' + ('①②③'[q.image_type - 1] || '?'));
+      document.getElementById('type-badge').className = 'type-badge type-badge--' + q.image_type;
+      _setEl('trig-badge', q.question_type);
+      document.getElementById('trig-badge').className = 'trig-badge trig-badge--' + q.question_type;
 
-    // 삼각형 이미지
-    const imgEl = document.getElementById('tri-img');
-    imgEl.classList.add('loading');
-    imgEl.onload  = () => imgEl.classList.remove('loading');
-    imgEl.onerror = () => imgEl.classList.remove('loading');
-    imgEl.src = `${_cfg.IMG_DIRS[q.image_type]}/${q.filename}`;
+      // 삼각형 이미지
+      const imgEl = document.getElementById('tri-img');
+      imgEl.classList.add('loading');
+      imgEl.onload  = () => imgEl.classList.remove('loading');
+      imgEl.onerror = () => imgEl.classList.remove('loading');
+      imgEl.src = _cfg.IMG_DIRS[q.image_type] + '/' + q.filename;
 
-    // 질문 (KaTeX)
-    document.getElementById('question-text').innerHTML =
-      TriRenderer.renderTexStr(q.question);
+      // 질문 (한글+LaTeX 혼합 → renderMixedTex)
+      document.getElementById('question-text').innerHTML =
+        TriRenderer.renderMixedTex(q.question);
 
-    // 선지
-    document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
-      btn.disabled = false;
-      btn.className = 'choice-btn';
-      btn.innerHTML = `<span>${TriRenderer.renderTexStr(q.choices[idx])}</span>`;
-      btn.setAttribute('aria-label', `선지 ${['①','②','③','④'][idx]}`);
-    });
+      // 선지 (순수 수식 → renderTexStr)
+      document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
+        btn.disabled = false;
+        btn.className = 'choice-btn';
+        btn.innerHTML = '<span>' + TriRenderer.renderTexStr(q.choices[idx]) + '</span>';
+        btn.setAttribute('aria-label', '선지 ' + ('①②③④'[idx] || (idx + 1)));
+      });
 
-    // 해설 배너 / 다음 버튼 숨김
-    document.getElementById('answer-banner').style.display = 'none';
-    document.getElementById('next-btn').style.display = 'none';
+      // 해설 배너 / 다음 버튼 숨김
+      document.getElementById('answer-banner').style.display = 'none';
+      document.getElementById('next-btn').style.display = 'none';
 
-    // 진행 도트 갱신
-    _updateDots();
+      // 진행 도트 갱신
+      _updateDots();
 
-    // HUD 문항 번호
-    _setEl('hud-qnum', _gs.qIndex + 1);
+      // HUD 문항 번호
+      _setEl('hud-qnum', _gs.qIndex + 1);
 
-    // 타이머 시작
-    _startTimer();
-    _gs.qStartTime = Date.now();
+      // 타이머 시작
+      _startTimer();
+      _gs.qStartTime = Date.now();
+
+    } catch(e) {
+      console.error('[TriQuizEngine] showQuestion 실패:', e, q);
+      // fallback: 텍스트만 표시하고 타이머는 반드시 시작
+      const qt = document.getElementById('question-text');
+      if (qt) qt.textContent = (q && q.question) ? q.question : '문제 로드 실패';
+      document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
+        btn.disabled = false;
+        btn.textContent = (q && q.choices && q.choices[idx]) || '';
+      });
+      if (document.getElementById('answer-banner'))
+        document.getElementById('answer-banner').style.display = 'none';
+      if (document.getElementById('next-btn'))
+        document.getElementById('next-btn').style.display = 'none';
+      _startTimer();
+      _gs.qStartTime = Date.now();
+    }
   }
 
   /* ── 타이머 ───────────────────────────────────────────── */
