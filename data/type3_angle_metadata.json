@@ -10258,5 +10258,1373 @@
       "AB": "$3$",
       "BC": "$\\sqrt{34}$"
     }
+  },
+  {
+    "filename": "tri3_T026_1a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.0,
+      "BC": 1.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_1a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.0,
+      "BC": 1.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_2a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "BC": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 1.0,
+      "CA": 2.0
+    }
+  },
+  {
+    "filename": "tri3_T026_2a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "BC": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 1.0,
+      "CA": 2.0
+    }
+  },
+  {
+    "filename": "tri3_T026_3a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "BC": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 1.0,
+      "CA": 2.0
+    }
+  },
+  {
+    "filename": "tri3_T026_3a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "BC": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 1.0,
+      "CA": 2.0
+    }
+  },
+  {
+    "filename": "tri3_T026_4a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.0,
+      "BC": 1.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_4a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.0,
+      "BC": 1.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_5a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 2.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_5a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 2.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_6a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 1.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_6a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 1.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_1b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 1.0,
+      "BC": 2.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_1b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.0,
+      "BC": 2.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_2b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "CA": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 2.0,
+      "CA": 1.0
+    }
+  },
+  {
+    "filename": "tri3_T026_2b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "CA": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 2.0,
+      "CA": 1.0
+    }
+  },
+  {
+    "filename": "tri3_T026_3b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "CA": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 2.0,
+      "CA": 1.0
+    }
+  },
+  {
+    "filename": "tri3_T026_3b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{5}$",
+      "CA": "$1$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.23606797749979,
+      "BC": 2.0,
+      "CA": 1.0
+    }
+  },
+  {
+    "filename": "tri3_T026_4b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 1.0,
+      "BC": 2.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_4b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "CA": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.0,
+      "BC": 2.0,
+      "CA": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_5b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 1.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_5b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.0,
+      "AC": 1.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_6b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 2.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T026_6b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$1$",
+      "BC": "$\\sqrt{5}$"
+    },
+    "triangle_id": "T026",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.0,
+      "AC": 2.0,
+      "BC": 2.23606797749979
+    }
+  },
+  {
+    "filename": "tri3_T027_1a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 8.0,
+      "BC": 4.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_1a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 8.0,
+      "BC": 4.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_2a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "BC": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 4.0,
+      "CA": 8.0
+    }
+  },
+  {
+    "filename": "tri3_T027_2a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "BC": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 4.0,
+      "CA": 8.0
+    }
+  },
+  {
+    "filename": "tri3_T027_3a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "BC": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 4.0,
+      "CA": 8.0
+    }
+  },
+  {
+    "filename": "tri3_T027_3a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "BC": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 4.0,
+      "CA": 8.0
+    }
+  },
+  {
+    "filename": "tri3_T027_4a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 8.0,
+      "BC": 4.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_4a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 8.0,
+      "BC": 4.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_5a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 8.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_5a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 8.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_6a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 4.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_6a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 4.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_1b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 4.0,
+      "BC": 8.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_1b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 1,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 4.0,
+      "BC": 8.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_2b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "CA": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 8.0,
+      "CA": 4.0
+    }
+  },
+  {
+    "filename": "tri3_T027_2b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "CA": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 2,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 8.0,
+      "CA": 4.0
+    }
+  },
+  {
+    "filename": "tri3_T027_3b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "CA": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 8.0,
+      "CA": 4.0
+    }
+  },
+  {
+    "filename": "tri3_T027_3b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4\\sqrt{5}$",
+      "CA": "$4$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 3,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 8.94427190999916,
+      "BC": 8.0,
+      "CA": 4.0
+    }
+  },
+  {
+    "filename": "tri3_T027_4b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 4.0,
+      "BC": 8.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_4b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "CA": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 4,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 4.0,
+      "BC": 8.0,
+      "CA": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_5b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 4.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_5b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 8.0,
+      "AC": 4.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_6b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 8.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T027_6b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$4$",
+      "BC": "$4\\sqrt{5}$"
+    },
+    "triangle_id": "T027",
+    "category": "정수 일반형",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 4.0,
+      "AC": 8.0,
+      "BC": 8.94427190999916
+    }
+  },
+  {
+    "filename": "tri3_T028_1a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 1,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "BC": 1.7320508075688772,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_1a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 1,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "BC": 1.7320508075688772,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_2a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 2,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 1.7320508075688772,
+      "CA": 2.449489742783178
+    }
+  },
+  {
+    "filename": "tri3_T028_2a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 2,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 1.7320508075688772,
+      "CA": 2.449489742783178
+    }
+  },
+  {
+    "filename": "tri3_T028_3a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 3,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 1.7320508075688772,
+      "CA": 2.449489742783178
+    }
+  },
+  {
+    "filename": "tri3_T028_3a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "BC": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 3,
+    "variant": "a",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 1.7320508075688772,
+      "CA": 2.449489742783178
+    }
+  },
+  {
+    "filename": "tri3_T028_4a_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 4,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "BC": 1.7320508075688772,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_4a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "BC": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 4,
+    "variant": "a",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "BC": 1.7320508075688772,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_5a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 2.449489742783178,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_5a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 2.449489742783178,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_6a_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "AC": 1.7320508075688772,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_6a_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "a",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "AC": 1.7320508075688772,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_1b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 1,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "BC": 2.449489742783178,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_1b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 1,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "BC": 2.449489742783178,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_2b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "CA": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 2,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 2.449489742783178,
+      "CA": 1.7320508075688772
+    }
+  },
+  {
+    "filename": "tri3_T028_2b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "CA": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 2,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 2.449489742783178,
+      "CA": 1.7320508075688772
+    }
+  },
+  {
+    "filename": "tri3_T028_3b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "CA": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 3,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 2.449489742783178,
+      "CA": 1.7320508075688772
+    }
+  },
+  {
+    "filename": "tri3_T028_3b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$3$",
+      "CA": "$\\sqrt{3}$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 3,
+    "variant": "b",
+    "right_vertex": "C",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 3.0,
+      "BC": 2.449489742783178,
+      "CA": 1.7320508075688772
+    }
+  },
+  {
+    "filename": "tri3_T028_4b_A.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 4,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "A",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "BC": 2.449489742783178,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_4b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "CA": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 4,
+    "variant": "b",
+    "right_vertex": "B",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "BC": 2.449489742783178,
+      "CA": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_5b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "AC": 1.7320508075688772,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_5b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AC": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 5,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 2.449489742783178,
+      "AC": 1.7320508075688772,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_6b_B.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "B",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 2.449489742783178,
+      "BC": 3.0
+    }
+  },
+  {
+    "filename": "tri3_T028_6b_C.png",
+    "image_type": 3,
+    "side_labels": {
+      "AB": "$\\sqrt{3}$",
+      "BC": "$3$"
+    },
+    "triangle_id": "T028",
+    "category": "무리수 변 포함",
+    "template": 6,
+    "variant": "b",
+    "right_vertex": "A",
+    "highlight_angle": "C",
+    "side_lengths": {
+      "AB": 1.7320508075688772,
+      "AC": 2.449489742783178,
+      "BC": 3.0
+    }
   }
 ]
