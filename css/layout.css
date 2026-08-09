@@ -184,13 +184,13 @@
 }
 
 .choice-btn {
-  background: var(--glass-bg);
+  background: #ffffff;
   border: 1.5px solid var(--border-normal);
   border-radius: var(--radius-lg);
   padding: var(--sp-4) var(--sp-3);
   font-family: var(--font-body);
   font-size: var(--text-base);
-  color: var(--text-primary);
+  color: #111827 !important; /* 강제 다크 텍스트 */
   cursor: pointer;
   transition:
     background var(--transition-fast),
@@ -202,10 +202,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-sm);
 }
 
 .choice-btn:hover:not(:disabled) {
-  background: rgba(124,58,237,0.12);
+  background: #f3f4f6; /* 연한 회색 */
   border-color: var(--primary-400);
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(124,58,237,0.2);
@@ -217,17 +218,17 @@
 
 /* 정답 / 오답 상태 */
 .choice-btn--correct {
-  background: rgba(34,197,94,0.18) !important;
-  border-color: var(--success-400) !important;
-  color: var(--success-400) !important;
+  background: #dcfce7 !important; /* Tailwind green-100 */
+  border-color: var(--success-500) !important;
+  color: var(--success-600) !important;
   box-shadow: 0 0 16px rgba(34,197,94,0.35) !important;
   animation: correct-flash 0.5s ease;
 }
 
 .choice-btn--wrong {
-  background: rgba(239,68,68,0.18) !important;
-  border-color: var(--danger-400) !important;
-  color: var(--danger-400) !important;
+  background: #fee2e2 !important; /* Tailwind red-100 */
+  border-color: var(--danger-500) !important;
+  color: var(--danger-600) !important;
   animation: wrong-flash 0.5s ease, shake 0.4s ease;
 }
 

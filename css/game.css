@@ -117,9 +117,7 @@
 #tri-img.loading { opacity: 0; }
 
 .tri-meta {
-  display: flex;
-  gap: var(--sp-2);
-  align-items: center;
+  display: none;
 }
 
 /* ── 질문 영역 ────────────────────────────────────────────── */
@@ -153,35 +151,11 @@
   padding-bottom: var(--sp-3);
 }
 
-/* KaTeX 수식 폰트 확대 */
+/* KaTeX 수식 폰트 더 크게 확대 */
 .choice-btn .katex {
-  font-size: 1.35em;
+  font-size: 1.8em;
 }
 
-/* 선지 번호 뜽지 (①②③④) */
-.choice-btn::before {
-  content: attr(data-label);
-  position: absolute;
-  top: 6px; left: 8px;
-  font-family: var(--font-display);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  color: var(--text-muted);
-  line-height: 1;
-}
-
-/* 키보드 힌트 배지 (1−4) */
-.choice-btn::after {
-  content: attr(data-key);
-  position: absolute;
-  bottom: 5px; right: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-muted);
-  opacity: 0.55;
-  line-height: 1;
-}
 
 
 /* ── 다크/라이트 모드 토글 버튼 ─────────────────────────── */
