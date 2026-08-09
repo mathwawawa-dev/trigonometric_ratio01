@@ -380,7 +380,10 @@ def draw(vertices_dict, right_v, side_labels, filename,
             t1, t2 = sorted([t1, t2])
             
         angle_diff = t2 - t1
-        # ── 뷰 범위 기반 반지름 계산 (각 표시 로직01) ───────────────────────
+        
+        # ── 뷰 범위 기반 반지름 계산 ──────────────────────────────────────────
+        # ax.get_xlim/ylim 은 데이터가 plot 된 이후에야 정확한 값을 반환함
+        # 짧은 쪽 축 범위(data 단위)의 일정 비율을 반지름으로 사용
         x_range = ax.get_xlim()[1] - ax.get_xlim()[0]
         y_range = ax.get_ylim()[1] - ax.get_ylim()[0]
         view_min = min(abs(x_range), abs(y_range))
