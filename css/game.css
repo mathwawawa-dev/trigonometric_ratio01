@@ -148,7 +148,7 @@
   position: relative;
   overflow: hidden;
   padding-top: var(--sp-5);
-  padding-bottom: var(--sp-3);
+  padding-bottom: var(--sp-5);
 }
 
 /* KaTeX 수식 폰트 더 크게 확대 */
