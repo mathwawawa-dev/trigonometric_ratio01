@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="삼각비 마스터 — 명예의 전당 Top 50">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>삼각비 마스터 — 명예의 전당</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/hallOfFame.css">
+</head>
+<body>
+<div class="page-wrapper">
+<div class="hof-page-wrap page-enter">
+
+  <!-- 뒤로가기 -->
+  <div class="back-header">
+    <a class="back-btn" href="index.html">← 처음으로</a>
+    <button class="clear-btn" id="clear-btn" aria-label="기록 전체 삭제">🗑️ 기록 지우기</button>
+  </div>
+
+  <!-- 트로피 히어로 -->
+  <div class="hof-hero">
+    <span class="hof-hero__trophy" aria-hidden="true">🏆</span>
+    <h1 class="hof-hero__title">명예의 전당</h1>
+    <p class="hof-hero__sub">삼각비를 정복한 트레이너들의 기록</p>
+  </div>
+
+  <!-- 난이도 필터 탭 -->
+  <div class="filter-tabs" role="tablist" aria-label="난이도 필터">
+    <button class="filter-tab filter-tab--active" data-diff="all"    role="tab" aria-selected="true"  id="tab-all">전체</button>
+    <button class="filter-tab"                    data-diff="easy"   role="tab" aria-selected="false" id="tab-easy">🌿 쉬움</button>
+    <button class="filter-tab"                    data-diff="normal" role="tab" aria-selected="false" id="tab-normal">⚡ 보통</button>
+    <button class="filter-tab"                    data-diff="hard"   role="tab" aria-selected="false" id="tab-hard">🔥 어려움</button>
+  </div>
+
+  <!-- 리더보드 -->
+  <div class="leaderboard" id="leaderboard" role="list" aria-label="리더보드"></div>
+
+  <!-- 플레이 버튼 -->
+  <div style="width:100%;margin-top:var(--sp-4)">
+    <a class="btn btn--primary btn--full btn--xl" href="index.html">
+      🎮 지금 바로 도전!
+    </a>
+  </div>
+
+  <footer class="version-badge">v1.0.26_260809_1724_step2_5_hallOfFame</footer>
+
+</div>
+</div>
+
+<script>
+// ── 상수 ─────────────────────────────────────────────────
+const POKEMON_SM = (id) =>
+  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+
+const RANK_MEDALS = ['🥇','🥈','🥉'];
+const DIFF_KO = { easy: '쉬움', normal: '보통', hard: '어려움' };
+
+// ── 기록 로드 ─────────────────────────────────────────────
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem('tri_records') || '[]'); }
+  catch(e) { return []; }
+}
+
+// ── 현재 트레이너 (하이라이트용) ─────────────────────────
+let myNickname = '';
+try {
+  const trainer = JSON.parse(sessionStorage.getItem('trainer') || 'null');
+  if (trainer) myNickname = trainer.nickname;
+} catch(e) {}
+
+// ── 리더보드 렌더 ─────────────────────────────────────────
+function renderLeaderboard(diff = 'all') {
+  const all = loadRecords();
+  const filtered = diff === 'all' ? all : all.filter(r => r.difficulty === diff);
+  const el = document.getElementById('leaderboard');
+  el.innerHTML = '';
+
+  if (filtered.length === 0) {
+    el.innerHTML = `
+      <div class="hof-empty">
+        <span class="hof-empty__icon">📭</span>
+        <div class="hof-empty__title">아직 기록이 없어요</div>
+        <p>게임을 플레이하고 명예의 전당에 등록해보세요!</p>
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach((record, idx) => {
+    const rank = idx + 1;
+    const isMine = record.nickname === myNickname;
+    const rankClass = rank <= 3 ? `leaderboard-item--rank${rank}` : '';
+    const mineClass = isMine ? 'leaderboard-item--mine' : '';
+
+    const rankDisplay = rank <= 3
+      ? `<span class="lb-rank lb-rank--${rank}">${RANK_MEDALS[rank-1]}</span>`
+      : `<span class="lb-rank">${rank}</span>`;
+
+    const scoreClass = rank <= 3 ? `lb-score--${rank}` : '';
+
+    const item = document.createElement('div');
+    item.className = `leaderboard-item ${rankClass} ${mineClass}`;
+    item.setAttribute('role', 'listitem');
+    item.style.animationDelay = `${idx * 0.05}s`;
+
+    item.innerHTML = `
+      ${rankDisplay}
+      <img class="lb-pokemon"
+           src="${POKEMON_SM(record.pokemonId || 1)}"
+           alt="${record.pokemon || ''}"
+           onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'">
+      <div class="lb-info">
+        <div class="lb-name">${escHtml(record.nickname)}${isMine ? ' <span style="color:var(--primary-300);font-size:10px">← 나</span>' : ''}</div>
+        <div class="lb-meta">
+          <span class="lb-diff-pill lb-diff-pill--${record.difficulty || 'easy'}">${DIFF_KO[record.difficulty] || '쉬움'}</span>
+          <span>정확도 ${record.accuracy ?? '-'}%</span>
+          <span>콤보 ${record.maxCombo ?? '-'}</span>
+          ${record.date ? `<span>${record.date}</span>` : ''}
+        </div>
+      </div>
+      <span class="lb-score ${scoreClass}">${(record.score || 0).toLocaleString()}</span>
+    `;
+    el.appendChild(item);
+  });
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── 필터 탭 클릭 ─────────────────────────────────────────
+let currentDiff = 'all';
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => {
+      t.classList.remove('filter-tab--active');
+      t.setAttribute('aria-selected','false');
+    });
+    tab.classList.add('filter-tab--active');
+    tab.setAttribute('aria-selected','true');
+    currentDiff = tab.dataset.diff;
+    renderLeaderboard(currentDiff);
+  });
+});
+
+// ── 기록 삭제 ─────────────────────────────────────────────
+document.getElementById('clear-btn').addEventListener('click', () => {
+  if (!confirm('모든 기록을 삭제할까요? 이 작업은 되돌릴 수 없습니다.')) return;
+  localStorage.removeItem('tri_records');
+  renderLeaderboard(currentDiff);
+});
+
+// ── 초기 렌더 ─────────────────────────────────────────────
+renderLeaderboard('all');
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="삼각비 마스터 — 세션 결과">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>삼각비 마스터 — 결과</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/hallOfFame.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+</head>
+<body>
+<div class="page-wrapper">
+<div class="hof-page-wrap page-enter">
+
+  <!-- 뒤로가기 -->
+  <div class="back-header">
+    <a class="back-btn" href="index.html">← 처음으로</a>
+    <a class="back-btn" href="hall_of_fame.html">🏆 명예의 전당</a>
+  </div>
+
+  <!-- 포켓몬 + 제목 -->
+  <div class="result-hero">
+    <img id="hero-pokemon" class="result-hero__pokemon"
+         src="" alt="내 포켓몬">
+    <h1 class="result-hero__title" id="hero-title">수고했어요!</h1>
+    <p class="result-hero__subtitle" id="hero-sub"></p>
+  </div>
+
+  <!-- 별점 -->
+  <div class="stars-lg" id="stars-lg" aria-label="별점"></div>
+
+  <!-- 스탯 4개 카드 -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <span class="stat-card__icon">⭐</span>
+      <span class="stat-card__value stat-card__value--score" id="r-score">0</span>
+      <span class="stat-card__label">총 점수</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__icon">✅</span>
+      <span class="stat-card__value stat-card__value--correct" id="r-correct">0/0</span>
+      <span class="stat-card__label">정답</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__icon">🔥</span>
+      <span class="stat-card__value stat-card__value--combo" id="r-combo">0</span>
+      <span class="stat-card__label">최고 콤보</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__icon">⚡</span>
+      <span class="stat-card__value stat-card__value--time" id="r-time">-</span>
+      <span class="stat-card__label">평균 응답속도</span>
+    </div>
+  </div>
+
+  <!-- 정확도 바 -->
+  <div class="accuracy-section">
+    <div class="accuracy-section__label">
+      <span class="accuracy-section__title">정확도</span>
+      <span class="accuracy-section__pct" id="r-accuracy">0%</span>
+    </div>
+    <div class="accuracy-track">
+      <div class="accuracy-fill" id="accuracy-fill"></div>
+    </div>
+  </div>
+
+  <!-- 명예의 전당 등록 -->
+  <div class="register-section" id="register-section">
+    <div class="register-section__title">
+      🏅 명예의 전당 등록
+    </div>
+    <div class="register-section__name-display" id="trainer-display">
+      <span>👤</span>
+      <span id="display-name">트레이너</span>
+      <span style="margin-left:auto;font-size:var(--text-xs);color:var(--text-muted)" id="display-diff"></span>
+    </div>
+    <button class="btn btn--primary btn--full btn--lg" id="register-btn">
+      🏆 명예의 전당에 등록하기
+    </button>
+    <p class="hint-text" id="register-hint" style="margin-top:var(--sp-2)"></p>
+  </div>
+
+  <!-- 버튼 -->
+  <div style="width:100%;display:flex;flex-direction:column;gap:var(--sp-3)">
+    <button class="btn btn--secondary btn--full btn--lg" id="retry-btn">
+      🔄 다시 도전
+    </button>
+    <a class="btn btn--ghost btn--full" href="index.html">
+      🏠 처음으로
+    </a>
+  </div>
+
+  <footer class="version-badge">v1.0.26_260809_1724_step2_5_result</footer>
+
+</div>
+</div>
+
+<script>
+// ── 세션 결과 복원 ────────────────────────────────────────
+let result, trainer;
+try {
+  result  = JSON.parse(sessionStorage.getItem('lastResult') || 'null');
+  trainer = JSON.parse(sessionStorage.getItem('trainer')    || 'null');
+} catch(e) {}
+
+if (!result || !trainer) {
+  // 직접 접근 시 대문으로
+  window.location.href = 'index.html';
+}
+
+const DIFF_KO = { easy: '쉬움', normal: '보통', hard: '어려움' };
+const POKEMON_IMG = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${trainer.pokemonId}.png`;
+const POKEMON_SM  = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${trainer.pokemonId}.png`;
+
+// ── 포켓몬 + 제목 ─────────────────────────────────────────
+document.getElementById('hero-pokemon').src = POKEMON_IMG;
+
+const TITLES = [
+  '아직 멀었어요...', '조금 더 힘내요!', '잘하고 있어요!',
+  '대단해요!', '완벽해요! 🎉'
+];
+const titleIdx = Math.min(Math.floor(result.accuracy / 25), 4);
+document.getElementById('hero-title').textContent = TITLES[titleIdx];
+document.getElementById('hero-sub').textContent =
+  `${trainer.nickname} 트레이너 · ${DIFF_KO[trainer.difficulty] || ''} · ${new Date().toLocaleDateString('ko-KR')}`;
+
+// ── 별점 ─────────────────────────────────────────────────
+const stars = result.accuracy >= 90 ? 3 : result.accuracy >= 60 ? 2 : 1;
+const starsEl = document.getElementById('stars-lg');
+[1,2,3].forEach(i => {
+  const span = document.createElement('span');
+  span.className = 'star-lg' + (i <= stars ? ' star-lg--filled' : '');
+  span.textContent = '★';
+  starsEl.appendChild(span);
+});
+
+// ── 스탯 카드 ─────────────────────────────────────────────
+document.getElementById('r-score').textContent   = (result.score || 0).toLocaleString();
+document.getElementById('r-correct').textContent = `${result.correctCount}/${result.totalCount}`;
+document.getElementById('r-combo').textContent   = result.maxCombo || 0;
+document.getElementById('r-time').textContent    =
+  result.avgTime !== undefined ? `${result.avgTime}s` : '-';
+
+// ── 정확도 바 ─────────────────────────────────────────────
+const pct = result.accuracy || 0;
+document.getElementById('r-accuracy').textContent = `${pct}%`;
+// 애니메이션: 약간 지연 후 채우기
+setTimeout(() => {
+  document.getElementById('accuracy-fill').style.width = pct + '%';
+}, 100);
+
+// ── 명예의 전당 등록 섹션 ─────────────────────────────────
+document.getElementById('display-name').textContent = trainer.nickname;
+document.getElementById('display-diff').textContent = DIFF_KO[trainer.difficulty] || '';
+
+let registered = false;
+document.getElementById('register-btn').addEventListener('click', () => {
+  if (registered) return;
+  registered = true;
+
+  const record = {
+    nickname:     trainer.nickname,
+    pokemon:      trainer.pokemon,
+    pokemonId:    trainer.pokemonId,
+    difficulty:   trainer.difficulty,
+    score:        result.score,
+    accuracy:     result.accuracy,
+    maxCombo:     result.maxCombo,
+    avgTime:      result.avgTime,
+    correctCount: result.correctCount,
+    totalCount:   result.totalCount,
+    date:         new Date().toLocaleDateString('ko-KR'),
+  };
+
+  try {
+    const records = JSON.parse(localStorage.getItem('tri_records') || '[]');
+    records.push(record);
+    records.sort((a, b) => b.score - a.score);
+    localStorage.setItem('tri_records', JSON.stringify(records.slice(0, 50)));
+  } catch(e) {}
+
+  const btn = document.getElementById('register-btn');
+  btn.textContent = '✅ 등록 완료!';
+  btn.disabled = true;
+  btn.className = btn.className.replace('btn--primary', 'btn--ghost');
+  document.getElementById('register-hint').textContent =
+    '명예의 전당에 기록이 저장되었습니다!';
+});
+
+// ── 다시 도전 ─────────────────────────────────────────────
+document.getElementById('retry-btn').addEventListener('click', () => {
+  // trainer 정보는 유지, result만 제거
+  sessionStorage.removeItem('lastResult');
+  window.location.href = 'game.html';
+});
+</script>
+</body>
+</html>

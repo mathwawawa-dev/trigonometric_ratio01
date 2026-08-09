@@ -49,7 +49,8 @@
     </div>
     <div class="stars" id="r-stars" aria-label="별점"></div>
     <div class="result-btns">
-      <button class="btn btn--primary btn--full btn--lg" id="retry-btn">🔄 다시 도전</button>
+      <button class="btn btn--primary btn--full btn--lg" id="detail-btn">📊 상세 결과 보기</button>
+      <button class="btn btn--secondary btn--full" id="retry-btn">🔄 다시 도전</button>
       <button class="btn btn--ghost btn--full" id="home-btn">🏠 처음으로</button>
     </div>
   </div>
@@ -501,21 +502,18 @@ function showResult() {
 
   document.getElementById('result-overlay').classList.add('show');
 
-  // 최고기록 저장 (LocalStorage)
-  saveRecord({ nickname, pokemon, difficulty, score: gs.score, accuracy, maxCombo: gs.maxCombo, avgTime });
+  // 결과를 sessionStorage에 저장 → result.html에서 활용
+  sessionStorage.setItem('lastResult', JSON.stringify({
+    score:        gs.score,
+    correctCount: gs.correctCount,
+    totalCount:   gs.session.length,
+    maxCombo:     gs.maxCombo,
+    avgTime:      parseFloat(avgTime),
+    accuracy,
+  }));
 }
 
-function saveRecord(data) {
-  try {
-    const key = 'tri_records';
-    const records = JSON.parse(localStorage.getItem(key) || '[]');
-    records.push({ ...data, date: new Date().toLocaleDateString('ko-KR') });
-    records.sort((a, b) => b.score - a.score);
-    localStorage.setItem(key, JSON.stringify(records.slice(0, 50)));
-  } catch(e) {}
-}
-
-// ── 다시 / 처음으로 ──────────────────────────────────────
+// ── 다시 / 처음으로 / 상세결과 ──────────────────────────
 document.getElementById('retry-btn').addEventListener('click', () => {
   document.getElementById('result-overlay').classList.remove('show');
   resetGame();
@@ -523,6 +521,12 @@ document.getElementById('retry-btn').addEventListener('click', () => {
 
 document.getElementById('home-btn').addEventListener('click', () => {
   window.location.href = 'index.html';
+});
+
+// 상세 결과 페이지로 이동
+const detailBtn = document.getElementById('detail-btn');
+if (detailBtn) detailBtn.addEventListener('click', () => {
+  window.location.href = 'result.html';
 });
 
 function resetGame() {

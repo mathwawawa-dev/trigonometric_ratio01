@@ -1,0 +1,443 @@
+/* ============================================================
+   hallOfFame.css — result.html / hall_of_fame.html 공용 스타일
+   STEP 2-5 | v1.0.26_260809_1724
+   ============================================================ */
+
+/* ── 페이지 공용 래퍼 ─────────────────────────────────────── */
+.hof-page-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--sp-6) var(--sp-4) var(--sp-12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-6);
+  min-height: 100dvh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 뒤로가기 헤더 ────────────────────────────────────────── */
+.back-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-full);
+  padding: var(--sp-2) var(--sp-4);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  text-decoration: none;
+}
+.back-btn:hover {
+  background: rgba(255,255,255,0.10);
+  color: var(--text-primary);
+}
+
+/* ── 결과 페이지: 포켓몬 + 점수 히어로 ───────────────────── */
+.result-hero {
+  width: 100%;
+  text-align: center;
+  padding: var(--sp-4) 0;
+  animation: fadeInScale 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.result-hero__pokemon {
+  width: 120px; height: 120px;
+  margin: 0 auto var(--sp-3);
+  object-fit: contain;
+  filter: drop-shadow(0 4px 24px rgba(124,58,237,0.7));
+  animation: float 2.5s ease-in-out infinite;
+}
+
+.result-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--sp-2);
+  line-height: 1.1;
+}
+
+.result-hero__subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ── 별점 (결과 페이지) ───────────────────────────────────── */
+.stars-lg {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: center;
+  margin: var(--sp-4) 0;
+}
+
+.star-lg {
+  font-size: 2.5rem;
+  color: var(--border-normal);
+  transition: color 0.3s ease, transform var(--transition-spring);
+  filter: drop-shadow(0 0 0 transparent);
+}
+
+.star-lg--filled {
+  color: var(--warning-400);
+  filter: drop-shadow(0 0 8px rgba(251,191,36,0.7));
+}
+
+.star-lg--filled:nth-child(1) { transition-delay: 0.1s; }
+.star-lg--filled:nth-child(2) { transition-delay: 0.3s; }
+.star-lg--filled:nth-child(3) { transition-delay: 0.5s; }
+
+/* ── 스탯 카드 그리드 ─────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+  width: 100%;
+}
+
+.stat-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  animation: fadeIn 0.4s ease both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+.stat-card__icon {
+  font-size: var(--text-xl);
+  margin-bottom: var(--sp-1);
+}
+
+.stat-card__value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.stat-card__value--score   { color: var(--primary-300); }
+.stat-card__value--correct { color: var(--success-400); }
+.stat-card__value--combo   { color: var(--warning-400); }
+.stat-card__value--time    { color: var(--accent-400);  }
+
+.stat-card__label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+}
+
+/* ── 정확도 바 (결과 페이지) ──────────────────────────────── */
+.accuracy-section {
+  width: 100%;
+  animation: fadeIn 0.5s 0.4s ease both;
+}
+
+.accuracy-section__label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-2);
+}
+
+.accuracy-section__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.accuracy-section__pct {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 900;
+  color: var(--primary-300);
+}
+
+.accuracy-track {
+  width: 100%;
+  height: 10px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.accuracy-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--grad-primary);
+  width: 0%;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1) 0.6s;
+}
+
+/* ── 닉네임 등록 폼 ───────────────────────────────────────── */
+.register-section {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  animation: fadeIn 0.5s 0.5s ease both;
+}
+
+.register-section__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.register-section__name-display {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  color: var(--accent-400);
+  font-weight: 700;
+  background: rgba(6,182,212,0.10);
+  border: 1px solid rgba(6,182,212,0.25);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-3);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* ── 명예의 전당 헤더 ─────────────────────────────────────── */
+.hof-hero {
+  width: 100%;
+  text-align: center;
+  padding: var(--sp-2) 0;
+  animation: fadeIn 0.4s ease both;
+}
+
+.hof-hero__trophy {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: var(--sp-3);
+  animation: float 3s ease-in-out infinite;
+}
+
+.hof-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2.5s linear infinite;
+}
+
+.hof-hero__sub {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: var(--sp-2);
+}
+
+/* ── 필터 탭 ──────────────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: var(--sp-2);
+  width: 100%;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-1);
+}
+
+.filter-tab {
+  flex: 1;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.filter-tab--active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── 리더보드 패널 ────────────────────────────────────────── */
+.leaderboard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  animation: fadeIn 0.4s ease both;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  animation: fadeIn 0.3s ease both;
+}
+
+.leaderboard-item:hover { background: rgba(124,58,237,0.06); border-color: var(--border-normal); }
+
+.leaderboard-item--rank1 {
+  background: rgba(251,191,36,0.08);
+  border-color: rgba(251,191,36,0.25);
+  box-shadow: 0 0 12px rgba(251,191,36,0.1);
+}
+.leaderboard-item--rank2 {
+  background: rgba(148,163,184,0.08);
+  border-color: rgba(148,163,184,0.2);
+}
+.leaderboard-item--rank3 {
+  background: rgba(180,120,60,0.08);
+  border-color: rgba(180,120,60,0.2);
+}
+
+/* 순위 뱃지 */
+.lb-rank {
+  min-width: 36px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.lb-rank--1 { color: #fbbf24; font-size: var(--text-xl); }
+.lb-rank--2 { color: #94a3b8; font-size: var(--text-lg); }
+.lb-rank--3 { color: #b4783c; font-size: var(--text-lg); }
+
+/* 포켓몬 아바타 */
+.lb-pokemon {
+  width: 36px; height: 36px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.12);
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+/* 이름 + 정보 */
+.lb-info { flex: 1; min-width: 0; }
+
+.lb-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lb-meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.lb-diff-pill {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+}
+.lb-diff-pill--easy   { color: var(--success-400); border-color: var(--success-500); background: rgba(34,197,94,0.1); }
+.lb-diff-pill--normal { color: var(--accent-400);  border-color: var(--accent-500);  background: rgba(6,182,212,0.1); }
+.lb-diff-pill--hard   { color: var(--danger-400);  border-color: var(--danger-500);  background: rgba(239,68,68,0.1); }
+
+/* 점수 */
+.lb-score {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 900;
+  color: var(--accent-400);
+  flex-shrink: 0;
+  min-width: 60px;
+  text-align: right;
+}
+.lb-score--1 { color: #fbbf24; }
+.lb-score--2 { color: #94a3b8; }
+.lb-score--3 { color: #b4783c; }
+
+/* ── 빈 리더보드 ──────────────────────────────────────────── */
+.hof-empty {
+  text-align: center;
+  padding: var(--sp-12) 0;
+  color: var(--text-muted);
+}
+.hof-empty__icon  { font-size: 3rem; margin-bottom: var(--sp-4); display: block; }
+.hof-empty__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: var(--sp-2);
+}
+
+/* ── 내 기록 하이라이트 ───────────────────────────────────── */
+.leaderboard-item--mine {
+  border-color: var(--primary-400) !important;
+  background: rgba(124,58,237,0.10) !important;
+}
+
+/* ── 기록 지우기 버튼 ─────────────────────────────────────── */
+.clear-btn {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+.clear-btn:hover { color: var(--danger-400); }
+
+/* ── 반응형 ──────────────────────────────────────────────── */
+@media (max-width: 375px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+  .stat-card__value { font-size: var(--text-xl); }
+  .lb-pokemon { width: 28px; height: 28px; }
+}
