@@ -131,401 +131,83 @@
 
 <script>
 /* ============================================================
-   GAME ENGINE — 삼각비 마스터
-   STEP 3-1: game.html 인라인 로직 (후속 단계에서 JS 분리)
+   game.html — 오케스트레이션 레이어 (STEP 3-2)
+   실제 로직: js/utils.js · js/renderer.js
+              js/questionLoader.js · js/quizEngine.js
    ============================================================ */
 
-// ── 상수 (TriUtils.CONFIG에서 구조분해) ─────────────────
-const { SESSION_LEN, TIMER_SEC, TRI_COOLDOWN, TRIG_COOLDOWN, IMG_DIRS, DIFF_WEIGHTS }
-  = TriUtils.CONFIG;
-
-// ── 세션 복원 ─────────────────────────────────────────────
+// ── 트레이너 세션 복원 ────────────────────────────────────
 let trainer;
-try {
-  trainer = JSON.parse(sessionStorage.getItem('trainer') || 'null');
-} catch(e) { trainer = null; }
+try { trainer = JSON.parse(sessionStorage.getItem('trainer') || 'null'); }
+catch(e) { trainer = null; }
+if (!trainer) { window.location.href = 'index.html'; }
 
-if (!trainer) {
-  // 직접 접근 시 대문으로
-  window.location.href = 'index.html';
-}
+const { difficulty } = trainer;
 
-const { nickname, pokemon, pokemonId, difficulty } = trainer;
-const POKEMON_IMG_URL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
-const POKEMON_SMALL   = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
-
-// ── HUD 초기화 ────────────────────────────────────────────
-document.getElementById('hud-nickname').textContent = nickname;
-document.getElementById('hud-pokemon-img').src = POKEMON_SMALL;
-document.getElementById('hud-qtotal').textContent = `/${SESSION_LEN}`;
-
-// 결과 화면 포켓몬
-document.getElementById('result-pokemon-img').src = POKEMON_IMG_URL;
-
-// ── 진행 도트 생성 ────────────────────────────────────────
-const dotsEl = document.getElementById('progress-dots');
-for (let i = 0; i < SESSION_LEN; i++) {
-  const d = document.createElement('div');
-  d.className = 'progress-dot';
-  d.id = `dot-${i}`;
-  dotsEl.appendChild(d);
-}
-
-// ── 게임 상태 ─────────────────────────────────────────────
-const gs = {
-  allQuestions: [],
-  session:      [],
-  qIndex:       0,
-  score:        0,
-  combo:        0,
-  maxCombo:     0,
-  correctCount: 0,
-  timings:      [],     // 각 문항 응답 시간(ms)
-  answered:     false,
-  timerInterval:null,
-  timerLeft:    TIMER_SEC,
-  qStartTime:   0,
-  // cooldown 추적
-  usedIds:      new Set(),
-  recentTris:   [],
-  recentTrigs:  [],
-};
-
-// ── QuestionLoader → TriUtils 위임 ──────────────────────
-const buildSession  = (allQ, diff) => TriUtils.buildSession(allQ, diff);
-
-// ── KaTeX 렌더 → TriRenderer 위임 ───────────────────────
-const renderTex    = (el, tex) => TriRenderer.renderTex(el, tex);
-const renderTexStr = (tex)     => TriRenderer.renderTexStr(tex);
-
-// ── 문제 표시 ─────────────────────────────────────────────
-function showQuestion(q) {
-  gs.answered = false;
-
-  // 메타 뱃지
-  document.getElementById('type-badge').textContent = `유형${'①②③'[q.image_type - 1]}`;
-  document.getElementById('type-badge').className = `type-badge type-badge--${q.image_type}`;
-  document.getElementById('trig-badge').textContent = q.question_type;
-  document.getElementById('trig-badge').className = `trig-badge trig-badge--${q.question_type}`;
-
-  // 이미지
-  const imgEl = document.getElementById('tri-img');
-  imgEl.classList.add('loading');
-  const dir = IMG_DIRS[q.image_type];
-  imgEl.onload = () => imgEl.classList.remove('loading');
-  imgEl.onerror = () => { imgEl.classList.remove('loading'); };
-  imgEl.src = `${dir}/${q.filename}`;
-
-  // 질문 텍스트 (KaTeX)
-  const qtEl = document.getElementById('question-text');
-  qtEl.innerHTML = renderTexStr(q.question);
-
-  // 선지
-  const choiceBtns = document.querySelectorAll('.choice-btn');
-  choiceBtns.forEach((btn, idx) => {
-    btn.disabled = false;
-    btn.className = 'choice-btn';
-    btn.innerHTML = `<span>${renderTexStr(q.choices[idx])}</span>`;
-    btn.setAttribute('aria-label', `선지 ${['①','②','③','④'][idx]}`);
-  });
-
-  // 해설 배너 / 다음 버튼 숨김
-  document.getElementById('answer-banner').style.display = 'none';
-  const nextBtn = document.getElementById('next-btn');
-  nextBtn.style.display = 'none';
-
-  // 진행 도트
-  for (let i = 0; i < SESSION_LEN; i++) {
-    const d = document.getElementById(`dot-${i}`);
-    if (!d) continue;
-    d.className = 'progress-dot' +
-      (i < gs.qIndex ? ' progress-dot--done' :
-       i === gs.qIndex ? ' progress-dot--current' : '');
-  }
-
-  // HUD
-  document.getElementById('hud-qnum').textContent = gs.qIndex + 1;
-
-  // 타이머 시작
-  startTimer();
-  gs.qStartTime = Date.now();
-}
-
-// ── 타이머 ───────────────────────────────────────────────
-function startTimer() {
-  clearInterval(gs.timerInterval);
-  gs.timerLeft = TIMER_SEC;
-  updateTimerUI();
-  gs.timerInterval = setInterval(() => {
-    gs.timerLeft--;
-    updateTimerUI();
-    if (gs.timerLeft <= 0) {
-      clearInterval(gs.timerInterval);
-      if (!gs.answered) onTimeout();
-    }
-  }, 1000);
-}
-
-function updateTimerUI() {
-  const pct = (gs.timerLeft / TIMER_SEC) * 100;
-  const bar = document.getElementById('timer-bar');
-  const display = document.getElementById('timer-display');
-  bar.style.width = pct + '%';
-  display.textContent = gs.timerLeft;
-
-  bar.className = 'timer-bar-fill';
-  display.className = 'timer-countdown';
-  if (gs.timerLeft <= 10) {
-    bar.classList.add('timer-bar-fill--critical');
-    display.classList.add('timer-countdown--critical');
-  } else if (gs.timerLeft <= 15) {
-    bar.classList.add('timer-bar-fill--warning');
-    display.classList.add('timer-countdown--warning');
-  }
-}
-
-// ── 답 선택 ──────────────────────────────────────────────
-function onChoiceClick(idx) {
-  if (gs.answered) return;
-  gs.answered = true;
-  clearInterval(gs.timerInterval);
-
-  const q = gs.session[gs.qIndex];
-  const elapsed = (Date.now() - gs.qStartTime) / 1000;
-  gs.timings.push(elapsed);
-
-  const isCorrect = idx === q.answer_index;
-  const choiceBtns = document.querySelectorAll('.choice-btn');
-
-  // 모든 버튼 비활성화
-  choiceBtns.forEach(b => b.disabled = true);
-
-  // 정답/오답 표시
-  choiceBtns[q.answer_index].classList.add('choice-btn--correct');
-  if (!isCorrect) {
-    choiceBtns[idx].classList.add('choice-btn--wrong');
-  }
-
-  if (isCorrect) {
-    gs.combo++;
-    gs.maxCombo = Math.max(gs.maxCombo, gs.combo);
-    gs.correctCount++;
-    // 점수 = 기본 100 + 속도보너스(최대50) + 콤보보너스
-    const speedBonus = Math.round((gs.timerLeft / TIMER_SEC) * 50);
-    const comboBonus = Math.min(gs.combo - 1, 5) * 10;
-    gs.score += 100 + speedBonus + comboBonus;
-    showFeedback(true);
-    showAnswerBanner(true, q);
-  } else {
-    gs.combo = 0;
-    showFeedback(false);
-    showAnswerBanner(false, q);
-  }
-
-  updateHUD();
-  showNextBtn();
-}
-
-function onTimeout() {
-  if (gs.answered) return;
-  gs.answered = true;
-  gs.combo = 0;
-  gs.timings.push(TIMER_SEC);
-
-  const q = gs.session[gs.qIndex];
-  const choiceBtns = document.querySelectorAll('.choice-btn');
-  choiceBtns.forEach(b => b.disabled = true);
-  choiceBtns[q.answer_index].classList.add('choice-btn--correct');
-
-  showFeedback(false, true);
-  showAnswerBanner(false, q, true);
-  updateHUD();
-  showNextBtn();
-}
-
-// ── 피드백 스탬프 ────────────────────────────────────────
-function showFeedback(correct, timeout = false) {
-  const ov = document.getElementById('feedback-overlay');
-  const stamp = document.getElementById('feedback-stamp');
-  stamp.className = 'feedback-stamp ' +
-    (correct ? 'feedback-stamp--correct' : 'feedback-stamp--wrong');
-  stamp.textContent = timeout ? '시간 초과!' : (correct ? '정답!' : '오답!');
-  ov.classList.add('show');
-  setTimeout(() => ov.classList.remove('show'), 900);
-}
-
-// ── 정답 해설 배너 ────────────────────────────────────────
-function showAnswerBanner(correct, q, timeout = false) {
-  const banner = document.getElementById('answer-banner');
-  const correctChoice = q.choices[q.answer_index];
-  banner.className = `answer-banner answer-banner--${correct ? 'correct' : 'wrong'}`;
-  banner.innerHTML = `
-    <span class="answer-banner__icon">${correct ? '✅' : (timeout ? '⏰' : '❌')}</span>
-    <div class="answer-banner__text">
-      ${timeout ? '시간 초과! ' : (correct ? '정답입니다! ' : '오답! ')}정답:
-      <span class="answer-banner__formula">${renderTexStr(correctChoice)}</span>
-    </div>
-  `;
-  banner.style.display = 'flex';
-}
-
-// ── 다음 버튼 ────────────────────────────────────────────
-function showNextBtn() {
-  const nextBtn = document.getElementById('next-btn');
-  const isLast = gs.qIndex >= gs.session.length - 1;
-  nextBtn.textContent = isLast ? '결과 보기 🏆' : '다음 문제 →';
-  nextBtn.style.display = 'block';
-}
-
-// ── HUD 업데이트 ─────────────────────────────────────────
-function updateHUD() {
-  document.getElementById('hud-score').textContent = gs.score.toLocaleString();
-  const comboEl = document.getElementById('hud-combo');
-  comboEl.textContent = gs.combo;
-  if (gs.combo > 0) {
-    comboEl.classList.add('combo-value--active');
-    setTimeout(() => comboEl.classList.remove('combo-value--active'), 400);
-  }
-  const fireEl = document.getElementById('combo-fire');
-  fireEl.className = 'combo-fire' + (gs.combo >= 3 ? ' combo-fire--show' : '');
-}
-
-// ── 다음 문항 / 결과 ─────────────────────────────────────
-document.getElementById('next-btn').addEventListener('click', () => {
-  gs.qIndex++;
-  if (gs.qIndex >= gs.session.length) {
-    showResult();
-  } else {
-    showQuestion(gs.session[gs.qIndex]);
-  }
+// ── 선지 클릭 이벤트 ──────────────────────────────────────
+document.querySelectorAll('.choice-btn').forEach(btn => {
+  btn.addEventListener('click', () =>
+    TriQuizEngine.onChoiceClick(parseInt(btn.dataset.idx))
+  );
 });
 
-// ── 결과 화면 ────────────────────────────────────────────
-function showResult() {
-  // 진행 도트 모두 완료
-  for (let i = 0; i < SESSION_LEN; i++) {
-    const d = document.getElementById(`dot-${i}`);
-    if (d) d.className = 'progress-dot progress-dot--done';
-  }
+// ── 다음 문항 버튼 ────────────────────────────────────────
+document.getElementById('next-btn').addEventListener('click', () =>
+  TriQuizEngine.nextQuestion()
+);
 
-  const avgTime = gs.timings.length
-    ? (gs.timings.reduce((a,b) => a+b, 0) / gs.timings.length).toFixed(1)
-    : '-';
-  const accuracy = Math.round((gs.correctCount / gs.session.length) * 100);
+// ── 결과 오버레이 버튼 ────────────────────────────────────
+document.getElementById('detail-btn')?.addEventListener('click', () => {
+  window.location.href = 'result.html';
+});
 
-  document.getElementById('r-score').textContent = gs.score.toLocaleString();
-  document.getElementById('r-correct').textContent =
-    `${gs.correctCount}/${gs.session.length} (${accuracy}%)`;
-  document.getElementById('r-combo').textContent = gs.maxCombo;
-  document.getElementById('r-time').textContent = `${avgTime}s`;
-
-  // 제목 결정
-  const titles = ['아직 멀었어요...', '조금 더 힘내요!', '잘하고 있어요!', '대단해요!', '완벽해요! 🎉'];
-  const titleIdx = Math.min(Math.floor(accuracy / 25), 4);
-  document.getElementById('result-title').textContent = titles[titleIdx];
-
-  // 별점
-  const stars = accuracy >= 90 ? 3 : accuracy >= 60 ? 2 : 1;
-  const starsEl = document.getElementById('r-stars');
-  starsEl.innerHTML = [1,2,3].map(i =>
-    `<span class="star${i <= stars ? ' star--filled' : ''}">★</span>`
-  ).join('');
-
-  document.getElementById('result-overlay').classList.add('show');
-
-  // 결과를 sessionStorage에 저장 → result.html에서 활용
-  sessionStorage.setItem('lastResult', JSON.stringify({
-    score:        gs.score,
-    correctCount: gs.correctCount,
-    totalCount:   gs.session.length,
-    maxCombo:     gs.maxCombo,
-    avgTime:      parseFloat(avgTime),
-    accuracy,
-  }));
-}
-
-// ── 다시 / 처음으로 / 상세결과 ──────────────────────────
 document.getElementById('retry-btn').addEventListener('click', () => {
   document.getElementById('result-overlay').classList.remove('show');
-  resetGame();
+  const st = TriQuizEngine.getState();
+  TriQuizEngine.resetGame(st?.allQuestions, difficulty);
 });
 
 document.getElementById('home-btn').addEventListener('click', () => {
   window.location.href = 'index.html';
 });
 
-// 상세 결과 페이지로 이동
-const detailBtn = document.getElementById('detail-btn');
-if (detailBtn) detailBtn.addEventListener('click', () => {
-  window.location.href = 'result.html';
-});
-
-function resetGame() {
-  gs.qIndex = 0; gs.score = 0; gs.combo = 0;
-  gs.maxCombo = 0; gs.correctCount = 0;
-  gs.timings = []; gs.answered = false;
-  // 새 세션 빌드
-  gs.session = buildSession(gs.allQuestions, difficulty);
-  document.getElementById('hud-score').textContent = '0';
-  document.getElementById('hud-combo').textContent = '0';
-  // 도트 리셋
-  for (let i = 0; i < SESSION_LEN; i++) {
-    const d = document.getElementById(`dot-${i}`);
-    if (d) d.className = 'progress-dot' + (i === 0 ? ' progress-dot--current' : '');
-  }
-  showQuestion(gs.session[0]);
-}
-
-// ── 선지 클릭 이벤트 ─────────────────────────────────────
-document.querySelectorAll('.choice-btn').forEach(btn => {
-  btn.addEventListener('click', () => onChoiceClick(parseInt(btn.dataset.idx)));
-});
-
-// ── 키보드 단축키 (1~4) ──────────────────────────────────
+// ── 키보드 단축키 (1~4: 선지, Enter/Space: 다음) ─────────
 document.addEventListener('keydown', e => {
-  if (['1','2','3','4'].includes(e.key) && !gs.answered) {
-    onChoiceClick(parseInt(e.key) - 1);
+  const st = TriQuizEngine.getState();
+  if (['1','2','3','4'].includes(e.key) && st && !st.answered) {
+    TriQuizEngine.onChoiceClick(parseInt(e.key) - 1);
   }
-  if ((e.key === 'Enter' || e.key === ' ') && gs.answered) {
+  if ((e.key === 'Enter' || e.key === ' ') && st?.answered) {
     const nextBtn = document.getElementById('next-btn');
     if (nextBtn.style.display !== 'none') nextBtn.click();
   }
 });
 
-// ── 초기 데이터 로드 ─────────────────────────────────────
-(async function init() {
-  // file:// 프로토콜 감지 → 서버 안내
-  if (location.protocol === 'file:') {
-    document.getElementById('question-text').innerHTML = `
-      <span style="font-size:var(--text-base);line-height:1.7;color:var(--text-secondary)">
-        ⚠️ <strong style="color:var(--warning-400)">로컬 서버가 필요합니다.</strong><br><br>
-        프로젝트 폴더의 <code style="background:var(--bg-elevated);padding:2px 6px;border-radius:4px;font-size:0.85em">서버시작.bat</code>
-        을 더블클릭하면<br>
-        자동으로 서버가 열립니다. 🚀
-      </span>
-    `;
-    return;
-  }
-
-  try {
-    const res = await fetch('data/questions.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    gs.allQuestions = await res.json();
-    gs.session = buildSession(gs.allQuestions, difficulty);
-    showQuestion(gs.session[0]);
-  } catch(err) {
-    document.getElementById('question-text').innerHTML = `
-      <span style="font-size:var(--text-sm);color:var(--danger-400)">
-        ⚠️ questions.json 로드 실패<br>
-        <code style="font-size:0.85em">${err.message}</code><br><br>
-        <span style="color:var(--text-muted)">서버시작.bat 을 실행한 뒤<br>
-        http://localhost:8080/index.html 로 접속하세요.</span>
-      </span>
-    `;
-    console.error('questions.json 로드 실패:', err);
-  }
-})();
-
+// ── 초기 데이터 로드 & 게임 시작 ─────────────────────────
+TriLoader.initQuestions({
+  difficulty,
+  onSuccess(allQ, session) {
+    TriQuizEngine.init({ trainer, allQuestions: allQ, session });
+  },
+  onError(err) {
+    const qt = document.getElementById('question-text');
+    qt.innerHTML =
+      '<span style="font-size:var(--text-sm);color:var(--danger-400)">' +
+      '⚠️ questions.json 로드 실패<br>' +
+      '<code style="font-size:0.85em">' + err.message + '</code><br><br>' +
+      '<span style="color:var(--text-muted)">서버시작.bat 을 실행한 뒤<br>' +
+      'http://localhost:8080/index.html 로 접속하세요.</span></span>';
+    console.error('[game.html] 로드 실패:', err);
+  },
+  onFileProtocol() {
+    const qt = document.getElementById('question-text');
+    qt.innerHTML =
+      '<span style="font-size:var(--text-base);line-height:1.7;color:var(--text-secondary)">' +
+      '⚠️ <strong style="color:var(--warning-400)">로컬 서버가 필요합니다.</strong><br><br>' +
+      '프로젝트 폴더의 <code style="background:var(--bg-elevated);padding:2px 6px;border-radius:4px">' +
+      '서버시작.bat</code>을 더블클릭하면<br>자동으로 서버가 열립니다. 🚀</span>';
+  },
+});
 </script>
 
 </body>
