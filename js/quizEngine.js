@@ -47,7 +47,8 @@
       timings:       [],
       answered:      false,
       timerInterval: null,
-      timerLeft:     _cfg.TIMER_SEC,
+      timerMax:      _cfg.TIMER_SEC[_difficulty] || 30,
+      timerLeft:     _cfg.TIMER_SEC[_difficulty] || 30,
       qStartTime:    0,
     };
 
@@ -131,7 +132,7 @@
 
   function _startTimer() {
     clearInterval(_gs.timerInterval);
-    _gs.timerLeft = _cfg.TIMER_SEC;
+    _gs.timerLeft = _gs.timerMax;
     _updateTimerUI();
     _gs.timerInterval = setInterval(() => {
       _gs.timerLeft--;
@@ -144,7 +145,7 @@
   }
 
   function _updateTimerUI() {
-    const pct     = (_gs.timerLeft / _cfg.TIMER_SEC) * 100;
+    const pct     = (_gs.timerLeft / _gs.timerMax) * 100;
     const bar     = document.getElementById('timer-bar');
     const display = document.getElementById('timer-display');
     bar.style.width  = pct + '%';
@@ -183,7 +184,7 @@
       _gs.combo++;
       _gs.maxCombo     = Math.max(_gs.maxCombo, _gs.combo);
       _gs.correctCount++;
-      const speedBonus = Math.round((_gs.timerLeft / _cfg.TIMER_SEC) * 50);
+      const speedBonus = Math.round((_gs.timerLeft / _gs.timerMax) * 50);
       const comboBonus = Math.min(_gs.combo - 1, 5) * 10;
       _gs.score += 100 + speedBonus + comboBonus;
       _showFeedback(true);
@@ -204,7 +205,7 @@
     if (_gs.answered) return;
     _gs.answered = true;
     _gs.combo    = 0;
-    _gs.timings.push(_cfg.TIMER_SEC);
+    _gs.timings.push(_gs.timerMax);
 
     const q = _gs.session[_gs.qIndex];
     document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);

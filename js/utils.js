@@ -12,7 +12,7 @@
   /* ── 게임 상수 ─────────────────────────────────────────── */
   const CONFIG = Object.freeze({
     SESSION_LEN:   10,
-    TIMER_SEC:     30,
+    TIMER_SEC:     { easy: 240, normal: 100, hard: 50 },
     TRI_COOLDOWN:  5,
     TRIG_COOLDOWN: 2,
     IMG_DIRS:  { 1: 'Tri_img_01', 2: 'Tri_img_02', 3: 'Tri_img_03' },
