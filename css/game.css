@@ -54,7 +54,7 @@
 .stat-badge--orange { color: #c2410c; }
 .stat-badge--green  { color: #15803d; }
 .stat-badge--gray   { color: #4b5563; }
-.stat-unit { font-size: 10px; }
+.stat-unit { font-size: 9px; transform: translateY(-1px); display: inline-block; }
 
 /* ── 플로팅 토글 패널 (Fixed 우상단) ─────────────────────── */
 .floating-toggle-panel {
