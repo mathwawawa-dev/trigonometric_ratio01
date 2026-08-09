@@ -196,6 +196,7 @@
       transition: color var(--transition-fast);
     }
     .hint-text--warn { color: var(--warning-400); }
+    .hint-text--ready { color: #000000 !important; font-weight: 700; }
 
     /* 수식 데코 (배경 장식) */
     .math-deco {
@@ -520,7 +521,7 @@ function checkReady() {
     hintText.className = 'hint-text hint-text--warn';
   } else {
     hintText.textContent = `준비 완료! ${state.nickname} 트레이너, 출발하세요! 🚀`;
-    hintText.className = 'hint-text';
+    hintText.className = 'hint-text hint-text--ready';
   }
 }
 
