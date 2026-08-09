@@ -85,7 +85,7 @@
       imgEl.src = _cfg.IMG_DIRS[q.image_type] + '/' + q.filename;
 
       // 질문 (한글+LaTeX 혼합 → renderMixedTex)
-      const cleanedQuestion = q.question.replace('다음 삼각형에서 ', '');
+      const cleanedQuestion = q.question.replace('다음 삼각형에서 ', '').replace('의 값은?', '').trim();
       document.getElementById('question-text').innerHTML =
         TriRenderer.renderMixedTex(cleanedQuestion);
 
@@ -115,7 +115,7 @@
       console.error('[TriQuizEngine] showQuestion 실패:', e, q);
       // fallback: 텍스트만 표시하고 타이머는 반드시 시작
       const qt = document.getElementById('question-text');
-      if (qt) qt.textContent = (q && q.question) ? q.question.replace('다음 삼각형에서 ', '') : '문제 로드 실패';
+      if (qt) qt.textContent = (q && q.question) ? q.question.replace('다음 삼각형에서 ', '').replace('의 값은?', '').trim() : '문제 로드 실패';
       document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
         btn.disabled = false;
         btn.textContent = (q && q.choices && q.choices[idx]) || '';

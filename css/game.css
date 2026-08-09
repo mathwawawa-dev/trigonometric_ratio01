@@ -122,15 +122,19 @@
 
 /* ── 질문 영역 ────────────────────────────────────────────── */
 .question-section {
-  text-align: center;
-  padding: var(--sp-2) 0;
+  position: absolute;
+  top: var(--sp-4);
+  left: var(--sp-4);
+  text-align: left;
+  padding: 0;
+  z-index: 10;
 }
 
 #question-text {
   font-family: var(--font-body);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl); /* 글씨 좀 더 크게 */
   font-weight: 700;
-  color: var(--text-primary);
+  color: #111827 !important; /* 항상 어두운 색 유지 */
   line-height: var(--leading-tight);
 }
 
