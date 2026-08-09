@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="삼각비 마스터 — 게임 화면">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>삼각비 마스터 — 게임 중</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement && renderMathInElement(document.body)"></script>
+
+  <style>
+    /* ── 게임 화면 전용 ─────────────────────────────── */
+    .game-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 var(--sp-4) var(--sp-8);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+      min-height: 100dvh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── 상단 HUD ─────────────────────────────────── */
+    .hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-3) 0 0;
+      gap: var(--sp-3);
+    }
+
+    .hud-left { display: flex; align-items: center; gap: var(--sp-3); }
+    .hud-right { display: flex; align-items: center; gap: var(--sp-3); }
+
+    .trainer-chip {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      background: var(--glass-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: var(--sp-1) var(--sp-3) var(--sp-1) var(--sp-2);
+    }
+
+    .trainer-chip__avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(124,58,237,0.2);
+      padding: 2px;
+    }
+
+    .trainer-chip__name {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: var(--text-primary);
+      max-width: 80px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── 타이머 + 진행 영역 ──────────────────────── */
+    .timer-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+    }
+
+    .timer-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .timer-countdown {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      color: var(--accent-400);
+      line-height: 1;
+      transition: color var(--transition-fast);
+      min-width: 32px;
+    }
+    .timer-countdown--warning  { color: var(--warning-400); }
+    .timer-countdown--critical { color: var(--danger-400); animation: pulse-text 0.5s ease-in-out infinite; }
+
+    /* ── 삼각형 이미지 영역 ───────────────────────── */
+    .tri-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+
+    .tri-image-frame {
+      width: 100%;
+      background: rgba(255,255,255,0.97);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-3);
+      box-shadow: var(--shadow-lg), 0 0 0 2px var(--border-subtle);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #tri-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: opacity 0.2s ease;
+    }
+    #tri-img.loading { opacity: 0; }
+
+    .tri-meta {
+      display: flex;
+      gap: var(--sp-2);
+      align-items: center;
+    }
+
+    /* ── 질문 영역 ───────────────────────────────── */
+    .question-section {
+      text-align: center;
+      padding: var(--sp-2) 0;
+    }
+
+    #question-text {
+      font-family: var(--font-body);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: var(--leading-tight);
+    }
+
+    /* ── 선지 버튼 ───────────────────────────────── */
+    #choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-3);
+    }
+
+    .choice-btn {
+      min-height: 72px;
+      font-size: var(--text-lg);
+      letter-spacing: 0.02em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 선지 번호 뱃지 */
+    .choice-btn::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 6px; left: 8px;
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    /* ── 정답 해설 배너 ──────────────────────────── */
+    #answer-banner {
+      display: none;
+      animation: fadeIn 0.3s ease both;
+    }
+
+    /* ── 다음 버튼 ───────────────────────────────── */
+    #next-btn {
+      display: none;
+      animation: fadeIn 0.35s 0.15s ease both;
+    }
+
+    /* ── 결과 오버레이 ───────────────────────────── */
+    #result-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: var(--z-modal);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--sp-4);
+    }
+    #result-overlay.show { display: flex; }
+
+    .result-inner {
+      width: 100%;
+      max-width: 400px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-2xl);
+      padding: var(--sp-8) var(--sp-6);
+      box-shadow: var(--shadow-xl);
+      animation: fadeInScale 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+      text-align: center;
+    }
+
+    .result-pokemon {
+      width: 100px; height: 100px;
+      margin: 0 auto var(--sp-4);
+      object-fit: contain;
+      filter: drop-shadow(0 4px 20px rgba(124,58,237,0.6));
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .result-title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--sp-6);
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+    }
+
+    .result-stat {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-md);
+      padding: var(--sp-3);
+    }
+
+    .result-stat__val {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      color: var(--accent-400);
+      display: block;
+    }
+
+    .result-stat__val--primary { color: var(--primary-300); }
+    .result-stat__val--success { color: var(--success-400); }
+    .result-stat__val--warning { color: var(--warning-400); }
+
+    .result-stat__label {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .result-btns {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      margin-top: var(--sp-2);
+    }
+
+    /* ── 피드백 스탬프 ───────────────────────────── */
+    #feedback-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: var(--z-modal);
+      opacity: 0;
+      transition: opacity 0.1s ease;
+    }
+    #feedback-overlay.show { opacity: 1; }
+
+    /* ── pause (일시정지 안내) ─────────────────── */
+    #pause-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: var(--z-overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+    #pause-overlay.show { display: flex; }
+
+    @keyframes pulse-text {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 피드백 스탬프 오버레이 ─────────────────────────── -->
+<div id="feedback-overlay" aria-hidden="true">
+  <div id="feedback-stamp" class="feedback-stamp"></div>
+</div>
+
+<!-- ── 결과 오버레이 ──────────────────────────────────── -->
+<div id="result-overlay" role="dialog" aria-modal="true" aria-label="게임 결과">
+  <div class="result-inner">
+    <img id="result-pokemon-img" class="result-pokemon" src="" alt="포켓몬">
+    <h2 class="result-title" id="result-title">세션 종료!</h2>
+    <div class="result-stats">
+      <div class="result-stat">
+        <span class="result-stat__val result-stat__val--primary" id="r-score">0</span>
+        <span class="result-stat__label">총점</span>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat__val result-stat__val--success" id="r-correct">0/0</span>
+        <span class="result-stat__label">정답률</span>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat__val result-stat__val--warning" id="r-combo">0</span>
+        <span class="result-stat__label">최고 콤보</span>
+      </div>
+      <div class="result-stat">
+        <span class="result-stat__val" id="r-time">0s</span>
+        <span class="result-stat__label">평균 응답속도</span>
+      </div>
+    </div>
+    <div class="stars" id="r-stars" aria-label="별점"></div>
+    <div class="result-btns">
+      <button class="btn btn--primary btn--full btn--lg" id="retry-btn">🔄 다시 도전</button>
+      <button class="btn btn--ghost btn--full" id="home-btn">🏠 처음으로</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 메인 게임 래퍼 ──────────────────────────────────── -->
+<div class="game-wrap page-enter">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-left">
+      <div class="trainer-chip" id="trainer-chip">
+        <img class="trainer-chip__avatar" id="hud-pokemon-img" src="" alt="포켓몬">
+        <span class="trainer-chip__name" id="hud-nickname">트레이너</span>
+      </div>
+      <div class="combo-wrap">
+        <span class="combo-label">콤보</span>
+        <span class="combo-value" id="hud-combo">0</span>
+        <span class="combo-fire" id="combo-fire">🔥</span>
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="score-item">
+        <span class="score-item__label">점수</span>
+        <span class="score-item__value score-item__value--accent" id="hud-score">0</span>
+      </div>
+      <div class="q-counter">
+        <span class="q-counter__current" id="hud-qnum">1</span>
+        <span class="q-counter__total" id="hud-qtotal">/10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 타이머 -->
+  <div class="timer-section">
+    <div class="timer-meta">
+      <div class="progress-dots" id="progress-dots" aria-label="진행 현황"></div>
+      <span class="timer-countdown" id="timer-display">30</span>
+    </div>
+    <div class="timer-bar-wrap">
+      <div class="timer-bar-fill" id="timer-bar"></div>
+    </div>
+  </div>
+
+  <!-- 삼각형 이미지 -->
+  <div class="tri-section">
+    <div class="tri-image-frame">
+      <img id="tri-img" src="" alt="삼각형 문제 이미지" class="loading">
+    </div>
+    <div class="tri-meta">
+      <span class="type-badge" id="type-badge">유형①</span>
+      <span class="trig-badge" id="trig-badge">sin</span>
+    </div>
+  </div>
+
+  <!-- 질문 -->
+  <div class="question-section">
+    <p id="question-text" aria-live="polite">문제를 불러오는 중...</p>
+  </div>
+
+  <!-- 선지 4개 -->
+  <div id="choices-grid" role="group" aria-label="답안 선택">
+    <button class="choice-btn" data-label="①" data-idx="0" id="choice-0" aria-label="선지 1"></button>
+    <button class="choice-btn" data-label="②" data-idx="1" id="choice-1" aria-label="선지 2"></button>
+    <button class="choice-btn" data-label="③" data-idx="2" id="choice-2" aria-label="선지 3"></button>
+    <button class="choice-btn" data-label="④" data-idx="3" id="choice-3" aria-label="선지 4"></button>
+  </div>
+
+  <!-- 정답 해설 배너 -->
+  <div id="answer-banner" class="answer-banner" role="status"></div>
+
+  <!-- 다음 버튼 -->
+  <button class="btn btn--primary btn--full btn--lg" id="next-btn" aria-label="다음 문제">
+    다음 문제 →
+  </button>
+
+</div><!-- /game-wrap -->
+
+<script>
+/* ============================================================
+   GAME ENGINE — 삼각비 마스터
+   STEP 3-1: game.html 인라인 로직 (후속 단계에서 JS 분리)
+   ============================================================ */
+
+// ── 상수 ─────────────────────────────────────────────────
+const SESSION_LEN   = 10;
+const TIMER_SEC     = 30;
+const TRI_COOLDOWN  = 5;
+const TRIG_COOLDOWN = 2;
+const IMG_DIRS = { 1: 'Tri_img_01', 2: 'Tri_img_02', 3: 'Tri_img_03' };
+const DIFF_WEIGHTS = {
+  easy:   [1.0, 0.0, 0.0],
+  normal: [0.5, 0.4, 0.1],
+  hard:   [0.3, 0.4, 0.3],
+};
+
+// ── 세션 복원 ─────────────────────────────────────────────
+let trainer;
+try {
+  trainer = JSON.parse(sessionStorage.getItem('trainer') || 'null');
+} catch(e) { trainer = null; }
+
+if (!trainer) {
+  // 직접 접근 시 대문으로
+  window.location.href = 'index.html';
+}
+
+const { nickname, pokemon, pokemonId, difficulty } = trainer;
+const POKEMON_IMG_URL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+const POKEMON_SMALL   = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+
+// ── HUD 초기화 ────────────────────────────────────────────
+document.getElementById('hud-nickname').textContent = nickname;
+document.getElementById('hud-pokemon-img').src = POKEMON_SMALL;
+document.getElementById('hud-qtotal').textContent = `/${SESSION_LEN}`;
+
+// 결과 화면 포켓몬
+document.getElementById('result-pokemon-img').src = POKEMON_IMG_URL;
+
+// ── 진행 도트 생성 ────────────────────────────────────────
+const dotsEl = document.getElementById('progress-dots');
+for (let i = 0; i < SESSION_LEN; i++) {
+  const d = document.createElement('div');
+  d.className = 'progress-dot';
+  d.id = `dot-${i}`;
+  dotsEl.appendChild(d);
+}
+
+// ── 게임 상태 ─────────────────────────────────────────────
+const gs = {
+  allQuestions: [],
+  session:      [],
+  qIndex:       0,
+  score:        0,
+  combo:        0,
+  maxCombo:     0,
+  correctCount: 0,
+  timings:      [],     // 각 문항 응답 시간(ms)
+  answered:     false,
+  timerInterval:null,
+  timerLeft:    TIMER_SEC,
+  qStartTime:   0,
+  // cooldown 추적
+  usedIds:      new Set(),
+  recentTris:   [],
+  recentTrigs:  [],
+};
+
+// ── QuestionLoader ────────────────────────────────────────
+function buildSession(allQ, diff) {
+  const weights = DIFF_WEIGHTS[diff] || DIFF_WEIGHTS.normal;
+  const session = [];
+  const usedIds   = new Set();
+  const recentTri = [];
+  const recentTrg = [];
+  let cooldown = TRI_COOLDOWN;
+
+  for (let i = 0; i < SESSION_LEN; i++) {
+    const half = SESSION_LEN / 2;
+    // 전반: type1 우선, 후반: 난이도 가중치
+    const tw = i < half ? [0.8, 0.15, 0.05] : weights;
+
+    let eligible = filterQ(allQ, usedIds, recentTri, recentTrg, cooldown);
+    // 폴백: cooldown 완화
+    while (eligible.length === 0 && cooldown > 1) {
+      cooldown--;
+      eligible = filterQ(allQ, usedIds, recentTri, recentTrg, cooldown);
+    }
+    if (eligible.length === 0) break;
+
+    const q = weightedPick(eligible, tw);
+    session.push(q);
+    usedIds.add(q.id);
+    recentTri.push(q.triangle_id);
+    if (recentTri.length > TRI_COOLDOWN) recentTri.shift();
+    recentTrg.push(q.question_type);
+    if (recentTrg.length > TRIG_COOLDOWN) recentTrg.shift();
+  }
+  return session;
+}
+
+function filterQ(pool, usedIds, recentTri, recentTrg, cd) {
+  return pool.filter(q =>
+    !usedIds.has(q.id) &&
+    !recentTri.slice(-cd).includes(q.triangle_id) &&
+    !recentTrg.slice(-TRIG_COOLDOWN).includes(q.question_type)
+  );
+}
+
+function weightedPick(candidates, tw) {
+  const weighted = candidates.map(q => ({ q, w: tw[q.image_type - 1] ?? 0.1 }));
+  const totalW = weighted.reduce((s, x) => s + x.w, 0);
+  let r = Math.random() * totalW;
+  for (const { q, w } of weighted) { r -= w; if (r <= 0) return q; }
+  return weighted[weighted.length - 1].q;
+}
+
+// ── KaTeX 렌더 ────────────────────────────────────────────
+function renderTex(el, tex) {
+  // $...$ 또는 \frac{}{} 형태 처리
+  const raw = tex.replace(/^\$|\$$/g, '').trim();
+  try {
+    katex.render(raw, el, { throwOnError: false, displayMode: false });
+  } catch(e) {
+    el.textContent = tex;
+  }
+}
+
+function renderTexStr(tex) {
+  const raw = tex.replace(/^\$|\$$/g, '').trim();
+  const span = document.createElement('span');
+  try { katex.render(raw, span, { throwOnError: false }); }
+  catch(e) { span.textContent = tex; }
+  return span.innerHTML;
+}
+
+// ── 문제 표시 ─────────────────────────────────────────────
+function showQuestion(q) {
+  gs.answered = false;
+
+  // 메타 뱃지
+  document.getElementById('type-badge').textContent = `유형${'①②③'[q.image_type - 1]}`;
+  document.getElementById('type-badge').className = `type-badge type-badge--${q.image_type}`;
+  document.getElementById('trig-badge').textContent = q.question_type;
+  document.getElementById('trig-badge').className = `trig-badge trig-badge--${q.question_type}`;
+
+  // 이미지
+  const imgEl = document.getElementById('tri-img');
+  imgEl.classList.add('loading');
+  const dir = IMG_DIRS[q.image_type];
+  imgEl.onload = () => imgEl.classList.remove('loading');
+  imgEl.onerror = () => { imgEl.classList.remove('loading'); };
+  imgEl.src = `${dir}/${q.filename}`;
+
+  // 질문 텍스트 (KaTeX)
+  const qtEl = document.getElementById('question-text');
+  qtEl.innerHTML = renderTexStr(q.question);
+
+  // 선지
+  const choiceBtns = document.querySelectorAll('.choice-btn');
+  choiceBtns.forEach((btn, idx) => {
+    btn.disabled = false;
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span>${renderTexStr(q.choices[idx])}</span>`;
+    btn.setAttribute('aria-label', `선지 ${['①','②','③','④'][idx]}`);
+  });
+
+  // 해설 배너 / 다음 버튼 숨김
+  document.getElementById('answer-banner').style.display = 'none';
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.style.display = 'none';
+
+  // 진행 도트
+  for (let i = 0; i < SESSION_LEN; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (!d) continue;
+    d.className = 'progress-dot' +
+      (i < gs.qIndex ? ' progress-dot--done' :
+       i === gs.qIndex ? ' progress-dot--current' : '');
+  }
+
+  // HUD
+  document.getElementById('hud-qnum').textContent = gs.qIndex + 1;
+
+  // 타이머 시작
+  startTimer();
+  gs.qStartTime = Date.now();
+}
+
+// ── 타이머 ───────────────────────────────────────────────
+function startTimer() {
+  clearInterval(gs.timerInterval);
+  gs.timerLeft = TIMER_SEC;
+  updateTimerUI();
+  gs.timerInterval = setInterval(() => {
+    gs.timerLeft--;
+    updateTimerUI();
+    if (gs.timerLeft <= 0) {
+      clearInterval(gs.timerInterval);
+      if (!gs.answered) onTimeout();
+    }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  const pct = (gs.timerLeft / TIMER_SEC) * 100;
+  const bar = document.getElementById('timer-bar');
+  const display = document.getElementById('timer-display');
+  bar.style.width = pct + '%';
+  display.textContent = gs.timerLeft;
+
+  bar.className = 'timer-bar-fill';
+  display.className = 'timer-countdown';
+  if (gs.timerLeft <= 10) {
+    bar.classList.add('timer-bar-fill--critical');
+    display.classList.add('timer-countdown--critical');
+  } else if (gs.timerLeft <= 15) {
+    bar.classList.add('timer-bar-fill--warning');
+    display.classList.add('timer-countdown--warning');
+  }
+}
+
+// ── 답 선택 ──────────────────────────────────────────────
+function onChoiceClick(idx) {
+  if (gs.answered) return;
+  gs.answered = true;
+  clearInterval(gs.timerInterval);
+
+  const q = gs.session[gs.qIndex];
+  const elapsed = (Date.now() - gs.qStartTime) / 1000;
+  gs.timings.push(elapsed);
+
+  const isCorrect = idx === q.answer_index;
+  const choiceBtns = document.querySelectorAll('.choice-btn');
+
+  // 모든 버튼 비활성화
+  choiceBtns.forEach(b => b.disabled = true);
+
+  // 정답/오답 표시
+  choiceBtns[q.answer_index].classList.add('choice-btn--correct');
+  if (!isCorrect) {
+    choiceBtns[idx].classList.add('choice-btn--wrong');
+  }
+
+  if (isCorrect) {
+    gs.combo++;
+    gs.maxCombo = Math.max(gs.maxCombo, gs.combo);
+    gs.correctCount++;
+    // 점수 = 기본 100 + 속도보너스(최대50) + 콤보보너스
+    const speedBonus = Math.round((gs.timerLeft / TIMER_SEC) * 50);
+    const comboBonus = Math.min(gs.combo - 1, 5) * 10;
+    gs.score += 100 + speedBonus + comboBonus;
+    showFeedback(true);
+    showAnswerBanner(true, q);
+  } else {
+    gs.combo = 0;
+    showFeedback(false);
+    showAnswerBanner(false, q);
+  }
+
+  updateHUD();
+  showNextBtn();
+}
+
+function onTimeout() {
+  if (gs.answered) return;
+  gs.answered = true;
+  gs.combo = 0;
+  gs.timings.push(TIMER_SEC);
+
+  const q = gs.session[gs.qIndex];
+  const choiceBtns = document.querySelectorAll('.choice-btn');
+  choiceBtns.forEach(b => b.disabled = true);
+  choiceBtns[q.answer_index].classList.add('choice-btn--correct');
+
+  showFeedback(false, true);
+  showAnswerBanner(false, q, true);
+  updateHUD();
+  showNextBtn();
+}
+
+// ── 피드백 스탬프 ────────────────────────────────────────
+function showFeedback(correct, timeout = false) {
+  const ov = document.getElementById('feedback-overlay');
+  const stamp = document.getElementById('feedback-stamp');
+  stamp.className = 'feedback-stamp ' +
+    (correct ? 'feedback-stamp--correct' : 'feedback-stamp--wrong');
+  stamp.textContent = timeout ? '시간 초과!' : (correct ? '정답!' : '오답!');
+  ov.classList.add('show');
+  setTimeout(() => ov.classList.remove('show'), 900);
+}
+
+// ── 정답 해설 배너 ────────────────────────────────────────
+function showAnswerBanner(correct, q, timeout = false) {
+  const banner = document.getElementById('answer-banner');
+  const correctChoice = q.choices[q.answer_index];
+  banner.className = `answer-banner answer-banner--${correct ? 'correct' : 'wrong'}`;
+  banner.innerHTML = `
+    <span class="answer-banner__icon">${correct ? '✅' : (timeout ? '⏰' : '❌')}</span>
+    <div class="answer-banner__text">
+      ${timeout ? '시간 초과! ' : (correct ? '정답입니다! ' : '오답! ')}정답:
+      <span class="answer-banner__formula">${renderTexStr(correctChoice)}</span>
+    </div>
+  `;
+  banner.style.display = 'flex';
+}
+
+// ── 다음 버튼 ────────────────────────────────────────────
+function showNextBtn() {
+  const nextBtn = document.getElementById('next-btn');
+  const isLast = gs.qIndex >= gs.session.length - 1;
+  nextBtn.textContent = isLast ? '결과 보기 🏆' : '다음 문제 →';
+  nextBtn.style.display = 'block';
+}
+
+// ── HUD 업데이트 ─────────────────────────────────────────
+function updateHUD() {
+  document.getElementById('hud-score').textContent = gs.score.toLocaleString();
+  const comboEl = document.getElementById('hud-combo');
+  comboEl.textContent = gs.combo;
+  if (gs.combo > 0) {
+    comboEl.classList.add('combo-value--active');
+    setTimeout(() => comboEl.classList.remove('combo-value--active'), 400);
+  }
+  const fireEl = document.getElementById('combo-fire');
+  fireEl.className = 'combo-fire' + (gs.combo >= 3 ? ' combo-fire--show' : '');
+}
+
+// ── 다음 문항 / 결과 ─────────────────────────────────────
+document.getElementById('next-btn').addEventListener('click', () => {
+  gs.qIndex++;
+  if (gs.qIndex >= gs.session.length) {
+    showResult();
+  } else {
+    showQuestion(gs.session[gs.qIndex]);
+  }
+});
+
+// ── 결과 화면 ────────────────────────────────────────────
+function showResult() {
+  // 진행 도트 모두 완료
+  for (let i = 0; i < SESSION_LEN; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (d) d.className = 'progress-dot progress-dot--done';
+  }
+
+  const avgTime = gs.timings.length
+    ? (gs.timings.reduce((a,b) => a+b, 0) / gs.timings.length).toFixed(1)
+    : '-';
+  const accuracy = Math.round((gs.correctCount / gs.session.length) * 100);
+
+  document.getElementById('r-score').textContent = gs.score.toLocaleString();
+  document.getElementById('r-correct').textContent =
+    `${gs.correctCount}/${gs.session.length} (${accuracy}%)`;
+  document.getElementById('r-combo').textContent = gs.maxCombo;
+  document.getElementById('r-time').textContent = `${avgTime}s`;
+
+  // 제목 결정
+  const titles = ['아직 멀었어요...', '조금 더 힘내요!', '잘하고 있어요!', '대단해요!', '완벽해요! 🎉'];
+  const titleIdx = Math.min(Math.floor(accuracy / 25), 4);
+  document.getElementById('result-title').textContent = titles[titleIdx];
+
+  // 별점
+  const stars = accuracy >= 90 ? 3 : accuracy >= 60 ? 2 : 1;
+  const starsEl = document.getElementById('r-stars');
+  starsEl.innerHTML = [1,2,3].map(i =>
+    `<span class="star${i <= stars ? ' star--filled' : ''}">★</span>`
+  ).join('');
+
+  document.getElementById('result-overlay').classList.add('show');
+
+  // 최고기록 저장 (LocalStorage)
+  saveRecord({ nickname, pokemon, difficulty, score: gs.score, accuracy, maxCombo: gs.maxCombo, avgTime });
+}
+
+function saveRecord(data) {
+  try {
+    const key = 'tri_records';
+    const records = JSON.parse(localStorage.getItem(key) || '[]');
+    records.push({ ...data, date: new Date().toLocaleDateString('ko-KR') });
+    records.sort((a, b) => b.score - a.score);
+    localStorage.setItem(key, JSON.stringify(records.slice(0, 50)));
+  } catch(e) {}
+}
+
+// ── 다시 / 처음으로 ──────────────────────────────────────
+document.getElementById('retry-btn').addEventListener('click', () => {
+  document.getElementById('result-overlay').classList.remove('show');
+  resetGame();
+});
+
+document.getElementById('home-btn').addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
+
+function resetGame() {
+  gs.qIndex = 0; gs.score = 0; gs.combo = 0;
+  gs.maxCombo = 0; gs.correctCount = 0;
+  gs.timings = []; gs.answered = false;
+  // 새 세션 빌드
+  gs.session = buildSession(gs.allQuestions, difficulty);
+  document.getElementById('hud-score').textContent = '0';
+  document.getElementById('hud-combo').textContent = '0';
+  // 도트 리셋
+  for (let i = 0; i < SESSION_LEN; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (d) d.className = 'progress-dot' + (i === 0 ? ' progress-dot--current' : '');
+  }
+  showQuestion(gs.session[0]);
+}
+
+// ── 선지 클릭 이벤트 ─────────────────────────────────────
+document.querySelectorAll('.choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => onChoiceClick(parseInt(btn.dataset.idx)));
+});
+
+// ── 키보드 단축키 (1~4) ──────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (['1','2','3','4'].includes(e.key) && !gs.answered) {
+    onChoiceClick(parseInt(e.key) - 1);
+  }
+  if ((e.key === 'Enter' || e.key === ' ') && gs.answered) {
+    const nextBtn = document.getElementById('next-btn');
+    if (nextBtn.style.display !== 'none') nextBtn.click();
+  }
+});
+
+// ── 초기 데이터 로드 ─────────────────────────────────────
+(async function init() {
+  try {
+    const res = await fetch('data/questions.json');
+    gs.allQuestions = await res.json();
+    gs.session = buildSession(gs.allQuestions, difficulty);
+    showQuestion(gs.session[0]);
+  } catch(err) {
+    document.getElementById('question-text').textContent =
+      '⚠️ 문제를 불러올 수 없습니다. 파일 경로를 확인해주세요.';
+    console.error('questions.json 로드 실패:', err);
+  }
+})();
+</script>
+
+</body>
+</html>
