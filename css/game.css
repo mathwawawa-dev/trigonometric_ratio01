@@ -47,12 +47,14 @@
   flex-shrink: 0;
   display: block;
   pointer-events: none;
+  transform: translateY(-1px);
 }
 .stat-badge--blue   { color: #1d4ed8; }
 .stat-badge--purple { color: #6d28d9; }
 .stat-badge--orange { color: #c2410c; }
 .stat-badge--green  { color: #15803d; }
 .stat-badge--gray   { color: #4b5563; }
+.stat-unit { font-size: 10px; }
 
 /* ── 플로팅 토글 패널 (Fixed 우상단) ─────────────────────── */
 .floating-toggle-panel {
