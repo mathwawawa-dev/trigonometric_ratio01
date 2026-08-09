@@ -1,0 +1,295 @@
+/* ============================================================
+   game.css — 삼각비 RPG 퀴즈 게임 화면 전용 스타일
+   STEP 2-4 | v1.0.25_260809_1721
+   ============================================================ */
+
+/* ── 게임 전체 래퍼 ──────────────────────────────────────── */
+.game-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 var(--sp-4) var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-height: 100dvh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 상단 HUD ─────────────────────────────────────────────── */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) 0 0;
+  gap: var(--sp-3);
+}
+
+.hud-left  { display: flex; align-items: center; gap: var(--sp-3); }
+.hud-right { display: flex; align-items: center; gap: var(--sp-3); }
+
+.trainer-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: var(--sp-1) var(--sp-3) var(--sp-1) var(--sp-2);
+}
+
+.trainer-chip__avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: rgba(124,58,237,0.2);
+  padding: 2px;
+}
+
+.trainer-chip__name {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 타이머 + 진행 영역 ───────────────────────────────────── */
+.timer-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.timer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timer-countdown {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 900;
+  color: var(--accent-400);
+  line-height: 1;
+  transition: color var(--transition-fast);
+  min-width: 32px;
+}
+
+.timer-countdown--warning  { color: var(--warning-400); }
+.timer-countdown--critical {
+  color: var(--danger-400);
+  animation: pulse-text 0.5s ease-in-out infinite;
+}
+
+/* ── 삼각형 이미지 영역 ───────────────────────────────────── */
+.tri-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.tri-image-frame {
+  width: 100%;
+  background: rgba(255,255,255,0.97);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3);
+  box-shadow: var(--shadow-lg), 0 0 0 2px var(--border-subtle);
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+#tri-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: opacity 0.2s ease;
+}
+#tri-img.loading { opacity: 0; }
+
+.tri-meta {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+/* ── 질문 영역 ────────────────────────────────────────────── */
+.question-section {
+  text-align: center;
+  padding: var(--sp-2) 0;
+}
+
+#question-text {
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+}
+
+/* ── 선지 그리드 ──────────────────────────────────────────── */
+#choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.choice-btn {
+  min-height: 72px;
+  font-size: var(--text-lg);
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 선지 번호 뱃지 (①②③④) */
+.choice-btn::before {
+  content: attr(data-label);
+  position: absolute;
+  top: 6px; left: 8px;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+/* ── 정답 해설 배너 ───────────────────────────────────────── */
+#answer-banner {
+  display: none;
+  animation: fadeIn 0.3s ease both;
+}
+
+/* ── 다음 버튼 ────────────────────────────────────────────── */
+#next-btn {
+  display: none;
+  animation: fadeIn 0.35s 0.15s ease both;
+}
+
+/* ── 결과 오버레이 ────────────────────────────────────────── */
+#result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: var(--z-modal);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+}
+#result-overlay.show { display: flex; }
+
+.result-inner {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-2xl);
+  padding: var(--sp-8) var(--sp-6);
+  box-shadow: var(--shadow-xl);
+  animation: fadeInScale 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  text-align: center;
+}
+
+.result-pokemon {
+  width: 100px; height: 100px;
+  margin: 0 auto var(--sp-4);
+  object-fit: contain;
+  filter: drop-shadow(0 4px 20px rgba(124,58,237,0.6));
+  animation: float 2s ease-in-out infinite;
+}
+
+.result-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--sp-6);
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+}
+
+.result-stat {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3);
+}
+
+.result-stat__val {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  color: var(--accent-400);
+  display: block;
+}
+
+.result-stat__val--primary { color: var(--primary-300); }
+.result-stat__val--success { color: var(--success-400); }
+.result-stat__val--warning { color: var(--warning-400); }
+
+.result-stat__label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+  display: block;
+}
+
+.result-btns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+/* ── 피드백 스탬프 오버레이 ───────────────────────────────── */
+#feedback-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: var(--z-modal);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+#feedback-overlay.show { opacity: 1; }
+
+/* ── 일시정지 오버레이 ────────────────────────────────────── */
+#pause-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: var(--z-overlay);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+#pause-overlay.show { display: flex; }
+
+/* ── 게임 전용 키프레임 ───────────────────────────────────── */
+@keyframes pulse-text {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
