@@ -380,13 +380,20 @@ def draw(vertices_dict, right_v, side_labels, filename,
             t1, t2 = sorted([t1, t2])
             
         angle_diff = t2 - t1
-        # 각도가 작을수록 반지름을 더 크게 키움 (최대 1.0 이상)
-        base_radius = 0.45
-        if angle_diff < 45:
-            # 45도일 때 0.45, 10도일 때 약 1.3
-            radius = base_radius + (45 - angle_diff) * 0.025
+        # ── 뷰 범위 기반 반지름 계산 (각 표시 로직01) ───────────────────────
+        x_range = ax.get_xlim()[1] - ax.get_xlim()[0]
+        y_range = ax.get_ylim()[1] - ax.get_ylim()[0]
+        view_min = min(abs(x_range), abs(y_range))
+        
+        # 기본 비율 9% | 30도 미만 뾰족한 각은 최대 17%까지 선형 증가
+        if angle_diff < 30:
+            ratio = 0.17 + (30 - angle_diff) * 0.003
+        elif angle_diff < 45:
+            ratio = 0.09 + (45 - angle_diff) * 0.004
         else:
-            radius = base_radius
+            ratio = 0.09
+            
+        radius = view_min * ratio
             
         wedge = Wedge(p_A, radius, t1, t2, color='red', alpha=0.35, zorder=1)
         wedge_edge = Wedge(p_A, radius, t1, t2, fill=False, edgecolor='red', lw=1.5, zorder=2)
