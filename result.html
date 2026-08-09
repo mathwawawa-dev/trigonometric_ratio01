@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/hallOfFame.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="js/utils.js"></script>
   <script src="js/main.js"></script>
   <script src="js/hallOfFame.js"></script>
 </head>
@@ -96,7 +97,8 @@
     </a>
   </div>
 
-  <footer class="version-badge">v1.0.26_260809_1724_step2_5_result</footer>
+  <footer class="version-badge">v1.0.30_260809_1755_bugfix_script_loads</footer>
+
 
 </div>
 </div>
@@ -105,7 +107,8 @@
 // ── 세션 복원 (TriApp 위임) ─────────────────────────────
 const trainer = TriApp.requireTrainer();
 const result  = TriApp.getResult();
-if (!result) { window.location.href = 'index.html'; }
+if (!result) { window.location.href = 'index.html'; throw new Error('no result'); }
+
 
 // ── 포켓몬 + 제목 ───────────────────────────────────────
 document.getElementById('hero-pokemon').src = TriUtils.pokemonArtUrl(trainer.pokemonId);

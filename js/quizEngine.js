@@ -243,20 +243,30 @@
 
     document.getElementById('result-overlay').classList.add('show');
 
-    // sessionStorage → result.html
-    sessionStorage.setItem('lastResult', JSON.stringify({
-      score:        _gs.score,
-      correctCount: _gs.correctCount,
-      totalCount:   _gs.session.length,
-      maxCombo:     _gs.maxCombo,
-      avgTime:      parseFloat(avgTime),
-      accuracy,
-    }));
+    // sessionStorage → result.html (TriApp 위임)
+    if (global.TriApp) {
+      TriApp.setResult({
+        score:        _gs.score,
+        correctCount: _gs.correctCount,
+        totalCount:   _gs.session.length,
+        maxCombo:     _gs.maxCombo,
+        avgTime:      parseFloat(avgTime),
+        accuracy,
+      });
+    } else {
+      // TriApp 미로드 환경 폴백
+      sessionStorage.setItem('lastResult', JSON.stringify({
+        score: _gs.score, correctCount: _gs.correctCount,
+        totalCount: _gs.session.length, maxCombo: _gs.maxCombo,
+        avgTime: parseFloat(avgTime), accuracy,
+      }));
+    }
   }
 
   /* ── 게임 리셋 ────────────────────────────────────────── */
 
   function resetGame(allQ, diff) {
+    if (!_gs) return;   // init() 전 호출 방어
     clearInterval(_gs.timerInterval);
     _gs.qIndex       = 0;
     _gs.score        = 0;
@@ -359,9 +369,12 @@
     if (el) el.src = src;
   }
 
-  /* ── 상태 읽기 (외부용) ─────────────────────────────── */
-
-  function getState() { return _gs ? { ..._gs } : null; }
+  // 상태를 얕은 복사하되 allQuestions는 참조 유지 (배열 복제 방지)
+  function getState() {
+    if (!_gs) return null;
+    const { allQuestions, ...rest } = _gs;
+    return { ...rest, allQuestions };
+  }
 
   /* ── 네임스페이스 노출 ───────────────────────────────── */
 

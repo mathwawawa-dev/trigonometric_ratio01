@@ -15,6 +15,8 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/renderer.js"></script>
+  <script src="js/questionLoader.js"></script>
+  <script src="js/quizEngine.js"></script>
 
 </head>
 <body>
@@ -140,7 +142,7 @@
 let trainer;
 try { trainer = JSON.parse(sessionStorage.getItem('trainer') || 'null'); }
 catch(e) { trainer = null; }
-if (!trainer) { window.location.href = 'index.html'; }
+if (!trainer) { window.location.href = 'index.html'; throw new Error('no trainer'); }
 
 const { difficulty } = trainer;
 
