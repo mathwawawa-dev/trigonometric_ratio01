@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="삼각비 RPG — 직각삼각형 sin·cos·tan을 포켓몬과 함께 정복하는 수학 퀴즈 게임">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>삼각비 마스터 — 포켓몬 수학 RPG</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- KaTeX (수식 렌더링) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <style>
+    /* ── 대문 전용 스타일 ─────────────────────────── */
+
+    /* 별빛 파티클 배경 */
+    .stars-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .star-particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50%       { opacity: var(--peak, 0.8); transform: scale(1.2); }
+    }
+
+    /* 게임 제목 로고 */
+    .game-logo {
+      text-align: center;
+      margin-bottom: var(--sp-6);
+    }
+    .game-logo__sub {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-400);
+      margin-bottom: var(--sp-2);
+    }
+    .game-logo__title {
+      font-family: var(--font-display);
+      font-size: var(--text-5xl);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, #a56bff 0%, #67e8f9 60%, #a56bff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+    }
+    .game-logo__sub2 {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      margin-top: var(--sp-2);
+    }
+
+    /* 포켓몬 선택 섹션 */
+    .pokemon-section { width: 100%; }
+
+    .pokemon-section__label {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--sp-4);
+    }
+
+    .pokemon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-3);
+    }
+
+    /* 포켓몬 카드 커스텀 */
+    .pokemon-card__sprite {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto var(--sp-2);
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 4px 16px rgba(124,58,237,0.5));
+      transition: transform var(--transition-spring), filter var(--transition-normal);
+    }
+
+    .pokemon-card:hover .pokemon-card__sprite {
+      transform: scale(1.15) translateY(-6px);
+      filter: drop-shadow(0 8px 24px rgba(124,58,237,0.7));
+      animation: float 1.8s ease-in-out infinite;
+    }
+
+    .pokemon-card--selected .pokemon-card__sprite {
+      animation: float 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 4px 20px rgba(124,58,237,0.9));
+    }
+
+    .pokemon-card__name {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .pokemon-card__style {
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .pokemon-card__type-pill {
+      display: inline-block;
+      margin-top: var(--sp-1);
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid;
+    }
+
+    /* 타입별 색상 */
+    .type--grass { color: #4ade80; border-color: #4ade80; background: rgba(74,222,128,0.12); }
+    .type--fire  { color: #fb923c; border-color: #fb923c; background: rgba(251,146,60,0.12); }
+    .type--water { color: #60a5fa; border-color: #60a5fa; background: rgba(96,165,250,0.12); }
+
+    /* 입력 섹션 */
+    .form-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+
+    /* 난이도 선택 */
+    .diff-section { width: 100%; }
+    .diff-section__label {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--sp-3);
+    }
+    .diff-cards { display: flex; flex-direction: column; gap: var(--sp-2); }
+
+    /* 시작 버튼 */
+    .start-btn-wrap {
+      width: 100%;
+      margin-top: var(--sp-2);
+    }
+
+    #start-btn {
+      font-size: var(--text-lg);
+      letter-spacing: 0.05em;
+      position: relative;
+    }
+    #start-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    #start-btn:disabled::after { display: none; }
+
+    /* 선택 안내 메시지 */
+    .hint-text {
+      text-align: center;
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-top: var(--sp-2);
+      min-height: 1.4em;
+      transition: color var(--transition-fast);
+    }
+    .hint-text--warn { color: var(--warning-400); }
+
+    /* 수식 데코 (배경 장식) */
+    .math-deco {
+      position: fixed;
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 900;
+      pointer-events: none;
+      opacity: 0.04;
+      z-index: 0;
+      user-select: none;
+      animation: float var(--fdur, 6s) ease-in-out infinite;
+      animation-delay: var(--fdelay, 0s);
+    }
+
+    /* 전체 레이아웃 */
+    .index-wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: var(--sp-6) var(--sp-4) var(--sp-4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-6);
+      min-height: 100dvh;
+    }
+
+    /* 버전 뱃지 */
+    .version-badge {
+      margin-top: auto;
+      padding-top: var(--sp-4);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 별빛 배경 ──────────────────────────────────────────── -->
+<div class="stars-bg" id="stars-bg" aria-hidden="true"></div>
+
+<!-- ── 수식 장식 텍스트 ───────────────────────────────────── -->
+<div class="math-deco" style="top:12%;left:5%;  --fdur:7s; --fdelay:0s">sin θ</div>
+<div class="math-deco" style="top:28%;right:4%; --fdur:9s; --fdelay:1.5s">cos A</div>
+<div class="math-deco" style="top:55%;left:3%;  --fdur:8s; --fdelay:0.8s">tan B</div>
+<div class="math-deco" style="top:72%;right:6%; --fdur:6s; --fdelay:2s">√3</div>
+<div class="math-deco" style="top:88%;left:8%;  --fdur:10s;--fdelay:0.3s">a²+b²=c²</div>
+
+<!-- ── 메인 래퍼 ──────────────────────────────────────────── -->
+<div class="index-wrap">
+
+  <!-- 게임 로고 -->
+  <header class="game-logo animate-fadein">
+    <p class="game-logo__sub">포켓몬 수학 RPG</p>
+    <h1 class="game-logo__title">삼각비<br>마스터</h1>
+    <p class="game-logo__sub2">직각삼각형의 sin·cos·tan을 정복하라!</p>
+  </header>
+
+  <!-- 닉네임 입력 -->
+  <section class="form-section animate-fadein" style="animation-delay:0.1s">
+    <div class="input-wrap">
+      <label class="input-label" for="nickname-input">🏷️ 트레이너 이름</label>
+      <input
+        id="nickname-input"
+        class="input-field"
+        type="text"
+        maxlength="10"
+        placeholder="이름을 입력하세요 (최대 10자)"
+        autocomplete="off"
+      >
+    </div>
+  </section>
+
+  <!-- 스타팅 포켓몬 선택 -->
+  <section class="pokemon-section animate-fadein" style="animation-delay:0.2s">
+    <p class="pokemon-section__label">⚡ 스타팅 포켓몬 선택</p>
+    <div class="pokemon-grid" role="group" aria-label="스타팅 포켓몬 선택">
+
+      <!-- 이상해씨 -->
+      <button
+        class="pokemon-card"
+        id="poke-bulbasaur"
+        data-pokemon="bulbasaur"
+        data-pokemon-id="1"
+        aria-pressed="false"
+        aria-label="이상해씨 선택"
+      >
+        <img
+          class="pokemon-card__sprite"
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+          alt="이상해씨"
+          loading="lazy"
+          onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'"
+        >
+        <div class="pokemon-card__name">이상해씨</div>
+        <div class="pokemon-card__style">꼼꼼하게 분석</div>
+        <span class="pokemon-card__type-pill type--grass">풀 타입</span>
+      </button>
+
+      <!-- 파이리 -->
+      <button
+        class="pokemon-card"
+        id="poke-charmander"
+        data-pokemon="charmander"
+        data-pokemon-id="4"
+        aria-pressed="false"
+        aria-label="파이리 선택"
+      >
+        <img
+          class="pokemon-card__sprite"
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
+          alt="파이리"
+          loading="lazy"
+          onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png'"
+        >
+        <div class="pokemon-card__name">파이리</div>
+        <div class="pokemon-card__style">빠르게 도전</div>
+        <span class="pokemon-card__type-pill type--fire">불꽃 타입</span>
+      </button>
+
+      <!-- 꼬부기 -->
+      <button
+        class="pokemon-card"
+        id="poke-squirtle"
+        data-pokemon="squirtle"
+        data-pokemon-id="7"
+        aria-pressed="false"
+        aria-label="꼬부기 선택"
+      >
+        <img
+          class="pokemon-card__sprite"
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png"
+          alt="꼬부기"
+          loading="lazy"
+          onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png'"
+        >
+        <div class="pokemon-card__name">꼬부기</div>
+        <div class="pokemon-card__style">차분하게 정복</div>
+        <span class="pokemon-card__type-pill type--water">물 타입</span>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- 난이도 선택 -->
+  <section class="diff-section animate-fadein" style="animation-delay:0.3s">
+    <p class="diff-section__label">🎯 난이도</p>
+    <div class="diff-cards" role="group" aria-label="난이도 선택">
+
+      <button
+        class="difficulty-card difficulty-card--selected-easy"
+        id="diff-easy"
+        data-difficulty="easy"
+        aria-pressed="true"
+        aria-label="쉬움 난이도"
+      >
+        <span class="difficulty-card__icon">🌿</span>
+        <div class="difficulty-card__info">
+          <div class="difficulty-card__name">쉬움</div>
+          <div class="difficulty-card__desc">세 변 모두 표시 · sin/cos/tan 기초 확인</div>
+        </div>
+        <span class="difficulty-card__check" aria-hidden="true">✓</span>
+      </button>
+
+      <button
+        class="difficulty-card"
+        id="diff-normal"
+        data-difficulty="normal"
+        aria-pressed="false"
+        aria-label="보통 난이도"
+      >
+        <span class="difficulty-card__icon">⚡</span>
+        <div class="difficulty-card__info">
+          <div class="difficulty-card__name">보통</div>
+          <div class="difficulty-card__desc">빗변 숨김 포함 · 피타고라스 정리 활용</div>
+        </div>
+        <span class="difficulty-card__check" aria-hidden="true">✓</span>
+      </button>
+
+      <button
+        class="difficulty-card"
+        id="diff-hard"
+        data-difficulty="hard"
+        aria-pressed="false"
+        aria-label="어려움 난이도"
+      >
+        <span class="difficulty-card__icon">🔥</span>
+        <div class="difficulty-card__info">
+          <div class="difficulty-card__name">어려움</div>
+          <div class="difficulty-card__desc">변 숨김 · 높은 추론 요구 · 고난이도</div>
+        </div>
+        <span class="difficulty-card__check" aria-hidden="true">✓</span>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- 시작 버튼 -->
+  <div class="start-btn-wrap animate-fadein" style="animation-delay:0.4s">
+    <button
+      class="btn btn--primary btn--full btn--xl"
+      id="start-btn"
+      disabled
+      aria-disabled="true"
+    >
+      🎮 &nbsp;게임 시작!
+    </button>
+    <p class="hint-text" id="hint-text">포켓몬을 선택하고 이름을 입력하세요</p>
+  </div>
+
+  <!-- 버전 뱃지 (하단 고정) -->
+  <footer class="version-badge" aria-label="버전 정보">
+    v1.0.22_260809_1657_step2_3_index
+  </footer>
+
+</div><!-- /index-wrap -->
+
+<script>
+// ── 별빛 파티클 생성 ────────────────────────────────────────
+(function() {
+  const bg = document.getElementById('stars-bg');
+  const count = 80;
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-particle';
+    s.style.cssText = [
+      `left:${Math.random() * 100}%`,
+      `top:${Math.random() * 100}%`,
+      `--dur:${2 + Math.random() * 4}s`,
+      `--delay:${Math.random() * 4}s`,
+      `--peak:${0.3 + Math.random() * 0.7}`,
+      `width:${1 + Math.random() * 2}px`,
+      `height:${1 + Math.random() * 2}px`,
+    ].join(';');
+    bg.appendChild(s);
+  }
+})();
+
+// ── 게임 상태 ─────────────────────────────────────────────
+const state = {
+  pokemon:    null,
+  difficulty: 'easy',
+  nickname:   '',
+};
+
+// ── 포켓몬 선택 ───────────────────────────────────────────
+const pokeBtns = document.querySelectorAll('.pokemon-card');
+pokeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    pokeBtns.forEach(b => {
+      b.classList.remove('pokemon-card--selected');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    btn.classList.add('pokemon-card--selected');
+    btn.setAttribute('aria-pressed', 'true');
+    state.pokemon = btn.dataset.pokemon;
+    state.pokemonId = btn.dataset.pokemonId;
+    checkReady();
+  });
+});
+
+// ── 난이도 선택 ───────────────────────────────────────────
+const diffBtns = document.querySelectorAll('.difficulty-card');
+const DIFF_CLASSES = {
+  easy:   'difficulty-card--selected-easy',
+  normal: 'difficulty-card--selected-normal',
+  hard:   'difficulty-card--selected-hard',
+};
+
+diffBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    diffBtns.forEach(b => {
+      b.classList.remove(...Object.values(DIFF_CLASSES));
+      b.setAttribute('aria-pressed', 'false');
+    });
+    const diff = btn.dataset.difficulty;
+    btn.classList.add(DIFF_CLASSES[diff]);
+    btn.setAttribute('aria-pressed', 'true');
+    state.difficulty = diff;
+    checkReady();
+  });
+});
+
+// ── 닉네임 입력 ───────────────────────────────────────────
+const nickInput = document.getElementById('nickname-input');
+nickInput.addEventListener('input', () => {
+  state.nickname = nickInput.value.trim();
+  checkReady();
+});
+
+// ── 시작 버튼 활성화 체크 ─────────────────────────────────
+const startBtn  = document.getElementById('start-btn');
+const hintText  = document.getElementById('hint-text');
+
+function checkReady() {
+  const ready = state.pokemon && state.nickname.length > 0;
+  startBtn.disabled = !ready;
+  startBtn.setAttribute('aria-disabled', String(!ready));
+
+  if (!state.pokemon && !state.nickname) {
+    hintText.textContent = '포켓몬을 선택하고 이름을 입력하세요';
+    hintText.className = 'hint-text';
+  } else if (!state.pokemon) {
+    hintText.textContent = '⚡ 스타팅 포켓몬을 선택해주세요!';
+    hintText.className = 'hint-text hint-text--warn';
+  } else if (!state.nickname) {
+    hintText.textContent = '✏️ 트레이너 이름을 입력해주세요!';
+    hintText.className = 'hint-text hint-text--warn';
+  } else {
+    hintText.textContent = `준비 완료! ${state.nickname} 트레이너, 출발하세요! 🚀`;
+    hintText.className = 'hint-text';
+  }
+}
+
+// ── 게임 시작 ─────────────────────────────────────────────
+startBtn.addEventListener('click', () => {
+  if (startBtn.disabled) return;
+
+  // 세션 저장
+  sessionStorage.setItem('trainer', JSON.stringify({
+    nickname:   state.nickname,
+    pokemon:    state.pokemon,
+    pokemonId:  state.pokemonId,
+    difficulty: state.difficulty,
+    startedAt:  Date.now(),
+  }));
+
+  // 화면 전환
+  document.querySelector('.index-wrap').classList.add('page-exit');
+  setTimeout(() => {
+    window.location.href = 'game.html';
+  }, 250);
+});
+
+// ── 엔터키 지원 ───────────────────────────────────────────
+nickInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !startBtn.disabled) startBtn.click();
+});
+</script>
+
+</body>
+</html>
