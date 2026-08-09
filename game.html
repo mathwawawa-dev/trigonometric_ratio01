@@ -12,9 +12,9 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/game.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-    onload="renderMathInElement && renderMathInElement(document.body)"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/renderer.js"></script>
 
 </head>
 <body>
@@ -135,17 +135,9 @@
    STEP 3-1: game.html 인라인 로직 (후속 단계에서 JS 분리)
    ============================================================ */
 
-// ── 상수 ─────────────────────────────────────────────────
-const SESSION_LEN   = 10;
-const TIMER_SEC     = 30;
-const TRI_COOLDOWN  = 5;
-const TRIG_COOLDOWN = 2;
-const IMG_DIRS = { 1: 'Tri_img_01', 2: 'Tri_img_02', 3: 'Tri_img_03' };
-const DIFF_WEIGHTS = {
-  easy:   [1.0, 0.0, 0.0],
-  normal: [0.5, 0.4, 0.1],
-  hard:   [0.3, 0.4, 0.3],
-};
+// ── 상수 (TriUtils.CONFIG에서 구조분해) ─────────────────
+const { SESSION_LEN, TIMER_SEC, TRI_COOLDOWN, TRIG_COOLDOWN, IMG_DIRS, DIFF_WEIGHTS }
+  = TriUtils.CONFIG;
 
 // ── 세션 복원 ─────────────────────────────────────────────
 let trainer;
@@ -199,73 +191,12 @@ const gs = {
   recentTrigs:  [],
 };
 
-// ── QuestionLoader ────────────────────────────────────────
-function buildSession(allQ, diff) {
-  const weights = DIFF_WEIGHTS[diff] || DIFF_WEIGHTS.normal;
-  const session = [];
-  const usedIds   = new Set();
-  const recentTri = [];
-  const recentTrg = [];
-  let cooldown = TRI_COOLDOWN;
+// ── QuestionLoader → TriUtils 위임 ──────────────────────
+const buildSession  = (allQ, diff) => TriUtils.buildSession(allQ, diff);
 
-  for (let i = 0; i < SESSION_LEN; i++) {
-    const half = SESSION_LEN / 2;
-    // 전반: type1 우선, 후반: 난이도 가중치
-    const tw = i < half ? [0.8, 0.15, 0.05] : weights;
-
-    let eligible = filterQ(allQ, usedIds, recentTri, recentTrg, cooldown);
-    // 폴백: cooldown 완화
-    while (eligible.length === 0 && cooldown > 1) {
-      cooldown--;
-      eligible = filterQ(allQ, usedIds, recentTri, recentTrg, cooldown);
-    }
-    if (eligible.length === 0) break;
-
-    const q = weightedPick(eligible, tw);
-    session.push(q);
-    usedIds.add(q.id);
-    recentTri.push(q.triangle_id);
-    if (recentTri.length > TRI_COOLDOWN) recentTri.shift();
-    recentTrg.push(q.question_type);
-    if (recentTrg.length > TRIG_COOLDOWN) recentTrg.shift();
-  }
-  return session;
-}
-
-function filterQ(pool, usedIds, recentTri, recentTrg, cd) {
-  return pool.filter(q =>
-    !usedIds.has(q.id) &&
-    !recentTri.slice(-cd).includes(q.triangle_id) &&
-    !recentTrg.slice(-TRIG_COOLDOWN).includes(q.question_type)
-  );
-}
-
-function weightedPick(candidates, tw) {
-  const weighted = candidates.map(q => ({ q, w: tw[q.image_type - 1] ?? 0.1 }));
-  const totalW = weighted.reduce((s, x) => s + x.w, 0);
-  let r = Math.random() * totalW;
-  for (const { q, w } of weighted) { r -= w; if (r <= 0) return q; }
-  return weighted[weighted.length - 1].q;
-}
-
-// ── KaTeX 렌더 ────────────────────────────────────────────
-function renderTex(el, tex) {
-  // $...$ 또는 \frac{}{} 형태 처리
-  const raw = tex.replace(/^\$|\$$/g, '').trim();
-  try {
-    katex.render(raw, el, { throwOnError: false, displayMode: false });
-  } catch(e) {
-    el.textContent = tex;
-  }
-}
-
-function renderTexStr(tex) {
-  const raw = tex.replace(/^\$|\$$/g, '').trim();
-  const span = document.createElement('span');
-  try { katex.render(raw, span, { throwOnError: false }); }
-  catch(e) { span.textContent = tex; }
-  return span.innerHTML;
-}
+// ── KaTeX 렌더 → TriRenderer 위임 ───────────────────────
+const renderTex    = (el, tex) => TriRenderer.renderTex(el, tex);
+const renderTexStr = (tex)     => TriRenderer.renderTexStr(tex);
 
 // ── 문제 표시 ─────────────────────────────────────────────
 function showQuestion(q) {
