@@ -52,13 +52,52 @@ def inner(lbl):
 
 
 def frac_label(num_lbl, den_lbl):
-    """분수 LaTeX 문자열 생성: '\\frac{numerator}{denominator}'"""
-    n = inner(num_lbl)
-    d = inner(den_lbl)
-    # 분모가 정수 '1' 인 경우: 분수 불필요
-    if d == '1':
-        return f"${n}$"
-    return f"$\\frac{{{n}}}{{{d}}}$"
+    """분수 LaTeX 문자열 생성: 약분 포함"""
+    import re
+    def parse(l):
+        l = l.strip().strip('$').strip()
+        m = re.match(r'^(\d*)\\sqrt\{(\d+)\}$', l)
+        if m: return (int(m.group(1)) if m.group(1) else 1, int(m.group(2)))
+        m = re.match(r'^(\d+)$', l)
+        if m: return (int(m.group(1)), 1)
+        return None
+
+    pn = parse(num_lbl)
+    pd = parse(den_lbl)
+    
+    if not pn or not pd:
+        n = num_lbl.strip().strip('$').strip()
+        d = den_lbl.strip().strip('$').strip()
+        if n == d: return "$1$"
+        if d == '1': return f"${n}$"
+        return f"$\\frac{{{n}}}{{{d}}}$"
+    
+    c, r = pn
+    C, R = pd
+    
+    g = math.gcd(c, C)
+    c //= g
+    C //= g
+    
+    if r == R:
+        r = 1
+        R = 1
+        
+    g_root = math.gcd(r, R)
+    r //= g_root
+    R //= g_root
+    
+    def fmt(c, r):
+        if r == 1: return str(c)
+        if c == 1: return f"\\sqrt{{{r}}}"
+        return f"{c}\\sqrt{{{r}}}"
+        
+    num_str = fmt(c, r)
+    den_str = fmt(C, R)
+    
+    if den_str == '1':
+        return f"${num_str}$"
+    return f"$\\frac{{{num_str}}}{{{den_str}}}$"
 
 
 def make_choices(correct_lbl, distractor_lbls):
@@ -103,27 +142,41 @@ for entry in metas:
     cos_val = adj_len / hyp_len
     tan_val = opp_len / adj_len
 
-    # 분수 라벨
+    # 분수 라벨 (약분 자동 적용)
     sin_correct = frac_label(opp_lbl, hyp_lbl)
     cos_correct = frac_label(adj_lbl, hyp_lbl)
     tan_correct = frac_label(opp_lbl, adj_lbl)
+    
+    # 그 외 나올 수 있는 모든 삼각비 값들 (오답 풀)
+    pool = [
+        cos_correct,
+        tan_correct,
+        frac_label(hyp_lbl, opp_lbl), # csc
+        frac_label(adj_lbl, opp_lbl), # cot
+        frac_label(hyp_lbl, adj_lbl), # sec
+        frac_label(adj_lbl, hyp_lbl)  # cos (for fallback)
+    ]
 
-    # 오답 선지 (sin / cos / tan 전형적 혼동 패턴)
-    sin_distractors = [
-        frac_label(adj_lbl, hyp_lbl),   # cos 값 (가장 흔한 혼동)
-        frac_label(opp_lbl, adj_lbl),   # tan 값
-        frac_label(hyp_lbl, opp_lbl),   # 역수 csc
-    ]
-    cos_distractors = [
-        frac_label(opp_lbl, hyp_lbl),   # sin 값
-        frac_label(adj_lbl, opp_lbl),   # cot 값
-        frac_label(hyp_lbl, adj_lbl),   # 역수 sec
-    ]
-    tan_distractors = [
-        frac_label(adj_lbl, opp_lbl),   # cot (역수)
-        frac_label(opp_lbl, hyp_lbl),   # sin 값
-        frac_label(adj_lbl, hyp_lbl),   # cos 값
-    ]
+    def get_unique_distractors(correct_ans):
+        unique_pool = []
+        for p in pool:
+            if p != correct_ans and p not in unique_pool:
+                unique_pool.append(p)
+        
+        # 만약 길이가 3개가 안 된다면 임의의 더미 오답 추가 (거의 발생 안 함)
+        dummy_val = 2
+        while len(unique_pool) < 3:
+            dummy_ans = f"${dummy_val}$"
+            if dummy_ans != correct_ans and dummy_ans not in unique_pool:
+                unique_pool.append(dummy_ans)
+            dummy_val += 1
+            
+        return unique_pool[:3]
+
+    # 오답 선지 고유하게 3개 추출
+    sin_distractors = get_unique_distractors(sin_correct)
+    cos_distractors = get_unique_distractors(cos_correct)
+    tan_distractors = get_unique_distractors(tan_correct)
 
     base = {
         'filename':      fname,
