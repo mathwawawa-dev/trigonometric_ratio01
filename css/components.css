@@ -1,0 +1,695 @@
+/* ============================================================
+   components.css — 삼각비 RPG 게임 공통 UI 컴포넌트
+   STEP 2-2 | v1.0.21_260809_1653
+   ============================================================ */
+
+/* ── 1. COMBO COUNTER ─────────────────────────────────────── */
+.combo-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.combo-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.combo-value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  color: var(--warning-400);
+  line-height: 1;
+  transition: transform var(--transition-spring), color var(--transition-fast);
+  text-shadow: 0 0 12px rgba(251,191,36,0.6);
+}
+
+.combo-value--active {
+  animation: combo-pop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.combo-fire {
+  font-size: var(--text-lg);
+  display: none;
+}
+.combo-fire--show { display: inline; }
+
+@keyframes combo-pop {
+  0%   { transform: scale(1.0); }
+  50%  { transform: scale(1.5); }
+  100% { transform: scale(1.0); }
+}
+
+/* ── 2. SCORE PANEL ───────────────────────────────────────── */
+.score-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  width: 100%;
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.score-item__label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-display);
+}
+
+.score-item__value {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.score-item__value--accent  { color: var(--accent-400); }
+.score-item__value--primary { color: var(--primary-300); }
+.score-item__value--success { color: var(--success-400); }
+.score-item__value--warning { color: var(--warning-400); }
+
+.score-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border-subtle);
+}
+
+/* ── 3. QUESTION COUNTER ──────────────────────────────────── */
+.q-counter {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.q-counter__current {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.q-counter__total { color: var(--text-muted); }
+
+/* ── 4. IMAGE TYPE BADGE ──────────────────────────────────── */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  padding: 3px var(--sp-3);
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+.type-badge--1 {   /* 유형① 세 변 표기 — 초록 */
+  background: rgba(34,197,94,0.12);
+  border-color: var(--success-500);
+  color: var(--success-400);
+}
+.type-badge--2 {   /* 유형② 빗변 숨김 — 시안 */
+  background: rgba(6,182,212,0.12);
+  border-color: var(--accent-500);
+  color: var(--accent-400);
+}
+.type-badge--3 {   /* 유형③ 중간변 숨김 — 보라 */
+  background: rgba(124,58,237,0.12);
+  border-color: var(--primary-500);
+  color: var(--primary-300);
+}
+
+/* ── 5. TRIG TYPE BADGE ───────────────────────────────────── */
+.trig-badge {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 2px var(--sp-2);
+  border-radius: var(--radius-sm);
+  text-transform: lowercase;
+}
+
+.trig-badge--sin { background: rgba(239,68,68,0.15);  color: var(--danger-400); }
+.trig-badge--cos { background: rgba(6,182,212,0.15);  color: var(--accent-400); }
+.trig-badge--tan { background: rgba(251,191,36,0.15); color: var(--warning-400); }
+
+/* ── 6. FEEDBACK OVERLAY ──────────────────────────────────── */
+.feedback-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: var(--z-modal);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.feedback-overlay--show { opacity: 1; }
+
+.feedback-stamp {
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  font-weight: 900;
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4) var(--sp-8);
+  border: 4px solid;
+  transform: rotate(-8deg);
+  animation: stamp-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.feedback-stamp--correct {
+  color: var(--success-400);
+  border-color: var(--success-400);
+  background: rgba(34,197,94,0.10);
+  text-shadow: 0 0 24px rgba(34,197,94,0.6);
+  box-shadow: 0 0 32px rgba(34,197,94,0.3);
+}
+
+.feedback-stamp--wrong {
+  color: var(--danger-400);
+  border-color: var(--danger-400);
+  background: rgba(239,68,68,0.10);
+  text-shadow: 0 0 24px rgba(239,68,68,0.6);
+  box-shadow: 0 0 32px rgba(239,68,68,0.3);
+  transform: rotate(8deg);
+}
+
+@keyframes stamp-in {
+  0%   { transform: rotate(-8deg) scale(2.5); opacity: 0; }
+  100% { transform: rotate(-8deg) scale(1.0); opacity: 1; }
+}
+
+/* ── 7. EXPLANATION PANEL (정답 해설) ─────────────────────── */
+.explanation-panel {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4) var(--sp-5);
+  margin-top: var(--sp-4);
+  animation: fadeIn 0.3s ease both;
+}
+
+.explanation-panel__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--sp-2);
+}
+
+.explanation-panel__content {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-normal);
+}
+
+.explanation-panel__formula {
+  font-size: var(--text-xl);
+  color: var(--accent-400);
+  text-align: center;
+  padding: var(--sp-3) 0;
+  font-weight: 700;
+}
+
+/* ── 8. RESULT CARD ───────────────────────────────────────── */
+.result-card {
+  width: 100%;
+  background: var(--grad-card);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-2xl);
+  padding: var(--sp-8);
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  animation: fadeInScale 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.result-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--sp-6);
+}
+
+.result-card__score-ring {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-500);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--sp-6);
+  box-shadow: var(--shadow-glow-primary);
+  background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+}
+
+.result-card__score-num {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 900;
+  color: var(--primary-300);
+  line-height: 1;
+}
+
+.result-card__score-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* 정확도 바 */
+.accuracy-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: var(--sp-4) 0;
+}
+
+.accuracy-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.accuracy-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--grad-primary);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left;
+}
+
+.accuracy-label {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--primary-300);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ── 9. MEDAL BADGE ───────────────────────────────────────── */
+.medal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 900;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+
+.medal--gold   { background: rgba(251,191,36,0.15); border-color: #f59e0b; color: #fbbf24; }
+.medal--silver { background: rgba(148,163,184,0.15); border-color: #94a3b8; color: #cbd5e1; }
+.medal--bronze { background: rgba(180,120,60,0.15);  border-color: #b4783c; color: #d4a05a; }
+.medal--num    { background: var(--bg-elevated); border-color: var(--border-normal); color: var(--text-muted); font-size: var(--text-sm); }
+
+/* ── 10. HALL OF FAME TABLE ───────────────────────────────── */
+.hof-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hof-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+  position: relative;
+}
+
+.hof-row:nth-child(even)  { background: rgba(255,255,255,0.03); }
+.hof-row:hover            { background: rgba(124,58,237,0.08); }
+
+.hof-row--top1 {
+  background: rgba(251,191,36,0.08) !important;
+  border: 1px solid rgba(251,191,36,0.2);
+}
+
+.hof-row__name {
+  flex: 1;
+  font-weight: 700;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hof-row__score {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 900;
+  color: var(--accent-400);
+  min-width: 60px;
+  text-align: right;
+}
+
+.hof-row__detail {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ── 11. FORM INPUT ───────────────────────────────────────── */
+.input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  width: 100%;
+}
+
+.input-label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.input-field {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border-normal);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.input-field:focus {
+  border-color: var(--primary-400);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
+}
+
+.input-field::placeholder { color: var(--text-muted); }
+
+/* 에러 상태 */
+.input-field--error {
+  border-color: var(--danger-500);
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
+}
+
+.input-error-msg {
+  font-size: var(--text-xs);
+  color: var(--danger-400);
+  margin-top: var(--sp-1);
+}
+
+/* ── 12. DIFFICULTY CARD (난이도 선택) ────────────────────── */
+.difficulty-card {
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border-normal);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4) var(--sp-5);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    transform var(--transition-spring);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.difficulty-card:hover {
+  transform: translateX(4px);
+  border-color: var(--border-strong);
+}
+
+.difficulty-card--selected-easy   { border-color: var(--success-400); background: rgba(34,197,94,0.08); }
+.difficulty-card--selected-normal { border-color: var(--accent-400);  background: rgba(6,182,212,0.08); }
+.difficulty-card--selected-hard   { border-color: var(--danger-400);  background: rgba(239,68,68,0.08); }
+
+.difficulty-card__icon {
+  font-size: var(--text-2xl);
+  flex-shrink: 0;
+}
+
+.difficulty-card__info { flex: 1; }
+
+.difficulty-card__name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.difficulty-card__desc {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+
+.difficulty-card__check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  font-size: var(--text-sm);
+  color: transparent;
+}
+
+.difficulty-card--selected-easy   .difficulty-card__check { background: var(--success-500); border-color: var(--success-400); color: white; }
+.difficulty-card--selected-normal .difficulty-card__check { background: var(--accent-500);  border-color: var(--accent-400);  color: white; }
+.difficulty-card--selected-hard   .difficulty-card__check { background: var(--danger-500);  border-color: var(--danger-400);  color: white; }
+
+/* ── 13. KATEX MATH DISPLAY ───────────────────────────────── */
+/* KaTeX 렌더러 영역 */
+.katex-display-wrap {
+  font-size: 1.25em;
+  color: var(--text-primary);
+  text-align: center;
+  min-height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-2) 0;
+}
+
+/* 선지 버튼 내 KaTeX */
+.choice-btn .katex {
+  font-size: 1.1em;
+}
+
+/* ── 14. LOADING SPINNER ──────────────────────────────────── */
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--primary-400);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+.spinner--sm { width: 20px; height: 20px; border-width: 2px; }
+.spinner--lg { width: 56px; height: 56px; border-width: 4px; }
+
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-12) 0;
+}
+
+.loading-text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1.0; }
+}
+
+/* ── 15. SECTION TITLE ────────────────────────────────────── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  text-align: center;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--sp-2);
+  line-height: var(--leading-tight);
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+  margin-bottom: var(--sp-6);
+}
+
+/* ── 16. SEPARATOR ────────────────────────────────────────── */
+.separator {
+  width: 100%;
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--sp-4) 0;
+}
+
+.separator--glow {
+  background: linear-gradient(90deg, transparent, var(--primary-600), transparent);
+}
+
+/* ── 17. STAR RATING ──────────────────────────────────────── */
+.stars {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.star {
+  font-size: var(--text-xl);
+  color: var(--border-normal);
+  transition: color var(--transition-normal), transform var(--transition-spring);
+}
+
+.star--filled {
+  color: var(--warning-400);
+  text-shadow: 0 0 8px rgba(251,191,36,0.6);
+}
+
+.star--filled:nth-child(1) { transition-delay: 0ms;   }
+.star--filled:nth-child(2) { transition-delay: 80ms;  }
+.star--filled:nth-child(3) { transition-delay: 160ms; }
+
+/* ── 18. ANSWER REVEAL BANNER ─────────────────────────────── */
+.answer-banner {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3) var(--sp-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  animation: fadeIn 0.3s ease both;
+}
+
+.answer-banner--correct {
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.3);
+}
+
+.answer-banner--wrong {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.3);
+}
+
+.answer-banner__icon {
+  font-size: var(--text-2xl);
+  flex-shrink: 0;
+}
+
+.answer-banner__text {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.answer-banner__formula {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+}
+
+.answer-banner--correct .answer-banner__formula { color: var(--success-400); }
+.answer-banner--wrong   .answer-banner__formula { color: var(--danger-400); }
+
+/* ── 19. NEXT BUTTON AREA ─────────────────────────────────── */
+.next-btn-area {
+  width: 100%;
+  margin-top: var(--sp-4);
+  display: flex;
+  justify-content: center;
+  animation: fadeIn 0.4s 0.2s ease both;
+}
+
+/* ── 20. PAGE TRANSITION ──────────────────────────────────── */
+.page-enter {
+  animation: fadeIn 0.3s ease both;
+}
+
+.page-exit {
+  animation: page-out 0.25s ease both;
+}
+
+@keyframes page-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-12px); }
+}
+
+/* ── 21. TOOLTIP ──────────────────────────────────────────── */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: var(--z-float);
+}
+
+[data-tooltip]:hover::after { opacity: 1; }
