@@ -31,7 +31,7 @@
 /* ── 스탯 배지 (테두리/배경 없이 순수 텍스트 + 아이콘) ─────── */
 .stat-badge {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 4px;
   font-size: 11px;
   font-weight: 700;
@@ -47,7 +47,6 @@
   flex-shrink: 0;
   display: block;
   pointer-events: none;
-  transform: translateY(0.5px);
 }
 .stat-badge--blue   { color: #1d4ed8; }
 .stat-badge--purple { color: #6d28d9; }
