@@ -31,9 +31,9 @@ def custom_draw(vertices_dict, right_v, side_labels, filename,
     L_min = min(labeled_lens) if labeled_lens else 1.0
 
     def custom_sfrac(L):
-        # T012 가장 짧은 변 (L_min = 7): 기존 0.28 + 0.12 = 0.40 적용
+        # T012 가장 짧은 변 (L_min = 7): 기존 0.28 + 0.05 = 0.33 적용
         if abs(L - L_min) < 1e-5:
-            return 0.40
+            return 0.33
         return float(np.clip(0.28 * (L_min / L) ** 0.3, 0.12, 0.28))
 
     old_bracket_arc = mod.bracket_arc
@@ -50,7 +50,7 @@ def custom_draw(vertices_dict, right_v, side_labels, filename,
 
     extra = dict(kwargs)
     slo = extra.get('side_label_offsets', {}).copy()
-    slo['BC'] = (0.0, -0.12 * 7)   # data 좌표 스케일에 맞춰 텍스트 이동 (-0.84)
+    slo['BC'] = (0.0, -0.05 * 7)   # data 좌표 스케일에 맞춰 텍스트 이동 (-0.35)
     extra['side_label_offsets'] = slo
 
     mod.draw(
