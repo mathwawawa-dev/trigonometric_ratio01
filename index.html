@@ -71,7 +71,8 @@
     }
     .game-logo__sub2 {
       font-size: var(--text-sm);
-      color: var(--text-muted);
+      color: #000000;
+      font-weight: 700;
       margin-top: var(--sp-2);
     }
 
@@ -82,7 +83,7 @@
       font-family: var(--font-display);
       font-size: var(--text-sm);
       font-weight: 700;
-      color: var(--text-muted);
+      color: #000000;
       text-align: center;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -236,16 +237,6 @@
 </head>
 <body>
 
-<!-- ── 별빛 배경 ──────────────────────────────────────────── -->
-<div class="stars-bg" id="stars-bg" aria-hidden="true"></div>
-
-<!-- ── 수식 장식 텍스트 ───────────────────────────────────── -->
-<div class="math-deco" style="top:12%;left:5%;  --fdur:7s; --fdelay:0s">sin θ</div>
-<div class="math-deco" style="top:28%;right:4%; --fdur:9s; --fdelay:1.5s">cos A</div>
-<div class="math-deco" style="top:55%;left:3%;  --fdur:8s; --fdelay:0.8s">tan B</div>
-<div class="math-deco" style="top:72%;right:6%; --fdur:6s; --fdelay:2s">√3</div>
-<div class="math-deco" style="top:88%;left:8%;  --fdur:10s;--fdelay:0.3s">a²+b²=c²</div>
-
 <!-- ── 메인 래퍼 ──────────────────────────────────────────── -->
 <div class="index-wrap">
 
@@ -253,7 +244,7 @@
   <header class="game-logo animate-fadein">
     <p class="game-logo__sub">포켓몬 수학 RPG</p>
     <h1 class="game-logo__title">삼각비<br>마스터</h1>
-    <p class="game-logo__sub2">직각삼각형의 sin·cos·tan을 정복하라!</p>
+    <p class="game-logo__sub2">학습목표: 삼각비의 값을 구할 수 있다.</p>
   </header>
 
   <!-- 닉네임 입력 -->
@@ -293,8 +284,6 @@
           onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'"
         >
         <div class="pokemon-card__name">이상해씨</div>
-        <div class="pokemon-card__style">꼼꼼하게 분석</div>
-        <span class="pokemon-card__type-pill type--grass">풀 타입</span>
       </button>
 
       <!-- 파이리 -->
@@ -314,8 +303,6 @@
           onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png'"
         >
         <div class="pokemon-card__name">파이리</div>
-        <div class="pokemon-card__style">빠르게 도전</div>
-        <span class="pokemon-card__type-pill type--fire">불꽃 타입</span>
       </button>
 
       <!-- 꼬부기 -->
@@ -335,8 +322,6 @@
           onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png'"
         >
         <div class="pokemon-card__name">꼬부기</div>
-        <div class="pokemon-card__style">차분하게 정복</div>
-        <span class="pokemon-card__type-pill type--water">물 타입</span>
       </button>
 
     </div>
@@ -357,7 +342,7 @@
         <span class="difficulty-card__icon">🌿</span>
         <div class="difficulty-card__info">
           <div class="difficulty-card__name">쉬움</div>
-          <div class="difficulty-card__desc">세 변 모두 표시 · sin/cos/tan 기초 확인</div>
+          <div class="difficulty-card__desc">세 변 길이 모두 표시, 획득 pt 귀여움</div>
         </div>
         <span class="difficulty-card__check" aria-hidden="true">✓</span>
       </button>
@@ -372,7 +357,7 @@
         <span class="difficulty-card__icon">⚡</span>
         <div class="difficulty-card__info">
           <div class="difficulty-card__name">보통</div>
-          <div class="difficulty-card__desc">빗변 숨김 포함 · 피타고라스 정리 활용</div>
+          <div class="difficulty-card__desc">피타고라스 정리 사용하기, 획득 pt 보통</div>
         </div>
         <span class="difficulty-card__check" aria-hidden="true">✓</span>
       </button>
@@ -387,7 +372,7 @@
         <span class="difficulty-card__icon">🔥</span>
         <div class="difficulty-card__info">
           <div class="difficulty-card__name">어려움</div>
-          <div class="difficulty-card__desc">변 숨김 · 높은 추론 요구 · 고난이도</div>
+          <div class="difficulty-card__desc">피타고라스 정리 사용하기, 획득 pt 풍성</div>
         </div>
         <span class="difficulty-card__check" aria-hidden="true">✓</span>
       </button>
@@ -415,7 +400,7 @@
 
   <!-- 버전 뱃지 (하단 고정) -->
   <footer class="version-badge" aria-label="버전 정보" style="display:flex;align-items:center;justify-content:center;gap:8px">
-    <span>v1.0.50_260810_1025_hud_icons_and_colors_file</span>
+    <span>v1.0.51_260810_1050_start_screen_refine</span>
     <button id="theme-toggle-index" aria-label="테마 변경" style="
       width:28px;height:28px;border-radius:50%;
       background:var(--glass-bg);border:1px solid var(--border-normal);
@@ -427,27 +412,6 @@
 
 
 </div><!-- /index-wrap -->
-
-<script>
-// ── 별빛 파티클 생성 ────────────────────────────────────────
-(function() {
-  const bg = document.getElementById('stars-bg');
-  const count = 80;
-  for (let i = 0; i < count; i++) {
-    const s = document.createElement('div');
-    s.className = 'star-particle';
-    s.style.cssText = [
-      `left:${Math.random() * 100}%`,
-      `top:${Math.random() * 100}%`,
-      `--dur:${2 + Math.random() * 4}s`,
-      `--delay:${Math.random() * 4}s`,
-      `--peak:${0.3 + Math.random() * 0.7}`,
-      `width:${1 + Math.random() * 2}px`,
-      `height:${1 + Math.random() * 2}px`,
-    ].join(';');
-    bg.appendChild(s);
-  }
-})();
 
 // ── 게임 상태 ─────────────────────────────────────────────
 const state = {

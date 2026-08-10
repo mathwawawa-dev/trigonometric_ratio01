@@ -475,7 +475,8 @@
 
 .difficulty-card__desc {
   font-size: var(--text-xs);
-  color: var(--text-muted);
+  color: #000000;
+  font-weight: 600;
   line-height: var(--leading-normal);
 }
 
