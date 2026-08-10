@@ -223,9 +223,9 @@
   border-radius: var(--radius-lg);
   padding: var(--sp-3);
   box-shadow: var(--shadow-lg), 0 0 0 2px var(--border-subtle);
-  aspect-ratio: 3/2;
+  height: 250px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   overflow: hidden;
   position: relative;
