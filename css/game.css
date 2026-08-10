@@ -222,7 +222,7 @@
   background: rgba(255,255,255,0.97);
   border-radius: var(--radius-lg);
   padding: var(--sp-3);
-  box-shadow: var(--shadow-md), 0 0 0 2px var(--border-subtle);
+  box-shadow: var(--shadow-sm), 0 0 0 2px var(--border-subtle);
   height: 240px;
   display: flex;
   align-items: center;
@@ -235,7 +235,7 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  margin-left: 14%; /* shift slightly to the right, using percentage for responsiveness */
+  margin-left: 15%; /* shift slightly to the right, using percentage for responsiveness */
   transition: opacity 0.2s ease;
 }
 #tri-img.loading { opacity: 0; }
@@ -268,6 +268,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-2);
+  margin-top: -8px; /* Reduce gap between frame and choices */
 }
 
 .choice-btn {
