@@ -47,9 +47,12 @@
    */
   function renderTexStr(tex) {
     if (!global.katex) return escapeHtml(tex);
+    // 순수 정수(자연수 포함)이면 KaTeX 없이 일반 텍스트로 반환
+    const stripped = stripDollar(tex);
+    if (/^-?\d+$/.test(stripped)) return escapeHtml(stripped);
     const span = document.createElement('span');
     try {
-      global.katex.render(stripDollar(tex), span, KATEX_OPTS);
+      global.katex.render(stripped, span, KATEX_OPTS);
     } catch(e) {
       span.textContent = tex;
     }
