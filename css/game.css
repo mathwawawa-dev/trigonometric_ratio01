@@ -271,23 +271,23 @@
 }
 
 .choice-btn {
-  min-height: 90px;
+  min-height: 70px;
   font-size: var(--text-2xl);
   letter-spacing: 0.01em;
   position: relative;
   overflow: hidden;
-  padding-top: var(--sp-5);
-  padding-bottom: var(--sp-5);
+  padding-top: var(--sp-3);
+  padding-bottom: var(--sp-3);
 }
 
 /* KaTeX 수식 폰트 더 크게 확대 */
 .choice-btn .katex {
-  font-size: 1.8em;
+  font-size: 1.6em;
 }
 
 /* 정수 / √n 꼴 선지는 KaTeX 크기 3단위 축소 (1.8 → 1.2) */
 .choice-btn--simple .katex {
-  font-size: 1.3em;
+  font-size: 1.1em;
 }
 
 
