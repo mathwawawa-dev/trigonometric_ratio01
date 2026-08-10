@@ -15,7 +15,7 @@
     TIMER_SEC:     { easy: 240, normal: 100, hard: 50 },
     TRI_COOLDOWN:  5,
     TRIG_COOLDOWN: 2,
-    IMG_DIRS:  { 1: 'Tri_img_01', 2: 'Tri_img_02', 3: 'Tri_img_03' },
+    IMG_DIRS:  { 1: 'Tri_img_01_crop', 2: 'Tri_img_02_crop', 3: 'Tri_img_03_crop' },
     DIFF_WEIGHTS: {
       easy:   [1.0, 0.0, 0.0],
       normal: [0.5, 0.4, 0.1],
