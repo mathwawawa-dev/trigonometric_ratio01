@@ -267,7 +267,7 @@
 #choices-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.7rem;
+  gap: 0.6rem;
   margin-top: -4px; /* Reduce gap between frame and choices slightly less */
 }
 
