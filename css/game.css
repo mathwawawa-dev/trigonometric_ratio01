@@ -49,17 +49,11 @@
   pointer-events: none;
   transform: translateY(-1px);
 }
-.stat-badge--blue   { color: #2563eb; }
-.stat-badge--purple { color: #9333ea; }
-.stat-badge--orange { color: #f97316; }
-.stat-badge--green  { color: #059669; }
-.stat-badge--gray   { color: #6b7280; }
-
-[data-theme="dark"] .stat-badge--blue   { color: #60a5fa; }
-[data-theme="dark"] .stat-badge--purple { color: #c084fc; }
-[data-theme="dark"] .stat-badge--orange { color: #fb923c; }
-[data-theme="dark"] .stat-badge--green  { color: #34d399; }
-[data-theme="dark"] .stat-badge--gray   { color: #9ca3af; }
+.stat-badge--blue   { color: var(--hud-accuracy-color, #2563eb); }
+.stat-badge--purple { color: var(--hud-score-color, #9333ea); }
+.stat-badge--orange { color: var(--hud-combo-color, #f97316); }
+.stat-badge--green  { color: var(--hud-avgtime-color, #059669); }
+.stat-badge--gray   { color: var(--hud-elapsed-color, #6b7280); }
 .stat-unit { font-size: 9px; transform: translateY(-1px); display: inline-block; }
 
 /* ── 플로팅 토글 패널 (Fixed 우상단) ─────────────────────── */

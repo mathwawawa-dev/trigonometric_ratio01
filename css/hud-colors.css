@@ -1,0 +1,23 @@
+/* ============================================================
+   HUD Color Palette (Design Tokens)
+   ============================================================ */
+
+:root {
+  /* 라이트 테마 HUD 스탯 색상 */
+  --hud-accuracy-color: #2563eb; /* 🎯 정답률 (blue-600) */
+  --hud-score-color:    #9333ea; /* 🏆 점수 (purple-600) */
+  --hud-combo-color:    #f97316; /* 🔥 연속정답 (orange-500) */
+  --hud-avgtime-color:  #059669; /* ⚡ 평균응답시간 (emerald-600) */
+  --hud-elapsed-color:  #6b7280; /* 🕐 경과시간 (gray-500) */
+  --hud-scorepop-color: #7c3aed; /* 점수 팝업 애니메이션 */
+}
+
+/* 다크 테마 HUD 스탯 색상 */
+[data-theme="dark"] {
+  --hud-accuracy-color: #60a5fa; /* 🎯 정답률 (blue-400) */
+  --hud-score-color:    #c084fc; /* 🏆 점수 (purple-400) */
+  --hud-combo-color:    #fb923c; /* 🔥 연속정답 (orange-400) */
+  --hud-avgtime-color:  #34d399; /* ⚡ 평균응답시간 (emerald-400) */
+  --hud-elapsed-color:  #9ca3af; /* 🕐 경과시간 (gray-400) */
+  --hud-scorepop-color: #a78bfa;
+}
