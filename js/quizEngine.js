@@ -96,7 +96,13 @@
       // 삼각형 이미지
       const imgEl = document.getElementById('tri-img');
       imgEl.classList.add('loading');
-      imgEl.onload  = () => imgEl.classList.remove('loading');
+      imgEl.classList.remove('tri-img--landscape');
+      imgEl.onload  = () => {
+        imgEl.classList.remove('loading');
+        if (imgEl.naturalWidth > imgEl.naturalHeight) {
+          imgEl.classList.add('tri-img--landscape');
+        }
+      };
       imgEl.onerror = () => imgEl.classList.remove('loading');
       imgEl.src = _cfg.IMG_DIRS[q.image_type] + '/' + q.filename;
 
