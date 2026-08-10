@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ── Google Fonts import ─────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap');
 
 /* ── Design Tokens (CSS Custom Properties) ───────────────── */
 :root {
@@ -67,8 +67,8 @@
   --glass-shadow:  0 8px 32px rgba(0, 0, 0, 0.4);
 
   /* ── Typography ── */
-  --font-display:  'Outfit', 'Noto Sans KR', sans-serif;
-  --font-body:     'Nanum Gothic', 'Noto Sans KR', sans-serif;
+  --font-display:  'Outfit', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font-body:     'Outfit', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
   --font-mono:     'Courier New', monospace;
 
   --text-xs:    0.75rem;    /* 12px */
