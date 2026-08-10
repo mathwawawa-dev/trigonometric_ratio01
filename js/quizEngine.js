@@ -105,30 +105,15 @@
       document.getElementById('question-text').innerHTML =
         TriRenderer.renderMixedTex(cleanedQuestion);
 
-      // 선지 정렬: CHOICE_ORDER lookup 기반 오름차순
-      const order = window.CHOICE_ORDER || {};
-      const correctTex = q.choices[q.answer_index];
-      const sortedChoices = [...q.choices].sort((a, b) => {
-        const va = order[a] !== undefined ? order[a] : Infinity;
-        const vb = order[b] !== undefined ? order[b] : Infinity;
-        return va - vb;
-      });
-      const sortedAnswerIndex = sortedChoices.indexOf(correctTex);
-
       // 선지 (순수 수식 → renderTexStr)
       document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
         btn.disabled = false;
         btn.className = 'choice-btn';
-        const choiceTex = sortedChoices[idx];
+        const choiceTex = q.choices[idx];
         if (TriRenderer.isSimpleChoice(choiceTex)) btn.classList.add('choice-btn--simple');
         btn.innerHTML = '<span>' + TriRenderer.renderTexStr(choiceTex) + '</span>';
         btn.setAttribute('aria-label', '선지 ' + ('①②③④'[idx] || (idx + 1)));
-        // 정렬된 정답 인덱스를 data attribute로 저장
-        if (idx === 0) btn.closest('.choices') && btn.closest('.choices').setAttribute('data-answer', sortedAnswerIndex);
       });
-      // 현재 문제 객체의 answer_index를 정렬 기준으로 임시 교체
-      q._sorted_answer_index = sortedAnswerIndex;
-      q._sorted_choices = sortedChoices;
 
       // 해설 배너 / 다음 버튼 숨김
       document.getElementById('answer-banner').style.display = 'none';
@@ -208,11 +193,10 @@
     const elapsed = (Date.now() - _gs.qStartTime) / 1000;
     _gs.timings.push(elapsed);
 
-    const ansIdx     = q._sorted_answer_index ?? q.answer_index;
-    const isCorrect  = idx === ansIdx;
+    const isCorrect  = idx === q.answer_index;
     const choiceBtns = document.querySelectorAll('.choice-btn');
     choiceBtns.forEach(b => b.disabled = true);
-    choiceBtns[ansIdx].classList.add('choice-btn--correct');
+    choiceBtns[q.answer_index].classList.add('choice-btn--correct');
     if (!isCorrect) choiceBtns[idx].classList.add('choice-btn--wrong');
 
     if (isCorrect) {
@@ -245,9 +229,8 @@
     _gs.timings.push(_gs.timerMax);
 
     const q = _gs.session[_gs.qIndex];
-    const ansIdx = q._sorted_answer_index ?? q.answer_index;
     document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-    document.querySelectorAll('.choice-btn')[ansIdx]
+    document.querySelectorAll('.choice-btn')[q.answer_index]
       .classList.add('choice-btn--correct');
 
     _showFeedback(false, true);
@@ -367,9 +350,7 @@
 
   function _showAnswerBanner(correct, q, timeout = false) {
     const banner = document.getElementById('answer-banner');
-    const choices = q._sorted_choices || q.choices;
-    const ansIdx  = q._sorted_answer_index ?? q.answer_index;
-    const correctChoice = choices[ansIdx];
+    const correctChoice = q.choices[q.answer_index];
     banner.className = `answer-banner answer-banner--${correct ? 'correct' : 'wrong'}`;
     banner.innerHTML = `
       <span class="answer-banner__icon">${correct ? '✅' : (timeout ? '⏰' : '❌')}</span>
