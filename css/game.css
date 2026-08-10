@@ -222,7 +222,7 @@
   background: rgba(255,255,255,0.97);
   border-radius: var(--radius-lg);
   padding: var(--sp-3);
-  box-shadow: var(--shadow-lg), 0 0 0 2px var(--border-subtle);
+  box-shadow: var(--shadow-md), 0 0 0 2px var(--border-subtle);
   height: 240px;
   display: flex;
   align-items: center;
