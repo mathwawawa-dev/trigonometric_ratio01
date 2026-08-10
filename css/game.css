@@ -248,8 +248,8 @@
 /* ── 질문 영역 ────────────────────────────────────────────── */
 .question-section {
   position: absolute;
-  top: 5px;             /* 6px → 5px (−1px ↑) */
-  left: 9px;             /* 8px → 9px (+1px →) */
+  top: 6.5px;
+  left: 10.5px;
   text-align: left;
   padding: 0;
   z-index: 10;
