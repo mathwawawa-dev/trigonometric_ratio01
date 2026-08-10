@@ -111,15 +111,30 @@
       document.getElementById('question-text').innerHTML =
         TriRenderer.renderMixedTex(cleanedQuestion);
 
+      // ── 선지 셔플: 매 문항마다 choices 순서를 무작위로 섞고 answer_index 재설정 ──
+      const origChoices = q.choices.slice();               // 원본 복사
+      const origAnswer  = origChoices[q.answer_index];    // 정답 문자열 보관
+      // Fisher-Yates shuffle
+      for (let i = origChoices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [origChoices[i], origChoices[j]] = [origChoices[j], origChoices[i]];
+      }
+      const shuffledChoices   = origChoices;
+      const shuffledAnswerIdx = shuffledChoices.indexOf(origAnswer);
+
       // 선지 (순수 수식 → renderTexStr)
       document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
         btn.disabled = false;
         btn.className = 'choice-btn';
-        const choiceTex = q.choices[idx];
+        const choiceTex = shuffledChoices[idx];
         if (TriRenderer.isSimpleChoice(choiceTex)) btn.classList.add('choice-btn--simple');
         btn.innerHTML = '<span>' + TriRenderer.renderTexStr(choiceTex) + '</span>';
         btn.setAttribute('aria-label', '선지 ' + ('①②③④'[idx] || (idx + 1)));
       });
+
+      // 셔플된 정답 인덱스를 게임 상태에 저장 (onChoiceClick에서 사용)
+      _gs.currentAnswerIdx = shuffledAnswerIdx;
+
 
       // 해설 배너 / 다음 버튼 숨김
       document.getElementById('answer-banner').style.display = 'none';
@@ -199,10 +214,10 @@
     const elapsed = (Date.now() - _gs.qStartTime) / 1000;
     _gs.timings.push(elapsed);
 
-    const isCorrect  = idx === q.answer_index;
+    const isCorrect  = idx === _gs.currentAnswerIdx;
     const choiceBtns = document.querySelectorAll('.choice-btn');
     choiceBtns.forEach(b => b.disabled = true);
-    choiceBtns[q.answer_index].classList.add('choice-btn--correct');
+    choiceBtns[_gs.currentAnswerIdx].classList.add('choice-btn--correct');
     if (!isCorrect) choiceBtns[idx].classList.add('choice-btn--wrong');
 
     if (isCorrect) {
@@ -236,7 +251,7 @@
 
     const q = _gs.session[_gs.qIndex];
     document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-    document.querySelectorAll('.choice-btn')[q.answer_index]
+    document.querySelectorAll('.choice-btn')[_gs.currentAnswerIdx]
       .classList.add('choice-btn--correct');
 
     _showFeedback(false, true);
@@ -356,7 +371,7 @@
 
   function _showAnswerBanner(correct, q, timeout = false) {
     const banner = document.getElementById('answer-banner');
-    const correctChoice = q.choices[q.answer_index];
+    const correctChoice = q.choices[q.answer_index]; // 원본 정답 텍스트 (셔플과 무관)
     banner.className = `answer-banner answer-banner--${correct ? 'correct' : 'wrong'}`;
     banner.innerHTML = `
       <span class="answer-banner__icon">${correct ? '✅' : (timeout ? '⏰' : '❌')}</span>
