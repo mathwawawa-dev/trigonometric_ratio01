@@ -423,3 +423,9 @@
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
 }
+
+/* ── 모바일 반응형 (아이폰 등 좁은 화면) ──────────────────── */
+@media (max-width: 480px) {
+  #tri-img { max-width: 95%; max-height: 95%; }
+  #tri-img.tri-img--landscape { max-width: 90%; }
+}
