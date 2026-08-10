@@ -235,7 +235,7 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  margin-left: 12%; /* shift slightly to the right, using percentage for responsiveness */
+  margin-left: 14%; /* shift slightly to the right, using percentage for responsiveness */
   transition: opacity 0.2s ease;
 }
 #tri-img.loading { opacity: 0; }
