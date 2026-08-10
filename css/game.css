@@ -238,7 +238,7 @@
   transition: opacity 0.2s ease;
 }
 #tri-img.loading { opacity: 0; }
-#tri-img.tri-img--landscape { max-width: 70%; }
+#tri-img.tri-img--landscape { max-width: 73%; }
 
 .tri-meta {
   display: none;
