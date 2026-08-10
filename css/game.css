@@ -283,6 +283,11 @@
   font-size: 1.8em;
 }
 
+/* 정수 / √n 꼴 선지는 KaTeX 크기 3단위 축소 (1.8 → 1.2) */
+.choice-btn--simple .katex {
+  font-size: 1.2em;
+}
+
 
 
 

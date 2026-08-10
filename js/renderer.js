@@ -47,9 +47,7 @@
    */
   function renderTexStr(tex) {
     if (!global.katex) return escapeHtml(tex);
-    // 순수 정수(자연수 포함)이면 KaTeX 없이 일반 텍스트로 반환
     const stripped = stripDollar(tex);
-    if (/^-?\d+$/.test(stripped)) return escapeHtml(stripped);
     const span = document.createElement('span');
     try {
       global.katex.render(stripped, span, KATEX_OPTS);
@@ -57,6 +55,23 @@
       span.textContent = tex;
     }
     return span.innerHTML;
+  }
+
+  /**
+   * 선지가 "단순" 꼴인지 판별 (정수 | \sqrt{정수} | 정수\sqrt{정수} 등)
+   * → true이면 choice-btn--simple 클래스를 부여해 KaTeX 크기를 줄임
+   * @param {string} tex
+   * @returns {boolean}
+   */
+  function isSimpleChoice(tex) {
+    const s = stripDollar(tex).replace(/\s/g, '');
+    // 순수 정수 (음수 포함)
+    if (/^-?\d+$/.test(s)) return true;
+    // \sqrt{n} 꼴
+    if (/^-?\\sqrt\{\d+\}$/.test(s)) return true;
+    // n\sqrt{m} 꼴
+    if (/^-?\d+\\sqrt\{\d+\}$/.test(s)) return true;
+    return false;
   }
 
   /**
@@ -112,6 +127,7 @@
     renderMixedTex,
     renderChoices,
     simplifyFrac,
+    isSimpleChoice,
   };
 
 })(window);

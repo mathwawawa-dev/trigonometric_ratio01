@@ -109,7 +109,9 @@
       document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
         btn.disabled = false;
         btn.className = 'choice-btn';
-        btn.innerHTML = '<span>' + TriRenderer.renderTexStr(q.choices[idx]) + '</span>';
+        const choiceTex = q.choices[idx];
+        if (TriRenderer.isSimpleChoice(choiceTex)) btn.classList.add('choice-btn--simple');
+        btn.innerHTML = '<span>' + TriRenderer.renderTexStr(choiceTex) + '</span>';
         btn.setAttribute('aria-label', '선지 ' + ('①②③④'[idx] || (idx + 1)));
       });
 
