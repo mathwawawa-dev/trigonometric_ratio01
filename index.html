@@ -70,9 +70,9 @@
       animation: shimmer 3s linear infinite;
     }
     .game-logo__sub2 {
-      font-size: var(--text-sm);
+      font-size: var(--text-xs);
       color: #000000;
-      font-weight: 700;
+      font-weight: 400;
       margin-top: var(--sp-2);
     }
 
@@ -96,27 +96,35 @@
       gap: var(--sp-3);
     }
 
-    /* 포켓몬 카드 커스텀 */
+    /* 포켓몬 카드 커스텀 및 타입별 후광 효과 (reference project) */
+    #poke-bulbasaur { --poke-glow: 34, 197, 94; }
+    #poke-charmander { --poke-glow: 249, 115, 22; }
+    #poke-squirtle { --poke-glow: 59, 130, 246; }
+
     .pokemon-card__sprite {
       width: 88px;
       height: 88px;
       margin: 0 auto var(--sp-2);
       object-fit: contain;
       image-rendering: pixelated;
-      filter: drop-shadow(0 4px 16px rgba(124,58,237,0.5));
+      filter: drop-shadow(0 4px 14px rgba(var(--poke-glow, 124, 58, 237), 0.55));
       transition: transform var(--transition-spring), filter var(--transition-normal);
     }
 
     .pokemon-card:hover .pokemon-card__sprite {
       transform: scale(1.15) translateY(-6px);
-      filter: drop-shadow(0 8px 24px rgba(124,58,237,0.7));
+      filter: drop-shadow(0 8px 22px rgba(var(--poke-glow, 124, 58, 237), 0.8));
       animation: float 1.8s ease-in-out infinite;
     }
 
     .pokemon-card--selected .pokemon-card__sprite {
       animation: float 1.8s ease-in-out infinite;
-      filter: drop-shadow(0 4px 20px rgba(124,58,237,0.9));
+      filter: drop-shadow(0 4px 22px rgba(var(--poke-glow, 124, 58, 237), 0.95));
     }
+
+    #poke-bulbasaur.pokemon-card--selected { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+    #poke-charmander.pokemon-card--selected { border-color: #f97316; background: rgba(249,115,22,0.1); }
+    #poke-squirtle.pokemon-card--selected { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
 
     .pokemon-card__name {
       font-family: var(--font-display);
@@ -167,7 +175,11 @@
       letter-spacing: 0.08em;
       margin-bottom: var(--sp-3);
     }
-    .diff-cards { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .diff-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-3);
+    }
 
     /* 시작 버튼 */
     .start-btn-wrap {
@@ -243,7 +255,7 @@
   <!-- 게임 로고 -->
   <header class="game-logo animate-fadein">
     <p class="game-logo__sub">포켓몬 수학 RPG</p>
-    <h1 class="game-logo__title">삼각비<br>마스터</h1>
+    <h1 class="game-logo__title">삼각비 마스터</h1>
     <p class="game-logo__sub2">학습목표: 삼각비의 값을 구할 수 있다.</p>
   </header>
 
@@ -400,7 +412,7 @@
 
   <!-- 버전 뱃지 (하단 고정) -->
   <footer class="version-badge" aria-label="버전 정보" style="display:flex;align-items:center;justify-content:center;gap:8px">
-    <span>v1.0.54_260810_1824_diff_desc_weight</span>
+    <span>v1.0.55_260810_1826_title_glow_diff_layout</span>
     <button id="theme-toggle-index" aria-label="테마 변경" style="
       width:28px;height:28px;border-radius:50%;
       background:var(--glass-bg);border:1px solid var(--border-normal);
