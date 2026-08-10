@@ -268,7 +268,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-2);
-  margin-top: -8px; /* Reduce gap between frame and choices */
+  margin-top: -4px; /* Reduce gap between frame and choices slightly less */
 }
 
 .choice-btn {
