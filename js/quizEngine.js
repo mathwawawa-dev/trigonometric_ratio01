@@ -459,6 +459,11 @@
     if (key === 'avgtime') {
       const b = document.getElementById('hud-avgtime-badge');
       if (b) b.style.display = _toggleState.avgtime ? '' : 'none';
+      // ON 전환 시 현재까지 누적된 평균 응답시간 즉시 표시
+      if (_toggleState.avgtime && _gs && _gs.timings.length > 0) {
+        const avg = (_gs.timings.reduce((a, b) => a + b, 0) / _gs.timings.length).toFixed(1);
+        _setEl('hud-avgtime-val', avg);
+      }
     } else if (key === 'elapsed') {
       const b = document.getElementById('hud-elapsed-badge');
       if (b) b.style.display = _toggleState.elapsed ? '' : 'none';
