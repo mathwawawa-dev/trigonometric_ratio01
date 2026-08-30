@@ -236,6 +236,7 @@
   max-width: 80%;
   max-height: 80%;
   object-fit: contain;
+  margin-left: 8%;
   transition: opacity 0.2s ease;
 }
 #tri-img.loading { opacity: 0; }
