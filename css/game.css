@@ -3,6 +3,16 @@
    STEP 2-4 | v1.0.25_260809_1721
    ============================================================ */
 
+/* ── STIX Two Math 로컬 폰트 (오프라인 지원) ─────────────────── */
+@font-face {
+  font-family: 'STIX Two Math';
+  src: local('STIX Two Math'),
+       url('../fonts/STIXTwoMath-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── 게임 전체 래퍼 ──────────────────────────────────────── */
 .game-wrap {
   max-width: 480px;
@@ -283,13 +293,17 @@
   justify-content: center;
 }
 
-/* KaTeX 수식 폰트 더 크게 확대 */
-.choice-btn .katex {
+/* KaTeX 수식 폰트 더 크게 확대 + 이미지 폰트(STIX)와 통일 */
+.choice-btn .katex,
+.choice-btn .katex * {
+  font-family: 'STIX Two Math', 'STIX Two Text', serif !important;
   font-size: 1.6em;
 }
 
 /* 정수 / √n 꼴 선지는 KaTeX 크기 3단위 축소 (1.8 → 1.2) */
-.choice-btn--simple .katex {
+.choice-btn--simple .katex,
+.choice-btn--simple .katex * {
+  font-family: 'STIX Two Math', 'STIX Two Text', serif !important;
   font-size: 1.1em;
 }
 
