@@ -224,7 +224,7 @@
   border-radius: var(--radius-lg);
   padding: var(--sp-3);
   box-shadow: var(--shadow-sm), 0 0 0 2px var(--border-subtle);
-  height: 240px;
+  aspect-ratio: 4/3;
   display: flex;
   align-items: center;
   justify-content: center;
