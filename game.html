@@ -284,7 +284,7 @@ document.getElementById('floating-home-btn').addEventListener('click', () => {
 
 // ── 선지 폰트 크기 조절 ──────────────────────────────────────
 (function() {
-  // 1.25 ~ 1.65, 0.05 간격 (9단계), 기본값 index 3 = 1.40em
+  // 1.25 ~ 1.65, 0.05 간격 (9단계), 기본값 index 4 = 1.45em
   const STEPS = [
     { complex: '1.25em', simple: '0.88em' },
     { complex: '1.30em', simple: '0.91em' },
@@ -297,7 +297,7 @@ document.getElementById('floating-home-btn').addEventListener('click', () => {
     { complex: '1.65em', simple: '1.16em' },
   ];
   const MAX = STEPS.length - 1;
-  const DEFAULT_STEP = 3; // 1.40em
+  const DEFAULT_STEP = 4; // 1.45em
   let step = parseInt(localStorage.getItem('choiceFontStep') ?? String(DEFAULT_STEP));
   if (isNaN(step) || step < 0 || step > MAX) step = DEFAULT_STEP;
 

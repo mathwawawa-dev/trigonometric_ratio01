@@ -284,12 +284,12 @@
 
 /* KaTeX 수식 폰트 크기 — CSS 변수로 JS에서 제어 */
 .choice-btn .katex {
-  font-size: var(--choice-fs, 1.4em);
+  font-size: var(--choice-fs, 1.45em);
 }
 
 /* 정수 / √n 꼴 선지는 KaTeX 크기 축소 */
 .choice-btn--simple .katex {
-  font-size: var(--choice-fs-simple, 0.98em);
+  font-size: var(--choice-fs-simple, 1.02em);
 }
 
 /* ── 선지 폰트 크기 조절 플로팅 버튼 ──────────────────────────── */
