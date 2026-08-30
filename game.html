@@ -63,6 +63,10 @@
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
 </button>
 
+<!-- ── 선지 폰트 크기 조절 버튼 ─────────────────────────── -->
+<button id="font-size-up-btn"   aria-label="선지 글자 크게" title="선지 글자 크게">A+</button>
+<button id="font-size-down-btn" aria-label="선지 글자 작게" title="선지 글자 작게">A−</button>
+
 <!-- ── 피드백 스탬프 오버레이 ─────────────────────────── -->
 <div id="feedback-overlay" aria-hidden="true">
   <div id="feedback-stamp" class="feedback-stamp"></div>
@@ -278,6 +282,33 @@ document.getElementById('floating-home-btn').addEventListener('click', () => {
   window.location.href = 'index.html';
 });
 
+// ── 선지 폰트 크기 조절 ──────────────────────────────────────
+(function() {
+  // 0=small(기본), 1=medium, 2=max
+  const STEPS = [
+    { complex: '1.0em', simple: '0.75em' },
+    { complex: '1.3em', simple: '0.92em' },
+    { complex: '1.6em', simple: '1.1em'  },
+  ];
+  let step = parseInt(localStorage.getItem('choiceFontStep') ?? '0');
+  if (isNaN(step) || step < 0 || step > 2) step = 0;
+
+  const btnUp   = document.getElementById('font-size-up-btn');
+  const btnDown = document.getElementById('font-size-down-btn');
+
+  function apply(s) {
+    step = Math.max(0, Math.min(2, s));
+    document.documentElement.style.setProperty('--choice-fs',        STEPS[step].complex);
+    document.documentElement.style.setProperty('--choice-fs-simple', STEPS[step].simple);
+    btnDown.disabled = (step === 0);
+    btnUp.disabled   = (step === 2);
+    localStorage.setItem('choiceFontStep', step);
+  }
+
+  btnUp.addEventListener('click',   () => apply(step + 1));
+  btnDown.addEventListener('click', () => apply(step - 1));
+  apply(step); // 페이지 로드 시 적용
+})();
 
 // ── 초기 데이터 로드 & 게임 시작 ─────────────────────────
 TriLoader.initQuestions({

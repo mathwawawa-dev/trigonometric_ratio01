@@ -283,17 +283,59 @@
   justify-content: center;
 }
 
-/* KaTeX 수식 폰트 더 크게 확대 */
+/* KaTeX 수식 폰트 크기 — CSS 변수로 JS에서 제어 */
 .choice-btn .katex {
-  font-size: 1.6em;
+  font-size: var(--choice-fs, 1.0em);
 }
 
-/* 정수 / √n 꼴 선지는 KaTeX 크기 3단위 축소 (1.8 → 1.2) */
+/* 정수 / √n 꼴 선지는 KaTeX 크기 축소 */
 .choice-btn--simple .katex {
-  font-size: 1.1em;
+  font-size: var(--choice-fs-simple, 0.75em);
 }
 
-
+/* ── 선지 폰트 크기 조절 플로팅 버튼 ──────────────────────────── */
+#font-size-down-btn,
+#font-size-up-btn {
+  position: fixed;
+  bottom: 20px;
+  z-index: 9999;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+  border: 1.5px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s, opacity 0.15s;
+  backdrop-filter: blur(6px);
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+#font-size-up-btn   { right: 68px; }
+#font-size-down-btn { right: 120px; }
+#font-size-down-btn:hover,
+#font-size-up-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  transform: scale(1.08);
+}
+#font-size-down-btn:disabled,
+#font-size-up-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+[data-theme="dark"] #font-size-down-btn,
+[data-theme="dark"] #font-size-up-btn {
+  background: rgba(30,30,40,0.95);
+  border-color: rgba(255,255,255,0.15);
+  color: #e5e7eb;
+}
 
 
 /* ── 정답 해설 배너 ───────────────────────────────────────────── */
