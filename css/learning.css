@@ -93,10 +93,19 @@
 }
 .learn-q-expr .katex { font-size: 1em; }
 
-.learn-q-hint {
-  font-size: 12px;
-  color: #94a3b8;
-  font-weight: 600;
+/* 삼각형 이미지 */
+.learn-tri-img-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--sp-2) 0 var(--sp-1);
+  min-height: 160px;
+}
+.learn-tri-img {
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  display: block;
 }
 
 /* ── 선지 그리드 ──────────────────────────────────────────── */

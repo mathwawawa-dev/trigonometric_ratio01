@@ -110,6 +110,13 @@
     document.getElementById('learn-badge-cat').textContent  = q.category || '';
     document.getElementById('learn-badge-tri').textContent  = q.triangle_id || '';
 
+    // ── 삼각형 이미지 ──
+    const imgEl = document.getElementById('learn-tri-img');
+    if (imgEl) {
+      imgEl.src = `Tri_img_01_dash3/${q.filename}`;
+      imgEl.alt = `삼각형 문제 이미지 (${q.id})`;
+    }
+
     // 선지 영역
     renderChoiceArea();
 
