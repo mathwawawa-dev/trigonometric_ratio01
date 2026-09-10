@@ -26,8 +26,35 @@
     wrongIds:       new Set(),
     results:        [],
     isReviewMode:   false,
-    multipleChoice: false,   // 기본값: O/X 모드 (객관식 OFF)
+    multipleChoice: false,
   };
+
+  /* ─── 줌 상태 ───────────────────────────────────────────── */
+  let zoomScale = 1.0;
+  const ZOOM_STEP = 0.25;
+  const ZOOM_MIN  = 0.4;
+  const ZOOM_MAX  = 4.0;
+
+  function applyZoom() {
+    const c = document.getElementById('learn-zoom-container');
+    if (c) c.style.transform = `scale(${zoomScale})`;
+  }
+  function zoomIn()    { zoomScale = Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX); applyZoom(); }
+  function zoomOut()   { zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN); applyZoom(); }
+  function resetZoom() { zoomScale = 1.0; applyZoom(); }
+
+  /* ─── 👍 애니메이션 ─────────────────────────────────────── */
+  function showThumbsUp() {
+    const el = document.getElementById('learn-thumbs-up');
+    if (!el) return;
+    el.textContent = '👍👍';
+    el.className = 'learn-thumbs-up';
+    void el.offsetWidth;
+    el.classList.add('pop');
+    el.addEventListener('animationend', () => {
+      el.className = 'learn-thumbs-up';
+    }, { once: true });
+  }
 
   /* ─── 유틸 ─────────────────────────────────────────────── */
   function shuffle(arr) {
@@ -202,6 +229,9 @@
   }
 
   function afterAnswer(q, correct) {
+    // 정답이면 👍👍 애니메이션
+    if (correct) showThumbsUp();
+
     // 배너·해설 모두 숨김 (정답/오답 무관)
     const banner = document.getElementById('learn-answer-banner');
     banner.className = 'learn-answer-banner';
@@ -319,6 +349,9 @@
     setMode,
     updateMCToggleBtn,
     getMode: () => state.multipleChoice,
+    zoomIn,
+    zoomOut,
+    resetZoom,
   };
 
 })(window);

@@ -77,8 +77,18 @@
       </div>
       <!-- 이미지 컨테이너 + 수식 좌상단 오버레이 -->
       <div class="learn-tri-img-wrap">
-        <div class="learn-q-expr" id="learn-q-expr" aria-live="polite">sin A</div>
-        <img id="learn-tri-img" src="" alt="삼각형 문제 이미지" class="learn-tri-img">
+        <!-- 줌 가능한 내부 컨테이너 -->
+        <div class="learn-zoom-container" id="learn-zoom-container">
+          <div class="learn-q-expr" id="learn-q-expr" aria-live="polite">sin A</div>
+          <img id="learn-tri-img" src="" alt="삼각형 문제 이미지" class="learn-tri-img">
+        </div>
+        <!-- 정답 시 👍 오버레이 (우상단) -->
+        <div id="learn-thumbs-up" class="learn-thumbs-up"></div>
+        <!-- 줌 컨트롤 (우하단) -->
+        <div class="learn-zoom-ctrl">
+          <button class="learn-zoom-btn" id="zoom-out-btn" title="축소 (단축키: -)">－</button>
+          <button class="learn-zoom-btn" id="zoom-in-btn"  title="확대 (단축키: +)">＋</button>
+        </div>
       </div>
     </div>
   </div>
@@ -207,17 +217,24 @@ document.getElementById('c-review-btn').addEventListener('click', () => Learning
 document.getElementById('c-restart-btn').addEventListener('click', () => LearningEngine.init());
 document.getElementById('c-home-btn').addEventListener('click', () => { window.location.href = 'index.html'; });
 
+/* ── 줌 버튼 ────────────────────────────────────────────── */
+document.getElementById('zoom-in-btn').addEventListener('click',  () => LearningEngine.zoomIn());
+document.getElementById('zoom-out-btn').addEventListener('click', () => LearningEngine.zoomOut());
+
 /* ── 키보드 단축키 ──────────────────────────────────────── */
 document.addEventListener('keydown', e => {
+  // 줌 단축키 (항상 동작)
+  if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd')      { e.preventDefault(); LearningEngine.zoomIn();    return; }
+  if (e.key === '-' || e.code === 'NumpadSubtract')                  { e.preventDefault(); LearningEngine.zoomOut();   return; }
+  if (e.key === '0' || e.code === 'Numpad0')                         { e.preventDefault(); LearningEngine.resetZoom(); return; }
+
   const isMC = LearningEngine.getMode();
   if (isMC) {
-    // 객관식: 1~4 → 선지 선택
     const mcMap = {'1':0,'2':1,'3':2,'4':3,'Numpad1':0,'Numpad2':1,'Numpad3':2,'Numpad4':3};
     const idx = mcMap[e.key] ?? mcMap[e.code];
     if (idx !== undefined) { e.preventDefault(); LearningEngine.onChoiceClick(idx); return; }
   } else {
-    // O/X 모드: 1 → ⭕, 2 → ❌
-    if (e.key === '1' || e.code === 'Numpad1') { e.preventDefault(); LearningEngine.onOXClick(true); return; }
+    if (e.key === '1' || e.code === 'Numpad1') { e.preventDefault(); LearningEngine.onOXClick(true);  return; }
     if (e.key === '2' || e.code === 'Numpad2') { e.preventDefault(); LearningEngine.onOXClick(false); return; }
   }
   if (e.key === 'Enter' || e.key === ' ') {
