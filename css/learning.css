@@ -60,10 +60,7 @@
   border-radius: 14px;
   border: 1.5px solid #e2e8f0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-  padding: var(--sp-5) var(--sp-5) var(--sp-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
+  overflow: hidden;
 }
 
 /* 뱃지 행 */
@@ -71,6 +68,7 @@
   display: flex;
   align-items: center;
   gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4) var(--sp-2);
 }
 .learn-badge {
   font-size: 11px;
@@ -83,29 +81,37 @@
 .learn-badge--cat  { background: #ede9fe; color: #6d28d9; }
 .learn-badge--tri  { background: #f1f5f9; color: #475569; }
 
-/* 수식 표시 (크게) */
+/* 수식 표시 — 이미지 위 좌상단 절대 오버레이 */
 .learn-q-expr {
-  font-size: 2.8rem;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  font-size: 2.4rem;
   font-weight: 900;
   color: #0f172a;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  padding: 4px 14px 6px;
+  line-height: 1.15;
+  pointer-events: none;
 }
 .learn-q-expr .katex { font-size: 1em; }
 
 /* 삼각형 이미지 */
 .learn-tri-img-wrap {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--sp-2) 0 var(--sp-1);
-  min-height: 400px;
+  min-height: 300px;
 }
 .learn-tri-img {
-  max-width: 100%;
-  max-height: 640px;
-  object-fit: contain;
+  width: 100%;
+  height: auto;
   display: block;
+  border-radius: 0 0 10px 10px;
 }
 
 /* ── 선지 그리드 ──────────────────────────────────────────── */
@@ -298,18 +304,18 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 99px;
   border: 2px solid #e2e8f0;
   background: #fff;
   color: #64748b;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   font-family: var(--font-display);
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(0,0,0,0.12);
   z-index: 500;
-  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
 #learn-mc-toggle.mc-on {
@@ -318,7 +324,37 @@
   border-color: var(--primary-600);
   box-shadow: 0 3px 16px rgba(109,40,217,0.35);
 }
-#learn-mc-toggle svg { width: 15px; height: 15px; flex-shrink: 0; }
+#learn-mc-toggle svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── 플로팅: 문항정보 토글 (우하단 위) ───────────────────── */
+#learn-info-toggle {
+  position: fixed;
+  bottom: 62px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 99px;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  z-index: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+#learn-info-toggle.info-on {
+  background: #0ea5e9;
+  color: #fff;
+  border-color: #0ea5e9;
+  box-shadow: 0 3px 14px rgba(14,165,233,0.35);
+}
+#learn-info-toggle svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* ── 플로팅: 틀린 문제 다시보기 (좌하단) ─────────────────── */
 #learn-wrong-pill {

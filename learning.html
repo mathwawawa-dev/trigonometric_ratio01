@@ -30,6 +30,12 @@
   <div id="learn-feedback-stamp" class="learn-feedback-stamp"></div>
 </div>
 
+<!-- 플로팅: 문항정보 토글 (우하단 위) -->
+<button id="learn-info-toggle" aria-label="문항정보 토글" title="문항정보 표시/숨김">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span>문항정보</span>
+</button>
+
 <!-- 플로팅: 객관식 ON/OFF 토글 (우하단) -->
 <button id="learn-mc-toggle" aria-label="객관식 모드 토글" title="객관식 ON/OFF">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -63,16 +69,15 @@
   <!-- ── 질문 카드 ──────────────────────────────────────── -->
   <div id="learn-q-area">
     <div class="learn-q-card">
-      <!-- 뱃지 행 -->
-      <div class="learn-badge-row">
+      <!-- 뱃지 행 (기본 숨김, 토글 버튼으로 표시) -->
+      <div class="learn-badge-row" id="learn-badge-row" style="display:none">
         <span class="learn-badge learn-badge--trig" id="learn-badge-trig">sin</span>
         <span class="learn-badge learn-badge--cat"  id="learn-badge-cat">특수각</span>
         <span class="learn-badge learn-badge--tri"  id="learn-badge-tri">T001</span>
       </div>
-      <!-- 수식 표시 (크게) -->
-      <div class="learn-q-expr" id="learn-q-expr" aria-live="polite">sin A</div>
-      <!-- 삼각형 이미지 -->
+      <!-- 이미지 컨테이너 + 수식 좌상단 오버레이 -->
       <div class="learn-tri-img-wrap">
+        <div class="learn-q-expr" id="learn-q-expr" aria-live="polite">sin A</div>
         <img id="learn-tri-img" src="" alt="삼각형 문제 이미지" class="learn-tri-img">
       </div>
     </div>
@@ -163,6 +168,16 @@
 /* ── 라이트 모드 고정 ──────────────────────────────────── */
 document.documentElement.setAttribute('data-theme', 'light');
 
+/* ── 문항정보 토글 ───────────────────────────────────────── */
+let infoVisible = false;
+document.getElementById('learn-info-toggle').addEventListener('click', () => {
+  infoVisible = !infoVisible;
+  const row = document.getElementById('learn-badge-row');
+  const btn = document.getElementById('learn-info-toggle');
+  row.style.display = infoVisible ? 'flex' : 'none';
+  btn.classList.toggle('info-on', infoVisible);
+});
+
 /* ── 객관식 토글 (플로팅) ───────────────────────────────── */
 document.getElementById('learn-mc-toggle').addEventListener('click', () => {
   LearningEngine.setMode(!LearningEngine.getMode());
@@ -194,11 +209,17 @@ document.getElementById('c-home-btn').addEventListener('click', () => { window.l
 
 /* ── 키보드 단축키 ──────────────────────────────────────── */
 document.addEventListener('keydown', e => {
-  const numMap = {'1':0,'2':1,'3':2,'4':3,'Numpad1':0,'Numpad2':1,'Numpad3':2,'Numpad4':3};
-  const idx = numMap[e.key] ?? numMap[e.code];
-  if (idx !== undefined) { e.preventDefault(); LearningEngine.onChoiceClick(idx); return; }
-  if (e.key === 'o' || e.key === 'O') { LearningEngine.onOXClick(true); return; }
-  if (e.key === 'x' || e.key === 'X') { LearningEngine.onOXClick(false); return; }
+  const isMC = LearningEngine.getMode();
+  if (isMC) {
+    // 객관식: 1~4 → 선지 선택
+    const mcMap = {'1':0,'2':1,'3':2,'4':3,'Numpad1':0,'Numpad2':1,'Numpad3':2,'Numpad4':3};
+    const idx = mcMap[e.key] ?? mcMap[e.code];
+    if (idx !== undefined) { e.preventDefault(); LearningEngine.onChoiceClick(idx); return; }
+  } else {
+    // O/X 모드: 1 → ⭕, 2 → ❌
+    if (e.key === '1' || e.code === 'Numpad1') { e.preventDefault(); LearningEngine.onOXClick(true); return; }
+    if (e.key === '2' || e.code === 'Numpad2') { e.preventDefault(); LearningEngine.onOXClick(false); return; }
+  }
   if (e.key === 'Enter' || e.key === ' ') {
     const nextBtn = document.getElementById('learn-next-btn');
     if (nextBtn && nextBtn.style.display !== 'none') { e.preventDefault(); nextBtn.click(); }
