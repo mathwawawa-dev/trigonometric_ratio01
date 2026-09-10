@@ -202,35 +202,13 @@
   }
 
   function afterAnswer(q, correct) {
-    // 스탬프 — 정답일 때만
-    if (correct) showStamp('⭕');
-
-    // 배너 — 정답일 때만
+    // 배너·해설 모두 숨김 (정답/오답 무관)
     const banner = document.getElementById('learn-answer-banner');
-    if (correct) {
-      banner.className = 'learn-answer-banner learn-answer-banner--correct show';
-      banner.textContent = '✅ 정답!';
-    } else {
-      banner.className = 'learn-answer-banner';
-      banner.textContent = '';
-    }
+    banner.className = 'learn-answer-banner';
+    banner.textContent = '';
+    document.getElementById('learn-explanation').className = 'learn-explanation';
 
-    // 해설 — 정답일 때만
-    const expEl = document.getElementById('learn-explanation');
-    if (correct) {
-      const trig = q.question_type, angle = q.highlight_angle, right = q.right_vertex;
-      let hint = '';
-      if (trig === 'sin')      hint = `sin ${angle} = (∠${angle}의 대변) ÷ (빗변)`;
-      else if (trig === 'cos') hint = `cos ${angle} = (∠${angle}의 인접변) ÷ (빗변)`;
-      else if (trig === 'tan') hint = `tan ${angle} = (∠${angle}의 대변) ÷ (인접변)`;
-      if (right) hint += `  |  직각: ∠${right}`;
-      expEl.textContent = hint;
-      expEl.className = 'learn-explanation show';
-    } else {
-      expEl.className = 'learn-explanation';
-    }
-
-    // 다음 버튼
+    // 다음 버튼만 표시
     const isLast = (state.idx === state.session.length - 1);
     const nextBtn = document.getElementById('learn-next-btn');
     nextBtn.textContent = isLast ? '결과 보기 →' : '다음 문제 →';
