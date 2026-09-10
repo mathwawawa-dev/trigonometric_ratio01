@@ -1,22 +1,12 @@
 /**
  * learningEngine.js — 삼각비 학습 모드 엔진
- * v1.1.0_260911_0729
- *
- * 의존성: js/renderer.js (TriRenderer), js/questionsData.js
+ * v1.2.0_260911_0736
  */
 
 (function(global) {
   'use strict';
 
-  /* ─── 약분되는 삼각형 ID 제거 ─────────────────────────────
-   * 아래 ID들은 세 변에 공통인수가 있어 기존 삼각형과 동일한 비를 가짐
-   *   T004 (2,2√3,4)   = T001×2   T007 (2,6,2√10)  = T005×2
-   *   T008 (3,9,3√10)  = T005×3   T013 (6,8,10)    = T009×2
-   *   T014 (9,12,15)   = T009×3   T015 (10,24,26)  = T010×2
-   *   T016 (12,16,20)  = T009×4   T018 (4,6,2√13)  = T017×2
-   *   T019 (2,2,2√2)   = T002×2   T020 (3,3,3√2)   = T002×3
-   *   T021 (4,4,4√2)   = T002×4   T027 (4,8,4√5)   = T026×4
-   ────────────────────────────────────────────────────────── */
+  /* ─── 약분 가능한 삼각형 제거 ──────────────────────────── */
   const REDUCIBLE_IDS = new Set([
     'T004','T007','T008',
     'T013','T014','T015','T016',
@@ -25,20 +15,18 @@
     'T027',
   ]);
 
-  const IMG_DIR = 'Tri_img_01_dash3';
-  const LABELS  = ['①', '②', '③', '④'];
+  const LABELS = ['①', '②', '③', '④'];
 
   /* ─── 상태 ─────────────────────────────────────────────── */
   let state = {
-    pool:          [],
-    session:       [],
-    idx:           0,
-    answered:      false,
-    wrongIds:      new Set(),
-    correctIds:    new Set(),
-    isReviewMode:  false,
-    results:       [],
-    multipleChoice: true,   // true=객관식, false=O/X 교사모드
+    pool:           [],
+    session:        [],
+    idx:            0,
+    answered:       false,
+    wrongIds:       new Set(),
+    results:        [],
+    isReviewMode:   false,
+    multipleChoice: false,   // 기본값: O/X 모드 (객관식 OFF)
   };
 
   /* ─── 유틸 ─────────────────────────────────────────────── */
@@ -58,48 +46,38 @@
       alert('문항 데이터를 불러오지 못했습니다.');
       return;
     }
-    // image_type===1 이고, 약분 가능한 삼각형 제외
     state.pool = allQ.filter(q =>
       q.image_type === 1 && !REDUCIBLE_IDS.has(q.triangle_id)
     );
-
     state.wrongIds   = new Set();
-    state.correctIds = new Set();
     state.results    = [];
     state.isReviewMode = false;
-
     state.session = shuffle(state.pool);
     state.idx = 0;
 
     updateReviewBanner();
+    updateWrongPill();
     showQuestion();
   }
 
-  /* ─── 객관식/O·X 모드 전환 ─────────────────────────────── */
-  function setMode(multipleChoice) {
-    state.multipleChoice = multipleChoice;
-    // 토글 버튼 UI 업데이트
-    const btnMC = document.getElementById('mode-mc-btn');
-    const btnOX = document.getElementById('mode-ox-btn');
-    if (btnMC) btnMC.classList.toggle('mode-btn--active', multipleChoice);
-    if (btnOX) btnOX.classList.toggle('mode-btn--active', !multipleChoice);
-
-    // 현재 문항 다시 렌더 (답하지 않은 상태에만)
-    if (!state.answered) {
-      renderChoiceArea();
-    }
+  /* ─── 모드 전환 (외부에서 호출) ─────────────────────────── */
+  function setMode(mc) {
+    state.multipleChoice = mc;
+    if (!state.answered) renderChoiceArea();
+    updateMCToggleBtn();
   }
 
-  /* ─── 오답 복습 모드 ────────────────────────────────────── */
+  /* ─── 오답 복습 시작 ─────────────────────────────────────── */
   function startReview() {
-    if (state.wrongIds.size === 0) { showComplete(); return; }
+    if (state.wrongIds.size === 0) return;
     state.isReviewMode = true;
     const wrongQ = state.pool.filter(q => state.wrongIds.has(q.id));
-    state.session = shuffle(wrongQ);
-    state.idx     = 0;
-    state.wrongIds   = new Set();
-    state.results    = [];
+    state.session  = shuffle(wrongQ);
+    state.idx      = 0;
+    state.wrongIds = new Set();
+    state.results  = [];
     updateReviewBanner();
+    updateWrongPill();
     hideComplete();
     showQuestion();
   }
@@ -114,61 +92,64 @@
     document.getElementById('learn-q-current').textContent = state.idx + 1;
     document.getElementById('learn-q-total').textContent   = state.session.length;
 
-    // 질문 텍스트
-    document.getElementById('learn-question-text').innerHTML =
-      TriRenderer.renderMixedTex(q.question);
+    // ── 수식 표시: "\sin A" 형태로 KaTeX 렌더 ──
+    const trigTex = `\\${q.question_type} ${q.highlight_angle}`;
+    const exprEl  = document.getElementById('learn-q-expr');
+    if (global.katex) {
+      try {
+        global.katex.render(trigTex, exprEl, { throwOnError: false, displayMode: false });
+      } catch(e) {
+        exprEl.textContent = `${q.question_type} ${q.highlight_angle}`;
+      }
+    } else {
+      exprEl.textContent = `${q.question_type} ${q.highlight_angle}`;
+    }
 
     // 뱃지
-    document.getElementById('learn-trig-badge').textContent = q.question_type;
+    document.getElementById('learn-badge-trig').textContent = q.question_type;
+    document.getElementById('learn-badge-cat').textContent  = q.category || '';
+    document.getElementById('learn-badge-tri').textContent  = q.triangle_id || '';
 
     // 선지 영역
     renderChoiceArea();
 
-    // 배너 리셋
+    // 배너/해설 리셋
     const banner = document.getElementById('learn-answer-banner');
     banner.className = 'learn-answer-banner';
     banner.textContent = '';
-
-    // 해설 리셋
     document.getElementById('learn-explanation').className = 'learn-explanation';
 
     // 버튼 리셋
     document.getElementById('learn-next-btn').style.display   = 'none';
-    document.getElementById('learn-review-btn').style.display = 'none';
   }
 
-  /* ─── 선지 영역 렌더 (모드에 따라 다름) ───────────────────── */
+  /* ─── 선지 영역 렌더 ────────────────────────────────────── */
   function renderChoiceArea() {
     const q = state.session[state.idx];
     if (!q) return;
 
-    if (state.multipleChoice) {
-      // 객관식 4지선다
-      document.getElementById('learn-choices-grid').style.display = '';
-      document.getElementById('learn-ox-grid').style.display      = 'none';
+    const mcGrid = document.getElementById('learn-choices-grid');
+    const oxGrid = document.getElementById('learn-ox-grid');
 
-      const choiceEls = document.querySelectorAll('.learn-choice-btn');
-      choiceEls.forEach((btn, i) => {
-        btn.disabled = state.answered;
+    if (state.multipleChoice) {
+      mcGrid.style.display = 'grid';
+      oxGrid.style.display = 'none';
+
+      document.querySelectorAll('.learn-choice-btn').forEach((btn, i) => {
+        btn.disabled  = state.answered;
         btn.className = 'learn-choice-btn';
         const label = btn.querySelector('.learn-choice-label');
         if (label) label.textContent = LABELS[i];
         const body  = btn.querySelector('.learn-choice-body');
         if (body) {
-          if (TriRenderer.isSimpleChoice(q.choices[i])) {
-            btn.classList.add('learn-choice-btn--simple');
-          }
           body.innerHTML = TriRenderer.renderTexStr(q.choices[i]);
         }
       });
     } else {
-      // O/X 교사 모드
-      document.getElementById('learn-choices-grid').style.display = 'none';
-      document.getElementById('learn-ox-grid').style.display      = 'grid';
-
-      // O/X 버튼 리셋
+      mcGrid.style.display = 'none';
+      oxGrid.style.display = 'grid';
       document.querySelectorAll('.learn-ox-btn').forEach(btn => {
-        btn.disabled = state.answered;
+        btn.disabled  = state.answered;
         btn.className = 'learn-ox-btn learn-ox-btn--' + btn.dataset.result;
       });
     }
@@ -178,58 +159,42 @@
   function onChoiceClick(idx) {
     if (state.answered) return;
     state.answered = true;
-
     const q = state.session[state.idx];
     const correct = (idx === q.answer_index);
 
-    recordResult(q.id, correct);
-    renderAfterAnswer(q, correct, idx);
+    record(q.id, correct);
+
+    // 버튼 표시
+    document.querySelectorAll('.learn-choice-btn').forEach((btn, i) => {
+      btn.disabled = true;
+      if (i === q.answer_index) {
+        btn.classList.add(correct && i === idx ? 'learn-choice-btn--correct' : 'learn-choice-btn--reveal');
+      }
+      if (!correct && i === idx) btn.classList.add('learn-choice-btn--wrong');
+    });
+
+    afterAnswer(q, correct);
   }
 
   /* ─── O/X 교사 클릭 ─────────────────────────────────────── */
   function onOXClick(correct) {
     if (state.answered) return;
     state.answered = true;
-
     const q = state.session[state.idx];
-    recordResult(q.id, correct);
-
-    // O/X 버튼 비활성화
-    document.querySelectorAll('.learn-ox-btn').forEach(btn => {
-      btn.disabled = true;
-    });
-
-    renderAfterAnswer(q, correct, null);
+    record(q.id, correct);
+    document.querySelectorAll('.learn-ox-btn').forEach(btn => { btn.disabled = true; });
+    afterAnswer(q, correct);
   }
 
-  /* ─── 결과 기록 및 공통 후처리 ──────────────────────────── */
-  function recordResult(id, correct) {
-    if (correct) {
-      state.correctIds.add(id);
-      state.wrongIds.delete(id);
-    } else {
-      state.wrongIds.add(id);
-      state.correctIds.delete(id);
-    }
+  /* ─── 공통 후처리 ───────────────────────────────────────── */
+  function record(id, correct) {
+    if (correct) state.wrongIds.delete(id);
+    else         state.wrongIds.add(id);
     state.results.push({ id, correct });
+    updateWrongPill();
   }
 
-  function renderAfterAnswer(q, correct, chosenIdx) {
-    // 객관식 버튼 색상 처리
-    if (state.multipleChoice && chosenIdx !== null) {
-      document.querySelectorAll('.learn-choice-btn').forEach((btn, i) => {
-        btn.disabled = true;
-        if (i === q.answer_index) {
-          btn.classList.add(correct && i === chosenIdx
-            ? 'learn-choice-btn--correct'
-            : 'learn-choice-btn--reveal');
-        }
-        if (!correct && i === chosenIdx) {
-          btn.classList.add('learn-choice-btn--wrong');
-        }
-      });
-    }
-
+  function afterAnswer(q, correct) {
     // 스탬프
     showStamp(correct ? '⭕' : '❌');
 
@@ -239,47 +204,34 @@
       banner.className = 'learn-answer-banner learn-answer-banner--correct show';
       banner.textContent = '✅ 정답!';
     } else {
-      const ansHtml = TriRenderer.renderTexStr(q.choices[q.answer_index]);
+      const ans = TriRenderer.renderTexStr(q.choices[q.answer_index]);
       banner.className = 'learn-answer-banner learn-answer-banner--wrong show';
-      banner.innerHTML = `❌ 오답! 정답: <strong>${ansHtml}</strong>`;
+      banner.innerHTML = `❌ 오답! &nbsp;정답: <strong>${ans}</strong>`;
     }
 
     // 해설
-    showExplanation(q);
-
-    // 버튼
-    const isLast = (state.idx === state.session.length - 1);
-    const nextBtn   = document.getElementById('learn-next-btn');
-    const reviewBtn = document.getElementById('learn-review-btn');
-    if (!isLast) {
-      nextBtn.style.display   = '';
-      reviewBtn.style.display = 'none';
-    } else {
-      nextBtn.style.display   = 'none';
-      reviewBtn.style.display = '';
-      if (state.wrongIds.size > 0) {
-        reviewBtn.textContent = `❌ 틀린 ${state.wrongIds.size}문제 다시 풀기`;
-        reviewBtn.className = 'btn btn--primary btn--full btn--lg';
-      } else {
-        reviewBtn.textContent = '🎉 모두 완료! 다시 처음부터';
-        reviewBtn.className = 'btn btn--ghost btn--full btn--lg';
-      }
-    }
-  }
-
-  /* ─── 해설 ──────────────────────────────────────────────── */
-  function showExplanation(q) {
-    const trig  = q.question_type;
-    const angle = q.highlight_angle;
-    const right = q.right_vertex;
+    const trig = q.question_type, angle = q.highlight_angle, right = q.right_vertex;
     let hint = '';
-    if (trig === 'sin')      hint = `sin ${angle} = (각 ${angle}의 대변) ÷ (빗변)`;
-    else if (trig === 'cos') hint = `cos ${angle} = (각 ${angle}의 인접변) ÷ (빗변)`;
-    else if (trig === 'tan') hint = `tan ${angle} = (각 ${angle}의 대변) ÷ (인접변)`;
-    if (right) hint += `  |  직각: ∠${right} = 90°`;
+    if (trig === 'sin')      hint = `sin ${angle} = (∠${angle}의 대변) ÷ (빗변)`;
+    else if (trig === 'cos') hint = `cos ${angle} = (∠${angle}의 인접변) ÷ (빗변)`;
+    else if (trig === 'tan') hint = `tan ${angle} = (∠${angle}의 대변) ÷ (인접변)`;
+    if (right) hint += `  |  직각: ∠${right}`;
     const expEl = document.getElementById('learn-explanation');
     expEl.textContent = hint;
     expEl.className = 'learn-explanation show';
+
+    // 다음 버튼
+    const isLast = (state.idx === state.session.length - 1);
+    const nextBtn = document.getElementById('learn-next-btn');
+    if (!isLast) {
+      nextBtn.textContent = '다음 문제 →';
+      nextBtn.className = 'btn btn--primary btn--full btn--lg';
+      nextBtn.style.display = '';
+    } else {
+      nextBtn.textContent = '결과 보기 →';
+      nextBtn.className = 'btn btn--primary btn--full btn--lg';
+      nextBtn.style.display = '';
+    }
   }
 
   /* ─── 다음 문항 ─────────────────────────────────────────── */
@@ -291,11 +243,14 @@
 
   /* ─── 완료 화면 ─────────────────────────────────────────── */
   function showComplete() {
-    document.getElementById('learn-card-area').style.display    = 'none';
-    document.getElementById('learn-choices-area').style.display = 'none';
-    document.getElementById('learn-actions').style.display      = 'none';
-    document.getElementById('learn-answer-banner').classList.remove('show');
-    document.getElementById('learn-explanation').classList.remove('show');
+    ['learn-q-area', 'learn-choices-area', 'learn-actions'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    ['learn-answer-banner', 'learn-explanation'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.className = el.className.replace(/\bshow\b/, ''); }
+    });
 
     const total   = state.results.length;
     const correct = state.results.filter(r => r.correct).length;
@@ -307,38 +262,62 @@
     document.getElementById('c-wrong').textContent   = wrong;
     document.getElementById('c-pct').textContent     = pct + '%';
 
-    let msg = pct === 100 ? '완벽합니다! 🏆'
-            : pct >= 80  ? `훌륭해요! 🎉 ${wrong}문제 복습해봐요.`
-            : pct >= 50  ? `조금 더 연습! 💪 ${wrong}문제 복습 추천.`
-            : `포기하지 마세요! 🌱 오답 복습으로 실력을 키워요.`;
+    const msg = pct === 100 ? '완벽합니다! 🏆 모두 맞혔어요.'
+              : pct >= 80   ? `훌륭해요! 🎉 ${wrong}문제 복습해봐요.`
+              : pct >= 50   ? `조금 더 연습! 💪 ${wrong}문제 복습 추천.`
+              : '포기하지 마세요! 🌱 오답 복습으로 실력을 쌓아요.';
     document.getElementById('c-comment').textContent = msg;
 
     const cReviewBtn = document.getElementById('c-review-btn');
-    if (wrong > 0) {
-      cReviewBtn.style.display = '';
-      cReviewBtn.textContent = `❌ 틀린 ${wrong}문제 다시 풀기`;
-    } else {
-      cReviewBtn.style.display = 'none';
-    }
+    cReviewBtn.style.display = wrong > 0 ? '' : 'none';
+    if (wrong > 0) cReviewBtn.textContent = `❌ 틀린 ${wrong}문제 다시 풀기`;
+
     document.getElementById('learn-complete').classList.add('show');
+    updateWrongPill();
   }
 
   function hideComplete() {
     document.getElementById('learn-complete').classList.remove('show');
-    document.getElementById('learn-card-area').style.display    = '';
-    document.getElementById('learn-choices-area').style.display = '';
-    document.getElementById('learn-actions').style.display      = '';
+    ['learn-q-area', 'learn-choices-area', 'learn-actions'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = '';
+    });
   }
 
-  /* ─── 오답 배너 ─────────────────────────────────────────── */
+  /* ─── UI 업데이트 ───────────────────────────────────────── */
   function updateReviewBanner() {
     const el = document.getElementById('learn-review-mode-banner');
-    el.classList.toggle('show', state.isReviewMode);
+    if (el) el.classList.toggle('show', state.isReviewMode);
+  }
+
+  function updateWrongPill() {
+    const pill = document.getElementById('learn-wrong-pill');
+    const cnt  = document.getElementById('wrong-count');
+    if (!pill) return;
+    if (state.wrongIds.size > 0) {
+      pill.classList.add('show');
+      if (cnt) cnt.textContent = state.wrongIds.size;
+    } else {
+      pill.classList.remove('show');
+    }
+  }
+
+  function updateMCToggleBtn() {
+    const btn = document.getElementById('learn-mc-toggle');
+    if (!btn) return;
+    if (state.multipleChoice) {
+      btn.classList.add('mc-on');
+      btn.querySelector('span').textContent = '객관식 ON';
+    } else {
+      btn.classList.remove('mc-on');
+      btn.querySelector('span').textContent = '객관식 OFF';
+    }
   }
 
   /* ─── 스탬프 ─────────────────────────────────────────────── */
   function showStamp(emoji) {
     const stamp = document.getElementById('learn-feedback-stamp');
+    if (!stamp) return;
     stamp.textContent = emoji;
     stamp.className = 'learn-feedback-stamp';
     void stamp.offsetWidth;
@@ -356,6 +335,8 @@
     onChoiceClick,
     onOXClick,
     setMode,
+    updateMCToggleBtn,
+    getMode: () => state.multipleChoice,
   };
 
 })(window);
