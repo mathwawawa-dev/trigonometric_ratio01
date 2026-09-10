@@ -202,43 +202,40 @@
   }
 
   function afterAnswer(q, correct) {
-    // 스탬프
-    showStamp(correct ? '⭕' : '❌');
+    // 스탬프 — 정답일 때만
+    if (correct) showStamp('⭕');
 
-    // 배너
+    // 배너 — 정답일 때만
     const banner = document.getElementById('learn-answer-banner');
     if (correct) {
       banner.className = 'learn-answer-banner learn-answer-banner--correct show';
       banner.textContent = '✅ 정답!';
     } else {
-      const ans = TriRenderer.renderTexStr(q.choices[q.answer_index]);
-      banner.className = 'learn-answer-banner learn-answer-banner--wrong show';
-      banner.innerHTML = `❌ 오답! &nbsp;정답: <strong>${ans}</strong>`;
+      banner.className = 'learn-answer-banner';
+      banner.textContent = '';
     }
 
-    // 해설
-    const trig = q.question_type, angle = q.highlight_angle, right = q.right_vertex;
-    let hint = '';
-    if (trig === 'sin')      hint = `sin ${angle} = (∠${angle}의 대변) ÷ (빗변)`;
-    else if (trig === 'cos') hint = `cos ${angle} = (∠${angle}의 인접변) ÷ (빗변)`;
-    else if (trig === 'tan') hint = `tan ${angle} = (∠${angle}의 대변) ÷ (인접변)`;
-    if (right) hint += `  |  직각: ∠${right}`;
+    // 해설 — 정답일 때만
     const expEl = document.getElementById('learn-explanation');
-    expEl.textContent = hint;
-    expEl.className = 'learn-explanation show';
+    if (correct) {
+      const trig = q.question_type, angle = q.highlight_angle, right = q.right_vertex;
+      let hint = '';
+      if (trig === 'sin')      hint = `sin ${angle} = (∠${angle}의 대변) ÷ (빗변)`;
+      else if (trig === 'cos') hint = `cos ${angle} = (∠${angle}의 인접변) ÷ (빗변)`;
+      else if (trig === 'tan') hint = `tan ${angle} = (∠${angle}의 대변) ÷ (인접변)`;
+      if (right) hint += `  |  직각: ∠${right}`;
+      expEl.textContent = hint;
+      expEl.className = 'learn-explanation show';
+    } else {
+      expEl.className = 'learn-explanation';
+    }
 
     // 다음 버튼
     const isLast = (state.idx === state.session.length - 1);
     const nextBtn = document.getElementById('learn-next-btn');
-    if (!isLast) {
-      nextBtn.textContent = '다음 문제 →';
-      nextBtn.className = 'btn btn--primary btn--full btn--lg';
-      nextBtn.style.display = '';
-    } else {
-      nextBtn.textContent = '결과 보기 →';
-      nextBtn.className = 'btn btn--primary btn--full btn--lg';
-      nextBtn.style.display = '';
-    }
+    nextBtn.textContent = isLast ? '결과 보기 →' : '다음 문제 →';
+    nextBtn.className = 'btn btn--primary btn--full btn--lg';
+    nextBtn.style.display = '';
   }
 
   /* ─── 다음 문항 ─────────────────────────────────────────── */
