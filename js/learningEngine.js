@@ -36,8 +36,8 @@
   const ZOOM_MAX  = 4.0;
 
   function applyZoom() {
-    const c = document.getElementById('learn-zoom-container');
-    if (c) c.style.zoom = String(zoomScale);
+    const img = document.getElementById('learn-tri-img');
+    if (img) img.style.transform = `scale(${zoomScale})`;
   }
   function zoomIn()    { zoomScale = Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX); applyZoom(); }
   function zoomOut()   { zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN); applyZoom(); }

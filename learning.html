@@ -1,253 +1,115 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>삼각비 학습</title>
-
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/learning.css">
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-
   <script src="js/utils.js"></script>
   <script src="js/renderer.js"></script>
   <script src="js/questionsData.js"></script>
   <script src="js/learningEngine.js"></script>
-
-  <style>
-    /* 라이트 모드 강제 */
-    html, body { background: #f1f5f9 !important; color: #0f172a !important; }
-  </style>
 </head>
 <body>
-
-<!-- 피드백 스탬프 -->
-<div id="learn-feedback-overlay" aria-hidden="true">
-  <div id="learn-feedback-stamp" class="learn-feedback-stamp"></div>
-</div>
-
-<!-- 플로팅: 줌 컨트롤 (우하단, 문항정보 위) -->
+<div id="learn-feedback-overlay" aria-hidden="true"><div id="learn-feedback-stamp" class="learn-feedback-stamp"></div></div>
 <div id="learn-zoom-float">
-  <button class="learn-zoom-btn" id="zoom-out-btn" title="축소 (단축키: -)">－</button>
-  <button class="learn-zoom-btn" id="zoom-in-btn"  title="확대 (단축키: +)">＋</button>
+  <button class="learn-zoom-btn" id="zoom-out-btn" title="축소 (-)">－</button>
+  <button class="learn-zoom-btn" id="zoom-in-btn"  title="확대 (+)">＋</button>
 </div>
-
-<!-- 플로팅: 문항정보 토글 (우하단 위) -->
-<button id="learn-info-toggle" aria-label="문항정보 토글" title="문항정보 표시/숨김">
+<button id="learn-info-toggle" aria-label="문항정보 토글">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
   <span>문항정보</span>
 </button>
-
-<!-- 플로팅: 객관식 ON/OFF 토글 (우하단) -->
-<button id="learn-mc-toggle" aria-label="객관식 모드 토글" title="객관식 ON/OFF">
+<button id="learn-mc-toggle" aria-label="객관식 모드 토글">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
   <span>객관식 OFF</span>
 </button>
-
-<!-- 플로팅: 틀린 문제 다시보기 (좌하단) -->
 <button id="learn-wrong-pill" aria-label="틀린 문제 다시보기">
   ❌ 틀린 <span id="wrong-count">0</span>문제 다시보기
 </button>
-
-<!-- 메인 래퍼 -->
-<div class="learn-wrap">
-
-  <!-- 헤더 (숨김) -->
-  <div class="learn-header" style="display:none">
-    <div class="learn-title">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      삼각비 학습
-    </div>
-    <div class="learn-counter">
-      <span id="learn-q-current">1</span> / <span id="learn-q-total">—</span>
-    </div>
+<div id="learn-stage">
+  <div class="learn-q-expr" id="learn-q-expr" aria-live="polite">sin A</div>
+  <div id="learn-thumbs-up" class="learn-thumbs-up"></div>
+  <div class="learn-review-banner" id="learn-review-mode-banner">❌ 오답 복습 모드 — 틀린 문제를 다시 풀어봐요</div>
+  <div class="learn-badge-row" id="learn-badge-row" style="display:none">
+    <span class="learn-badge learn-badge--trig" id="learn-badge-trig">sin</span>
+    <span class="learn-badge learn-badge--cat"  id="learn-badge-cat">특수각</span>
+    <span class="learn-badge learn-badge--tri"  id="learn-badge-tri">T001</span>
+    <span class="learn-badge learn-badge--num"><span id="learn-q-current">1</span>&nbsp;/&nbsp;<span id="learn-q-total">—</span></span>
   </div>
-
-  <!-- 오답 복습 배너 -->
-  <div class="learn-review-banner" id="learn-review-mode-banner">
-    ❌ 오답 복습 모드 — 틀린 문제를 다시 풀어봐요
+  <div id="learn-q-area" class="learn-img-area">
+    <img id="learn-tri-img" class="learn-tri-img" src="" alt="삼각형 문제 이미지">
   </div>
-
-  <!-- ── 질문 카드 ──────────────────────────────────────── -->
-  <div id="learn-q-area">
-    <div class="learn-q-card">
-      <!-- 뱃지 행 (기본 숨김, 토글 버튼으로 표시) -->
-      <div class="learn-badge-row" id="learn-badge-row" style="display:none">
-        <span class="learn-badge learn-badge--trig" id="learn-badge-trig">sin</span>
-        <span class="learn-badge learn-badge--cat"  id="learn-badge-cat">특수각</span>
-        <span class="learn-badge learn-badge--tri"  id="learn-badge-tri">T001</span>
-      </div>
-      <!-- 이미지 컨테이너 + 수식 좌상단 오버레이 -->
-      <div class="learn-tri-img-wrap">
-        <!-- 줌 가능한 내부 컨테이너 -->
-        <div class="learn-zoom-container" id="learn-zoom-container">
-          <div class="learn-q-expr" id="learn-q-expr" aria-live="polite">sin A</div>
-          <img id="learn-tri-img" src="" alt="삼각형 문제 이미지" class="learn-tri-img">
-        </div>
-        <!-- 정답 시 👍 오버레이 (우상단) -->
-        <div id="learn-thumbs-up" class="learn-thumbs-up"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── 선지 영역 ─────────────────────────────────────── -->
-  <div id="learn-choices-area">
-
-    <!-- 객관식 4지선다 -->
-    <div class="learn-choices" id="learn-choices-grid" style="display:none" role="group" aria-label="답안 선택">
-      <button class="learn-choice-btn" id="lc-0" aria-label="선지 1">
-        <span class="learn-choice-label">①</span>
-        <span class="learn-choice-body"></span>
-      </button>
-      <button class="learn-choice-btn" id="lc-1" aria-label="선지 2">
-        <span class="learn-choice-label">②</span>
-        <span class="learn-choice-body"></span>
-      </button>
-      <button class="learn-choice-btn" id="lc-2" aria-label="선지 3">
-        <span class="learn-choice-label">③</span>
-        <span class="learn-choice-body"></span>
-      </button>
-      <button class="learn-choice-btn" id="lc-3" aria-label="선지 4">
-        <span class="learn-choice-label">④</span>
-        <span class="learn-choice-body"></span>
-      </button>
-    </div>
-
-    <!-- O/X 교사 모드 -->
+  <div id="learn-choices-area" class="learn-bottom">
     <div id="learn-ox-grid" role="group" aria-label="정오 선택">
-      <button class="learn-ox-btn learn-ox-btn--O" data-result="O" id="ox-O-btn" aria-label="정답(O)">⭕</button>
-      <button class="learn-ox-btn learn-ox-btn--X" data-result="X" id="ox-X-btn" aria-label="오답(X)">❌</button>
+      <button class="learn-ox-btn learn-ox-btn--O" data-result="O" id="ox-O-btn">⭕</button>
+      <button class="learn-ox-btn learn-ox-btn--X" data-result="X" id="ox-X-btn">❌</button>
     </div>
-
+    <div class="learn-choices" id="learn-choices-grid" style="display:none" role="group" aria-label="답안 선택">
+      <button class="learn-choice-btn" id="lc-0"><span class="learn-choice-label">①</span><span class="learn-choice-body"></span></button>
+      <button class="learn-choice-btn" id="lc-1"><span class="learn-choice-label">②</span><span class="learn-choice-body"></span></button>
+      <button class="learn-choice-btn" id="lc-2"><span class="learn-choice-label">③</span><span class="learn-choice-body"></span></button>
+      <button class="learn-choice-btn" id="lc-3"><span class="learn-choice-label">④</span><span class="learn-choice-body"></span></button>
+    </div>
+    <button class="btn btn--primary btn--full btn--lg" id="learn-next-btn" style="display:none">다음 문제 →</button>
   </div>
-
-  <!-- 정답 배너 -->
-  <div id="learn-answer-banner" class="learn-answer-banner" role="status"></div>
-
-  <!-- 해설 -->
-  <div id="learn-explanation" class="learn-explanation"></div>
-
-  <!-- 액션 버튼 -->
-  <div class="learn-actions" id="learn-actions">
-    <button class="btn btn--primary btn--full btn--lg" id="learn-next-btn" style="display:none">
-      다음 문제 →
-    </button>
-  </div>
-
-  <!-- ── 완료 화면 ─────────────────────────────────────── -->
-  <div class="learn-complete" id="learn-complete" role="region" aria-label="학습 완료">
+  <div class="learn-complete" id="learn-complete">
     <div class="learn-complete__emoji">🎓</div>
     <div class="learn-complete__title">세션 완료!</div>
     <div class="learn-stats-grid">
-      <div class="learn-stat-box">
-        <span class="learn-stat-val" id="c-total">—</span>
-        <span class="learn-stat-lbl">총 문항</span>
-      </div>
-      <div class="learn-stat-box">
-        <span class="learn-stat-val learn-stat-val--green" id="c-correct">—</span>
-        <span class="learn-stat-lbl">정답</span>
-      </div>
-      <div class="learn-stat-box">
-        <span class="learn-stat-val learn-stat-val--red" id="c-wrong">—</span>
-        <span class="learn-stat-lbl">오답</span>
-      </div>
-      <div class="learn-stat-box">
-        <span class="learn-stat-val learn-stat-val--blue" id="c-pct">—</span>
-        <span class="learn-stat-lbl">정답률</span>
-      </div>
+      <div class="learn-stat-box"><span class="learn-stat-val" id="c-total">—</span><span class="learn-stat-lbl">총 문항</span></div>
+      <div class="learn-stat-box"><span class="learn-stat-val learn-stat-val--green" id="c-correct">—</span><span class="learn-stat-lbl">정답</span></div>
+      <div class="learn-stat-box"><span class="learn-stat-val learn-stat-val--red" id="c-wrong">—</span><span class="learn-stat-lbl">오답</span></div>
+      <div class="learn-stat-box"><span class="learn-stat-val learn-stat-val--blue" id="c-pct">—</span><span class="learn-stat-lbl">정답률</span></div>
     </div>
     <div class="learn-complete__subtitle" id="c-comment"></div>
-    <div class="learn-actions" style="width:100%">
+    <div class="learn-actions">
       <button class="btn btn--primary btn--full btn--lg" id="c-review-btn">❌ 틀린 문제 다시 풀기</button>
       <button class="btn btn--ghost btn--full" id="c-restart-btn">🔄 처음부터 다시</button>
       <button class="btn btn--ghost btn--full" id="c-home-btn">🏠 홈으로</button>
     </div>
+    <div style="font-size:10px;color:#94a3b8;padding-top:8px;">v2.1.9_260911_1129_전체화면레이아웃</div>
   </div>
-
-  <!-- 버전 -->
-  <div style="text-align:center;font-size:10px;color:#94a3b8;margin-top:auto;padding-top:var(--sp-4);">
-    v1.2.0_260911_0736_학습_OX기본_오답pill
-  </div>
-
 </div>
-
+<div style="display:none">
+  <div id="learn-answer-banner" class="learn-answer-banner"></div>
+  <div id="learn-explanation" class="learn-explanation"></div>
+</div>
 <script>
-/* ── 라이트 모드 고정 ──────────────────────────────────── */
-document.documentElement.setAttribute('data-theme', 'light');
-
-/* ── 문항정보 토글 ───────────────────────────────────────── */
-let infoVisible = false;
-document.getElementById('learn-info-toggle').addEventListener('click', () => {
-  infoVisible = !infoVisible;
-  const row = document.getElementById('learn-badge-row');
-  const btn = document.getElementById('learn-info-toggle');
-  row.style.display = infoVisible ? 'flex' : 'none';
-  btn.classList.toggle('info-on', infoVisible);
+document.documentElement.setAttribute('data-theme','light');
+let infoVisible=false;
+document.getElementById('learn-info-toggle').addEventListener('click',()=>{
+  infoVisible=!infoVisible;
+  document.getElementById('learn-badge-row').style.display=infoVisible?'flex':'none';
+  document.getElementById('learn-info-toggle').classList.toggle('info-on',infoVisible);
 });
-
-/* ── 객관식 토글 (플로팅) ───────────────────────────────── */
-document.getElementById('learn-mc-toggle').addEventListener('click', () => {
-  LearningEngine.setMode(!LearningEngine.getMode());
+document.getElementById('learn-mc-toggle').addEventListener('click',()=>LearningEngine.setMode(!LearningEngine.getMode()));
+document.getElementById('learn-wrong-pill').addEventListener('click',()=>LearningEngine.startReview());
+document.getElementById('zoom-in-btn').addEventListener('click',()=>LearningEngine.zoomIn());
+document.getElementById('zoom-out-btn').addEventListener('click',()=>LearningEngine.zoomOut());
+document.querySelectorAll('.learn-choice-btn').forEach((btn,i)=>btn.addEventListener('click',()=>LearningEngine.onChoiceClick(i)));
+document.getElementById('ox-O-btn').addEventListener('click',()=>LearningEngine.onOXClick(true));
+document.getElementById('ox-X-btn').addEventListener('click',()=>LearningEngine.onOXClick(false));
+document.getElementById('learn-next-btn').addEventListener('click',()=>LearningEngine.nextQuestion());
+document.getElementById('c-review-btn').addEventListener('click',()=>LearningEngine.startReview());
+document.getElementById('c-restart-btn').addEventListener('click',()=>LearningEngine.init());
+document.getElementById('c-home-btn').addEventListener('click',()=>{window.location.href='index.html';});
+document.addEventListener('keydown',e=>{
+  if(e.key==='+'||e.key==='='||e.code==='NumpadAdd'){e.preventDefault();LearningEngine.zoomIn();return;}
+  if(e.key==='-'||e.code==='NumpadSubtract'){e.preventDefault();LearningEngine.zoomOut();return;}
+  if(e.key==='0'||e.code==='Numpad0'){e.preventDefault();LearningEngine.resetZoom();return;}
+  const isMC=LearningEngine.getMode();
+  if(isMC){const m={'1':0,'2':1,'3':2,'4':3,'Numpad1':0,'Numpad2':1,'Numpad3':2,'Numpad4':3};const idx=m[e.key]??m[e.code];if(idx!==undefined){e.preventDefault();LearningEngine.onChoiceClick(idx);return;}}
+  else{if(e.key==='1'||e.code==='Numpad1'){e.preventDefault();LearningEngine.onOXClick(true);return;}if(e.key==='2'||e.code==='Numpad2'){e.preventDefault();LearningEngine.onOXClick(false);return;}}
+  if(e.key==='Enter'||e.key===' '){const n=document.getElementById('learn-next-btn');if(n&&n.style.display!=='none'){e.preventDefault();n.click();}}
 });
-
-/* ── 틀린 문제 다시보기 (플로팅 pill) ──────────────────── */
-document.getElementById('learn-wrong-pill').addEventListener('click', () => {
-  LearningEngine.startReview();
-});
-
-/* ── 객관식 선지 클릭 ──────────────────────────────────── */
-document.querySelectorAll('.learn-choice-btn').forEach((btn, i) => {
-  btn.addEventListener('click', () => LearningEngine.onChoiceClick(i));
-});
-
-/* ── O/X 교사 버튼 ──────────────────────────────────────── */
-document.getElementById('ox-O-btn').addEventListener('click', () => LearningEngine.onOXClick(true));
-document.getElementById('ox-X-btn').addEventListener('click', () => LearningEngine.onOXClick(false));
-
-/* ── 다음 문제 ──────────────────────────────────────────── */
-document.getElementById('learn-next-btn').addEventListener('click', () => {
-  LearningEngine.nextQuestion();
-});
-
-/* ── 완료 화면 버튼 ─────────────────────────────────────── */
-document.getElementById('c-review-btn').addEventListener('click', () => LearningEngine.startReview());
-document.getElementById('c-restart-btn').addEventListener('click', () => LearningEngine.init());
-document.getElementById('c-home-btn').addEventListener('click', () => { window.location.href = 'index.html'; });
-
-/* ── 줌 버튼 ────────────────────────────────────────────── */
-document.getElementById('zoom-in-btn').addEventListener('click',  () => LearningEngine.zoomIn());
-document.getElementById('zoom-out-btn').addEventListener('click', () => LearningEngine.zoomOut());
-
-/* ── 키보드 단축키 ──────────────────────────────────────── */
-document.addEventListener('keydown', e => {
-  // 줌 단축키 (항상 동작)
-  if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd')      { e.preventDefault(); LearningEngine.zoomIn();    return; }
-  if (e.key === '-' || e.code === 'NumpadSubtract')                  { e.preventDefault(); LearningEngine.zoomOut();   return; }
-  if (e.key === '0' || e.code === 'Numpad0')                         { e.preventDefault(); LearningEngine.resetZoom(); return; }
-
-  const isMC = LearningEngine.getMode();
-  if (isMC) {
-    const mcMap = {'1':0,'2':1,'3':2,'4':3,'Numpad1':0,'Numpad2':1,'Numpad3':2,'Numpad4':3};
-    const idx = mcMap[e.key] ?? mcMap[e.code];
-    if (idx !== undefined) { e.preventDefault(); LearningEngine.onChoiceClick(idx); return; }
-  } else {
-    if (e.key === '1' || e.code === 'Numpad1') { e.preventDefault(); LearningEngine.onOXClick(true);  return; }
-    if (e.key === '2' || e.code === 'Numpad2') { e.preventDefault(); LearningEngine.onOXClick(false); return; }
-  }
-  if (e.key === 'Enter' || e.key === ' ') {
-    const nextBtn = document.getElementById('learn-next-btn');
-    if (nextBtn && nextBtn.style.display !== 'none') { e.preventDefault(); nextBtn.click(); }
-  }
-});
-
-/* ── 시작 ─────────────────────────────────────────────── */
 LearningEngine.init();
 LearningEngine.updateMCToggleBtn();
 </script>
-
 </body>
 </html>
