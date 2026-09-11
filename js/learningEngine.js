@@ -31,7 +31,7 @@
 
   /* ─── 줌 상태 ───────────────────────────────────────────── */
   let zoomScale = parseFloat(localStorage.getItem('learn_zoom_scale')) || 1.0;
-  const ZOOM_STEP = 0.25;
+  const ZOOM_STEP = 0.10; // 기존 0.25(25%) -> 0.10(10%)로 세분화
   const ZOOM_MIN  = 0.4;
   const ZOOM_MAX  = 4.0;
 
@@ -40,12 +40,12 @@
     if (img) img.style.transform = `scale(${zoomScale})`;
   }
   function zoomIn() {
-    zoomScale = Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX);
+    zoomScale = Math.round(Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX) * 100) / 100;
     localStorage.setItem('learn_zoom_scale', String(zoomScale));
     applyZoom();
   }
   function zoomOut() {
-    zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN);
+    zoomScale = Math.round(Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN) * 100) / 100;
     localStorage.setItem('learn_zoom_scale', String(zoomScale));
     applyZoom();
   }
