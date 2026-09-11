@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    learning.css — 삼각비 학습 전체화면 레이아웃
    v2.0.0_260911_1129
    ============================================================ */
@@ -135,33 +135,68 @@ html, body {
   flex-shrink: 0;
 }
 
-/* O/X 교사 버튼 */
+/* ── 우측 고정 컨트롤 (OX / 다음 버튼) ────────────────── */
+#learn-right-ctrl {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* O/X 버튼 — 세로 배치 */
 #learn-ox-grid {
   display: none;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
-  max-width: 480px;
+  flex-direction: column;
+  gap: 10px;
 }
 .learn-ox-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  border: 2.5px solid;
+  font-size: 3rem;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  border-radius: 14px;
-  border: 2.5px solid;
-  font-size: 3.6rem;
-  cursor: pointer;
-  transition: background 0.12s, transform 0.1s, box-shadow 0.12s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
 }
 .learn-ox-btn--O { border-color: #22c55e; color: #15803d; }
-.learn-ox-btn--O:hover:not(:disabled) { background: #f0fdf4; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(34,197,94,0.25); }
+.learn-ox-btn--O:hover:not(:disabled) { background: #f0fdf4; transform: scale(1.07); box-shadow: 0 6px 20px rgba(34,197,94,0.3); }
 .learn-ox-btn--X { border-color: #ef4444; color: #b91c1c; }
-.learn-ox-btn--X:hover:not(:disabled) { background: #fef2f2; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(239,68,68,0.25); }
-.learn-ox-btn:active:not(:disabled) { transform: translateY(0); }
+.learn-ox-btn--X:hover:not(:disabled) { background: #fef2f2; transform: scale(1.07); box-shadow: 0 6px 20px rgba(239,68,68,0.3); }
+.learn-ox-btn:active:not(:disabled) { transform: scale(0.95); }
 .learn-ox-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* 다음 버튼 — 우측 세로형 */
+.learn-next-side {
+  width: 80px;
+  min-height: 80px;
+  padding: 14px 6px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.6;
+  word-break: keep-all;
+  text-align: center;
+  background: var(--primary-600);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(109,40,217,0.35);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.learn-next-side:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(109,40,217,0.45); }
+.learn-next-side:active { transform: scale(0.97); }
+
 
 /* 객관식 선지 */
 .learn-choices {

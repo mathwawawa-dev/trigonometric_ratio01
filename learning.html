@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
@@ -45,18 +45,22 @@
   <div id="learn-q-area" class="learn-img-area">
     <img id="learn-tri-img" class="learn-tri-img" src="" alt="삼각형 문제 이미지">
   </div>
-  <div id="learn-choices-area" class="learn-bottom">
+  <!-- 우측 고정 컨트롤: O/X 또는 다음 버튼 -->
+  <div id="learn-right-ctrl">
     <div id="learn-ox-grid" role="group" aria-label="정오 선택">
       <button class="learn-ox-btn learn-ox-btn--O" data-result="O" id="ox-O-btn">⭕</button>
       <button class="learn-ox-btn learn-ox-btn--X" data-result="X" id="ox-X-btn">❌</button>
     </div>
-    <div class="learn-choices" id="learn-choices-grid" style="display:none" role="group" aria-label="답안 선택">
+    <button class="btn btn--primary learn-next-side" id="learn-next-btn" style="display:none">다음<br>문제<br>→</button>
+  </div>
+  <!-- 하단바: 객관식 선지만 (O/X 모드에서는 숨김) -->
+  <div id="learn-choices-area" class="learn-bottom" style="display:none">
+    <div class="learn-choices" id="learn-choices-grid" role="group" aria-label="답안 선택">
       <button class="learn-choice-btn" id="lc-0"><span class="learn-choice-label">①</span><span class="learn-choice-body"></span></button>
       <button class="learn-choice-btn" id="lc-1"><span class="learn-choice-label">②</span><span class="learn-choice-body"></span></button>
       <button class="learn-choice-btn" id="lc-2"><span class="learn-choice-label">③</span><span class="learn-choice-body"></span></button>
       <button class="learn-choice-btn" id="lc-3"><span class="learn-choice-label">④</span><span class="learn-choice-body"></span></button>
     </div>
-    <button class="btn btn--primary btn--full btn--lg" id="learn-next-btn" style="display:none">다음 문제 →</button>
   </div>
   <div class="learn-complete" id="learn-complete">
     <div class="learn-complete__emoji">🎓</div>
@@ -102,7 +106,7 @@ document.getElementById('c-home-btn').addEventListener('click',()=>{window.locat
 document.addEventListener('keydown',e=>{
   if(e.key==='+'||e.key==='='||e.code==='NumpadAdd'){e.preventDefault();LearningEngine.zoomIn();return;}
   if(e.key==='-'||e.code==='NumpadSubtract'){e.preventDefault();LearningEngine.zoomOut();return;}
-  if(e.key==='0'||e.code==='Numpad0'){e.preventDefault();LearningEngine.resetZoom();return;}
+  if((e.key==='0'||e.code==='Numpad0')&&!e.ctrlKey){e.preventDefault();LearningEngine.resetZoom();return;}
   const isMC=LearningEngine.getMode();
   if(isMC){const m={'1':0,'2':1,'3':2,'4':3,'Numpad1':0,'Numpad2':1,'Numpad3':2,'Numpad4':3};const idx=m[e.key]??m[e.code];if(idx!==undefined){e.preventDefault();LearningEngine.onChoiceClick(idx);return;}}
   else{if(e.key==='1'||e.code==='Numpad1'){e.preventDefault();LearningEngine.onOXClick(true);return;}if(e.key==='2'||e.code==='Numpad2'){e.preventDefault();LearningEngine.onOXClick(false);return;}}

@@ -162,12 +162,15 @@
     const q = state.session[state.idx];
     if (!q) return;
 
-    const mcGrid = document.getElementById('learn-choices-grid');
-    const oxGrid = document.getElementById('learn-ox-grid');
+    const mcGrid    = document.getElementById('learn-choices-grid');
+    const oxGrid    = document.getElementById('learn-ox-grid');
+    const choicesArea = document.getElementById('learn-choices-area');
 
     if (state.multipleChoice) {
+      // MC 모드: 하단바 표시, OX 숨김
+      choicesArea.style.display = '';
       mcGrid.style.display = 'grid';
-      oxGrid.style.display = 'none';
+      oxGrid.style.display  = 'none';
 
       document.querySelectorAll('.learn-choice-btn').forEach((btn, i) => {
         btn.disabled  = state.answered;
@@ -175,13 +178,13 @@
         const label = btn.querySelector('.learn-choice-label');
         if (label) label.textContent = LABELS[i];
         const body  = btn.querySelector('.learn-choice-body');
-        if (body) {
-          body.innerHTML = TriRenderer.renderTexStr(q.choices[i]);
-        }
+        if (body) body.innerHTML = TriRenderer.renderTexStr(q.choices[i]);
       });
     } else {
+      // O/X 모드: 하단바 숨김, OX 표시
+      choicesArea.style.display = 'none';
       mcGrid.style.display = 'none';
-      oxGrid.style.display = 'grid';
+      oxGrid.style.display  = 'grid';
       document.querySelectorAll('.learn-ox-btn').forEach(btn => {
         btn.disabled  = state.answered;
         btn.className = 'learn-ox-btn learn-ox-btn--' + btn.dataset.result;
@@ -232,17 +235,17 @@
     // 정답이면 👍👍 애니메이션
     if (correct) showThumbsUp();
 
-    // 배너·해설 모두 숨김 (정답/오답 무관)
+    // 배너·해설 모두 숨김
     const banner = document.getElementById('learn-answer-banner');
     banner.className = 'learn-answer-banner';
     banner.textContent = '';
     document.getElementById('learn-explanation').className = 'learn-explanation';
 
-    // 다음 버튼만 표시
+    // OX 버튼 숨기고 다음 버튼만 표시 (공간 유지)
+    document.getElementById('learn-ox-grid').style.display = 'none';
     const isLast = (state.idx === state.session.length - 1);
     const nextBtn = document.getElementById('learn-next-btn');
     nextBtn.textContent = isLast ? '결과 보기 →' : '다음 문제 →';
-    nextBtn.className = 'btn btn--primary btn--full btn--lg';
     nextBtn.style.display = '';
   }
 
