@@ -43,6 +43,16 @@
   function zoomOut()   { zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN); applyZoom(); }
   function resetZoom() { zoomScale = 1.0; applyZoom(); }
 
+  /* ─── 이미지 모드 (dash3=세변, dash2=두변) ─────────────── */
+  let imgMode = 'dash3'; // 새 문제로 이동하면 항상 dash3으로 리셋
+
+  function setImgMode(mode) {
+    imgMode = mode;
+    const q = state.session[state.idx];
+    const imgEl = document.getElementById('learn-tri-img');
+    if (imgEl && q) imgEl.src = `Tri_img_01_${imgMode}/${q.filename}`;
+  }
+
   /* ─── 👍 애니메이션 ─────────────────────────────────────── */
   function showThumbsUp() {
     const el = document.getElementById('learn-thumbs-up');
@@ -137,7 +147,8 @@
     document.getElementById('learn-badge-cat').textContent  = q.category || '';
     document.getElementById('learn-badge-tri').textContent  = q.triangle_id || '';
 
-    // ── 삼각형 이미지 ──
+    // ── 삼각형 이미지 (새 문제는 항상 dash3=세변으로 시작) ──
+    imgMode = 'dash3';
     const imgEl = document.getElementById('learn-tri-img');
     if (imgEl) {
       imgEl.src = `Tri_img_01_dash3/${q.filename}`;
@@ -365,6 +376,7 @@
     resetZoom,
     prevQuestion,
     nextQuestion,
+    setImgMode,
   };
 
 })(window);
