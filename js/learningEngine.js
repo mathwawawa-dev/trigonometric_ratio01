@@ -47,7 +47,7 @@
   function showThumbsUp() {
     const el = document.getElementById('learn-thumbs-up');
     if (!el) return;
-    el.textContent = '👍👍';
+    el.textContent = '👍';
     el.className = 'learn-thumbs-up';
     void el.offsetWidth;
     el.classList.add('pop');
