@@ -99,21 +99,19 @@
 }
 .learn-q-expr .katex { font-size: 1em; }
 
-/* 삼각형 이미지 — 카드 고정 크기 */
+/* 삼각형 이미지 — 이미지 크기에 따라 wrap이 자동 확장 */
 .learn-tri-img-wrap {
   position: relative;
   width: 100%;
-  height: 420px;          /* 최대 이미지 기준 고정 높이 */
-  overflow: hidden;
+  min-height: 200px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background: #fff;
+  overflow: visible;          /* 줌 시 잘리지 않도록 */
 }
 .learn-tri-img {
   max-width: 100%;
-  max-height: 100%;
-  width: auto;
   height: auto;
   display: block;
   object-fit: contain;
@@ -122,13 +120,10 @@
 /* 줌 가능한 내부 컨테이너 */
 .learn-zoom-container {
   width: 100%;
-  height: 100%;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  transform-origin: center center;
-  transition: transform 0.18s ease;
 }
 
 /* 👍 오버레이 (우상단, 이미지 wrap 기준) */
@@ -155,13 +150,14 @@
   100% { opacity: 0; transform: scale(0.85) translateY(-4px); }
 }
 
-/* +/- 줌 버튼 (우하단) */
-.learn-zoom-ctrl {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 25;
+/* ── 플로팅: 줌 컨트롤 (화면 우하단 — 문항정보 위) ──────── */
+#learn-zoom-float {
+  position: fixed;
+  bottom: 104px;
+  right: 16px;
+  z-index: 500;
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 .learn-zoom-btn {
@@ -169,7 +165,7 @@
   height: 34px;
   border-radius: 50%;
   border: 1.5px solid #cbd5e1;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   color: #334155;
   font-size: 20px;
   font-weight: 700;
@@ -179,11 +175,11 @@
   justify-content: center;
   line-height: 1;
   transition: background 0.12s, transform 0.1s, box-shadow 0.12s;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.14);
   user-select: none;
 }
-.learn-zoom-btn:hover  { background: #e0f2fe; transform: scale(1.08); box-shadow: 0 3px 10px rgba(14,165,233,0.2); }
-.learn-zoom-btn:active { transform: scale(0.94); }
+.learn-zoom-btn:hover  { background: #e0f2fe; transform: scale(1.08); box-shadow: 0 3px 10px rgba(14,165,233,0.25); }
+.learn-zoom-btn:active { transform: scale(0.92); }
 .learn-choices {
   display: grid;
   grid-template-columns: 1fr 1fr;

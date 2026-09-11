@@ -37,7 +37,7 @@
 
   function applyZoom() {
     const c = document.getElementById('learn-zoom-container');
-    if (c) c.style.transform = `scale(${zoomScale})`;
+    if (c) c.style.zoom = String(zoomScale);
   }
   function zoomIn()    { zoomScale = Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX); applyZoom(); }
   function zoomOut()   { zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN); applyZoom(); }
