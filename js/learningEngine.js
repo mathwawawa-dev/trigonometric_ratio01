@@ -53,11 +53,11 @@
     if (!imgEl || !q) return;
     if (mode === 'dash3') {
       // 쉬운 버전: 세 변 모두 표시 (tri_ prefix)
-      imgEl.src = `Tri_img_01_dash3/${q.filename}`;
+      imgEl.src = `Tri_img_01_crop_dash3/${q.filename}`;
     } else {
       // 어려운 버전: 두 변만 표시 (tri2_ prefix)
       const fname2 = q.filename.replace(/^tri_/, 'tri2_');
-      imgEl.src = `Tri_img_02_dash3/${fname2}`;
+      imgEl.src = `Tri_img_02_crop_dash3/${fname2}`;
     }
   }
 
@@ -159,7 +159,7 @@
     imgMode = 'dash3';
     const imgEl = document.getElementById('learn-tri-img');
     if (imgEl) {
-      imgEl.src = `Tri_img_01_dash3/${q.filename}`;
+      imgEl.src = `Tri_img_01_crop_dash3/${q.filename}`;
       imgEl.alt = `삼각형 문제 이미지 (${q.id})`;
     }
 
