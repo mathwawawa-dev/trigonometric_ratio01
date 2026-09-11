@@ -30,7 +30,7 @@
   };
 
   /* ─── 줌 상태 ───────────────────────────────────────────── */
-  let zoomScale = 1.0;
+  let zoomScale = parseFloat(localStorage.getItem('learn_zoom_scale')) || 1.0;
   const ZOOM_STEP = 0.25;
   const ZOOM_MIN  = 0.4;
   const ZOOM_MAX  = 4.0;
@@ -39,9 +39,21 @@
     const img = document.getElementById('learn-tri-img');
     if (img) img.style.transform = `scale(${zoomScale})`;
   }
-  function zoomIn()    { zoomScale = Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX); applyZoom(); }
-  function zoomOut()   { zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN); applyZoom(); }
-  function resetZoom() { zoomScale = 1.0; applyZoom(); }
+  function zoomIn() {
+    zoomScale = Math.min(zoomScale + ZOOM_STEP, ZOOM_MAX);
+    localStorage.setItem('learn_zoom_scale', String(zoomScale));
+    applyZoom();
+  }
+  function zoomOut() {
+    zoomScale = Math.max(zoomScale - ZOOM_STEP, ZOOM_MIN);
+    localStorage.setItem('learn_zoom_scale', String(zoomScale));
+    applyZoom();
+  }
+  function resetZoom() {
+    zoomScale = 1.0;
+    localStorage.setItem('learn_zoom_scale', String(zoomScale));
+    applyZoom();
+  }
 
   /* ─── 이미지 모드 (dash3=세변, dash2=두변) ─────────────── */
   let imgMode = 'dash3'; // 새 문제로 이동하면 항상 dash3으로 리셋
@@ -51,6 +63,7 @@
     const q = state.session[state.idx];
     const imgEl = document.getElementById('learn-tri-img');
     if (!imgEl || !q) return;
+    imgEl.onload = applyZoom;
     if (mode === 'dash3') {
       // 쉬운 버전: 세 변 모두 표시 (tri_ prefix)
       imgEl.src = `Tri_img_01_crop_dash3/${q.filename}`;
@@ -59,6 +72,7 @@
       const fname2 = q.filename.replace(/^tri_/, 'tri2_');
       imgEl.src = `Tri_img_02_crop_dash3/${fname2}`;
     }
+    applyZoom();
   }
 
   /* ─── 👍 애니메이션 ─────────────────────────────────────── */
@@ -159,8 +173,10 @@
     imgMode = 'dash3';
     const imgEl = document.getElementById('learn-tri-img');
     if (imgEl) {
+      imgEl.onload = applyZoom;
       imgEl.src = `Tri_img_01_crop_dash3/${q.filename}`;
       imgEl.alt = `삼각형 문제 이미지 (${q.id})`;
+      applyZoom();
     }
 
     // 선지 영역
