@@ -275,6 +275,15 @@
     else showQuestion();
   }
 
+  /* ─── 다음 문항 (어려운 버전: 두 변 이미지로 시작) ──────── */
+  function nextQuestionHard() {
+    state.idx++;
+    if (state.idx >= state.session.length) { showComplete(); return; }
+    state.answered = false;
+    showQuestion();          // dash3으로 렌더 후
+    setImgMode('dash2');     // 즉시 dash2로 전환
+  }
+
   /* ─── 이전 문항 ─────────────────────────────────────────── */
   function prevQuestion() {
     if (state.idx <= 0) return;
@@ -384,6 +393,7 @@
     resetZoom,
     prevQuestion,
     nextQuestion,
+    nextQuestionHard,
     setImgMode,
   };
 

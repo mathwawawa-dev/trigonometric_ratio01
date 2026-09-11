@@ -110,9 +110,9 @@ document.addEventListener('keydown',e=>{
   // 방향키: 이미지 모드와 무관하게 문제 이동
   if(e.key==='ArrowLeft') {e.preventDefault();LearningEngine.prevQuestion();return;}
   if(e.key==='ArrowRight'){e.preventDefault();LearningEngine.nextQuestion();return;}
-  // 스페이스: 두 변만 있는 이미지 (dash2)
-  if(e.key===' '){e.preventDefault();LearningEngine.setImgMode('dash2');return;}
-  // 엔터: 세 변 모두 있는 이미지 (dash3)
+  // 스페이스: 다음 문제를 두 변 이미지(어려운 버전)로 이동
+  if(e.key===' '){e.preventDefault();LearningEngine.nextQuestionHard();return;}
+  // 엔터: 현재 문제를 세 변 이미지(쉬운 버전)로 복원
   if(e.key==='Enter'){e.preventDefault();LearningEngine.setImgMode('dash3');return;}
   // 선지 단축키
   const isMC=LearningEngine.getMode();
