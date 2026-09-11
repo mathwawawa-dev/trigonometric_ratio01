@@ -50,7 +50,7 @@
     imgMode = mode;
     const q = state.session[state.idx];
     const imgEl = document.getElementById('learn-tri-img');
-    if (imgEl && q) imgEl.src = `Tri_img_01_${imgMode}/${q.filename}`;
+    if (imgEl && q) imgEl.src = `Tri_img_02_${imgMode}/${q.filename}`;
   }
 
   /* ─── 👍 애니메이션 ─────────────────────────────────────── */
@@ -151,7 +151,7 @@
     imgMode = 'dash3';
     const imgEl = document.getElementById('learn-tri-img');
     if (imgEl) {
-      imgEl.src = `Tri_img_01_dash3/${q.filename}`;
+      imgEl.src = `Tri_img_02_dash3/${q.filename}`;
       imgEl.alt = `삼각형 문제 이미지 (${q.id})`;
     }
 
