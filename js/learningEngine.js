@@ -50,7 +50,15 @@
     imgMode = mode;
     const q = state.session[state.idx];
     const imgEl = document.getElementById('learn-tri-img');
-    if (imgEl && q) imgEl.src = `Tri_img_02_${imgMode}/${q.filename}`;
+    if (!imgEl || !q) return;
+    if (mode === 'dash3') {
+      // 쉬운 버전: 세 변 모두 표시 (tri_ prefix)
+      imgEl.src = `Tri_img_01_dash3/${q.filename}`;
+    } else {
+      // 어려운 버전: 두 변만 표시 (tri2_ prefix)
+      const fname2 = q.filename.replace(/^tri_/, 'tri2_');
+      imgEl.src = `Tri_img_02_dash3/${fname2}`;
+    }
   }
 
   /* ─── 👍 애니메이션 ─────────────────────────────────────── */
@@ -147,11 +155,11 @@
     document.getElementById('learn-badge-cat').textContent  = q.category || '';
     document.getElementById('learn-badge-tri').textContent  = q.triangle_id || '';
 
-    // ── 삼각형 이미지 (새 문제는 항상 dash3=세변으로 시작) ──
+    // ── 삼각형 이미지 (새 문제는 항상 세 변 버전으로 시작) ──
     imgMode = 'dash3';
     const imgEl = document.getElementById('learn-tri-img');
     if (imgEl) {
-      imgEl.src = `Tri_img_02_dash3/${q.filename}`;
+      imgEl.src = `Tri_img_01_dash3/${q.filename}`;
       imgEl.alt = `삼각형 문제 이미지 (${q.id})`;
     }
 
