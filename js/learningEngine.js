@@ -256,6 +256,14 @@
     else showQuestion();
   }
 
+  /* ─── 이전 문항 ─────────────────────────────────────────── */
+  function prevQuestion() {
+    if (state.idx <= 0) return;
+    state.idx--;
+    state.answered = false;
+    showQuestion();
+  }
+
   /* ─── 완료 화면 ─────────────────────────────────────────── */
   function showComplete() {
     ['learn-q-area', 'learn-choices-area', 'learn-actions'].forEach(id => {
@@ -355,6 +363,8 @@
     zoomIn,
     zoomOut,
     resetZoom,
+    prevQuestion,
+    nextQuestion,
   };
 
 })(window);
