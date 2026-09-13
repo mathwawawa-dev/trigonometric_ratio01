@@ -6,8 +6,9 @@ data/questions.json → js/questionsData.js 변환
 """
 import json, os
 
-SRC = r'C:\Users\user\Documents\삼각비 게임1\data\questions.json'
-DST = r'C:\Users\user\Documents\삼각비 게임1\js\questionsData.js'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(BASE_DIR, 'data', 'questions.json')
+DST = os.path.join(BASE_DIR, 'js', 'questionsData.js')
 
 with open(SRC, 'r', encoding='utf-8') as f:
     data = json.load(f)
